@@ -1,0 +1,30 @@
+#observations {
+	height: 450px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+.loading {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+}
+
+#loading {
+	z-index: 1000;
+	background: rgba(255, 255, 255, .8) url('../images/loading.gif') 50% 50%
+		no-repeat;
+}
+
+/* caché par défaut */
+body.chargement {
+	overflow: hidden;
+}
+
+/* affiché lorsque la classe chargement est présente */
+body.chargement .loading {
+	display: block;
+}
