@@ -1,0 +1,17 @@
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.form-group .help-block {
+  display: none;
+}
+ 
+.form-group.has-error .help-block {
+  display: block;
+}
+
+.required {
+    color: red;
+    font-family: 'Glyphicons Halflings';
+    font-weight: normal;
+    font-size: 7px;
+    vertical-align: top;
+}

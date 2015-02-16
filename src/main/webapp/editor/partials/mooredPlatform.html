@@ -1,0 +1,140 @@
+<div>
+
+    <!-- TABS -->
+    <ul class="nav nav-tabs">
+        <li ng-repeat="tab in tabs" ng-class="{ active: tab.active, disabled: tab.disabled}"><a ng-click="selectTab($index)">{{tab.title}}</a></li>
+    </ul>
+    
+    <!-- PLATFORM TAB -->
+    <div class="tab-pane fade in active" ng-show="isTabActive(0)" id="platform">
+        
+        <form name="platformForm" novalidate>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="uuid">Identifier</label>
+                <input type="text" class="form-control" id="uuid" name="uuid" ng-model="platform.uuid" required readonly placeholder="How the observatory is identified" />
+                <p class="help-block" ng-if="platformForm.uuid.$error.required">The observatory's identifier is required</p>
+            </div>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="observatoryName">Observatory name</label>
+                <input type="text" class="form-control" id="observatoryName" name="observatoryName" ng-model="platform.observatoryName" required placeholder="How the observatory is known" />
+                <p class="help-block" ng-if="platformForm.observatoryName.$error.required">The observatory's name is required</p>
+            </div>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="observatoryPicture">Observatory picture</label>
+                <input type="text" class="form-control" id="observatoryPicture" name="observatoryPicture" ng-model="platform.observatoryPicture" placeholder="Picture of the observatory (should be 1200*1800)" />
+                <!-- <p class="help-block" ng-if="platformForm.observatoryName.$error.required">The observatory's name is required</p> -->
+            </div>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="wmoPlatformNumber">WMO platform number</label>
+                <select class="form-control" id="wmoPlatformNumber" name="wmoPlatformNumber" ng-model="platform.wmoPlatformNumber" ng-options="opt for opt in wmoPlatformNumbers" required placeholder="Picture of the observatory (should be 1200*1800)"></select>
+                <p class="help-block" ng-if="platformForm.wmoPlatformNumber.$error.required">The WMO platform number is required</p>
+            </div>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="positionLatitude">Latitude</label>
+                <input type="text" class="form-control" id="positionLatitude" name="positionLatitude" ng-model="platform.position.latitude" required placeholder="Degrees north" />
+                <p class="help-block" ng-if="platformForm.positionLatitude.$error.required">The latitude is required</p>
+            </div>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="positionLongitude">Longitude</label>
+                <input type="text" class="form-control" id="positionLongitude" name="positionLongitude" ng-model="platform.position.longitude" required placeholder="Degrees east" />
+                <p class="help-block" ng-if="platformForm.positionLongitude.$error.required">The longitude is required</p>
+            </div>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="verticalReference">Vertical reference</label>
+                <select class="form-control" id="verticalReference" name="verticalReference" ng-model="platform.position.verticalReference" ng-options="opt for opt in verticalReferences" required placeholder=""></select>
+                <p class="help-block" ng-if="platformForm.verticalReference.$error.required">The vertical reference is required</p>
+            </div>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="bottomDepth">Bottom depth</label>
+                <input type="text" class="form-control" id="bottomDepth" name="bottomDepth" ng-model="platform.bottomDepth" placeholder="Meters below sea level" />
+            </div>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="principalInvestigatorName">Principal Investigator Name</label>
+                <input type="text" class="form-control" id="principalInvestigatorName" name="principalInvestigatorName" ng-model="platform.principalInvestigator.name" required placeholder="Observatory Principal Investigator Name" />
+                <p class="help-block" ng-if="platformForm.principalInvestigatorName.$error.required">The Principal Investigator Name is required</p>
+            </div>
+            
+            <div class="form-group" show-errors>
+                <label class="control-label" for="principalInvestigatorEmail">Principal Investigator Email</label>
+                <input type="email" class="form-control" id="principalInvestigatorEmail" name="principalInvestigatorEmail" ng-model="platform.principalInvestigator.email" required placeholder="Observatory Principal Investigator Email" />
+                <p class="help-block" ng-if="platformForm.principalInvestigatorEmail.$error.required">The Principal Investigator Email is required</p>
+                <p class="help-block" ng-if="platformForm.principalInvestigatorEmail.$error.email">The Principal Investigator Email address is invalid</p>
+            </div>
+            
+            <div class="col-10 pull-right">
+                <button class="btn btn-primary" ng-click="validatePlatform()">Next</button>
+                <!-- <button class="btn btn-link" ng-click="reset()">Reset</button> -->
+            </div>
+        </form>
+    </div>
+    
+    <!-- EVENTS TAB -->
+    <div id="events" ng-show="isTabActive(1)" class="tab-pane fade in active">
+        <!-- <form name="eventsForm" novalidate> -->
+        <form name="eventsForm">
+            
+            <div class="form-group">
+                <label class="control-label col-xs-6">Date</label>
+                <label class="control-label col-xs-6">Description</label>
+            </div>
+            
+            <div class="form-group">
+                <button class="btn btn-xs btn-secondary" ng-click="addEvent()"><span class="glyphicon glyphicon-plus-sign"></span></button>
+            </div>
+            
+            <!-- -->
+            <!-- <div class="form-group row" ng-repeat="event in platform.events" show-errors> -->
+            <div class="form-group row" ng-repeat="event in platform.events">
+                <div class="col-xs-4">
+                    <input type="text" class="form-control" id="event_date_{{$index}}" name="event_date_{{$index}}" ng-model="event.date" required placeholder="Event date"></input>
+                </div>
+                <div class="col-xs-7">
+                    <textarea class="form-control col-xs-6" id="event_description_{{$index}}" name="event_description_{{$index}}" ng-model="event.description" required placeholder="Event description"></textarea>
+                </div>
+                <div class="col-xs-1">
+                    <button class="btn btn-xs btn-danger" ng-click="deleteEvent($index)"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+                <p class="help-block" ng-if="eventsForm.event_date_$index.$error.required">Date is required</p>
+                <p class="help-block" ng-if="eventsForm.event_description_$index.$error.required">Description is required</p>                                    
+            </div>
+            <!-- -->
+            
+            <!-- --
+            <div class="form-group row" ng-repeat="event in platform.events">
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" id="event_date_{{$index}}" name="event_date_{{$index}}" ng-model="event.date" required placeholder="Event date"></input>
+                </div>
+                <div class="col-xs-6">
+                    <textarea class="form-control col-xs-6" id="event_description_{{$index}}" name="event_description_{{$index}}" ng-model="event.description" required placeholder="Event description"></textarea>
+                </div>
+            </div>
+            <!-- -->
+        
+            <div class="col-10 pull-right">
+                <button class="btn btn-link" ng-click="selectTab(0)">Previous</button>
+                <button class="btn btn-primary" ng-click="validateEvents()">Next</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- INSTRUMENTS TAB -->
+    <div id="instruments" ng-show="isTabActive(2)" class="tab-pane fade in active">
+        <form name="instrumentsForm" novalidate>
+            <div class="col-10 pull-right">
+                <button class="btn btn-link" ng-click="selectTab(1)">Previous</button>
+                <button class="btn btn-primary" ng-click="savePlatform()"><span class="glyphicon glyphicon-save"></span>Save</button>
+                <button class="btn btn-secondary" ng-click="exportPlatform()"><span class="glyphicon glyphicon-export"></span>Export</button>
+            </div>
+        </form>
+    </div>
+
+</div>

@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sml:PhysicalSystem gml:id="top"
+    xmlns:sml="http://www.opengis.net/sensorml/2.0"
+    xmlns:swe="http://www.opengis.net/swe/2.0"
+    xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:gco="http://www.isotc211.org/2005/gco"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xsi:schemaLocation="http://www.opengis.net/sensorml/2.0 http://schemas.opengis.net/sensorML/2.0/sensorML.xsd">
+    
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!--              Observatory description              -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->     
+  
+    <!-- optional -->
+    <gml:description>
+        {{observatoryDescription}}
+    </gml:description>
+    <!-- mandatory -->
+    <gml:name>{{observatoryName}}</gml:name>
+ 
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!--       Keywords                                   -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- optional -->
+    <sml:keywords>
+        <sml:KeywordList>
+            <sml:keyword>Oceanography</sml:keyword>
+            <sml:keyword>Meteorology</sml:keyword>
+            <sml:keyword>Observatory</sml:keyword>
+            <sml:keyword>Wind speed</sml:keyword>
+            <sml:keyword>Currents</sml:keyword>
+        </sml:KeywordList>
+    </sml:keywords>
+    <!-- mandatory -->
+    <sml:validTime>
+        <gml:TimePeriod gml:id="descriptionValidTime">
+            <gml:beginPosition>{{beginTime}}</gml:beginPosition>
+            <gml:endPosition>{{endTime}}</gml:endPosition>
+        </gml:TimePeriod>
+    </sml:validTime>
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!--                  System identification              -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    
+    <sml:identification>
+        <sml:IdentifierList>
+               <sml:identifier>
+                <!-- mandatory, automated -->
+                <sml:Term definition="http://www.ifremer.fr/tematres/vocab/index.php?tema=66">
+                    <sml:label>uuid</sml:label>
+                    <sml:value>{{uuid}}</sml:value>
+                </sml:Term>                   
+               </sml:identifier> 
+            <!-- mandatory for open ocean platforms -->
+            <sml:identifier>
+                <sml:Term definition="http://www.ifremer.fr/tematres/vocab/index.php?tema=47">
+                    <sml:label>wmoPlatformNumber</sml:label>
+                    <sml:value>{{wmoPlatformNumber}}</sml:value>
+                </sml:Term>                   
+            </sml:identifier> 
+            <!-- optional-->
+                <sml:identifier>
+                    <sml:Term definition="http://www.ifremer.fr/tematres/vocab/index.php?tema=127">
+                        <sml:label>GEOSSId</sml:label>
+                        <sml:codeSpace xlink:href="http://geossregistries.info/geosspub/resource_search.jsp#searchResult"></sml:codeSpace>
+                        <sml:value>http://geossregistries.info/geosspub/resource_details_ns.jsp?compId=urn:geoss:csr:resource:urn:uuid:c6782ae2-b941-be80-2879-6cf025c0a26d</sml:value>
+                    </sml:Term>                   
+                </sml:identifier>                    
+        </sml:IdentifierList>
+    </sml:identification>
+    
+    <sml:classification>
+        <sml:ClassifierList>
+            <!-- mandatory -->
+            <sml:classifier>
+                <sml:Term definition="http://www.ifremer.fr/tematres/vocab/index.php?tema=129">
+                    <sml:label>verticalReference</sml:label>
+                    <sml:codeSpace xlink:href="http://vocab.nerc.ac.uk/collection/L11/current/D08/"/>
+                    <sml:value>{{position.verticalReference}}</sml:value>
+                </sml:Term>
+            </sml:classifier>
+        </sml:ClassifierList>        
+    </sml:classification>
+    
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!--                  Contacts                        -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <sml:contacts>
+        <sml:ContactList>
+            <sml:contact>
+                <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName>
+                        <gco:CharacterString>HCMR</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:onlineResource xlink:href="http://www.hcmr.gr/en/"></gmd:onlineResource>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role><gmd:CI_RoleCode codeList="http://www.ifremer.fr/tematres/vocab/index.php?tema=67" codeListValue="owner"></gmd:CI_RoleCode></gmd:role>
+                </gmd:CI_ResponsibleParty>
+            </sml:contact>
+            <sml:contact>
+                <gmd:CI_ResponsibleParty>
+                    <gmd:individualName>
+                        <gco:CharacterString>{{piName}}</gco:CharacterString>
+                    </gmd:individualName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:address>
+                                <gmd:CI_Address>
+                                    <gmd:electronicMailAddress><gco:CharacterString>{{piEmail}}</gco:CharacterString></gmd:electronicMailAddress>
+                                </gmd:CI_Address>
+                            </gmd:address>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role><gmd:CI_RoleCode codeList="http://www.ifremer.fr/tematres/vocab/index.php?tema=67" codeListValue="principal investigator"></gmd:CI_RoleCode></gmd:role>
+                </gmd:CI_ResponsibleParty>
+            </sml:contact>
+        </sml:ContactList>
+    </sml:contacts>
+    
+   <sml:documentation>
+       <sml:DocumentList>
+           <sml:document>
+               <gmd:CI_OnlineResource>
+                   <gmd:linkage><gmd:URL>http://www.eurosites.info/pylos.php</gmd:URL></gmd:linkage>
+                   <gmd:name>
+                       <gco:CharacterString>about</gco:CharacterString>
+                   </gmd:name>
+                   <gmd:description>
+                       <gco:CharacterString>platform sheet</gco:CharacterString>
+                   </gmd:description>
+                   <gmd:function><gmd:CI_OnLineFunctionCode codeList="http://www.ifremer.fr/tematres/vocab/index.php?tema=99" codeListValue="about"></gmd:CI_OnLineFunctionCode></gmd:function>
+               </gmd:CI_OnlineResource>
+           </sml:document>
+           <sml:document>
+               <gmd:CI_OnlineResource>
+                   <gmd:linkage>
+                       <gmd:URL>{{observatoryPicture}}</gmd:URL>
+                   </gmd:linkage>
+                   <gmd:name>
+                       <gco:CharacterString>pylos2.png</gco:CharacterString>
+                   </gmd:name>
+                   <gmd:description>
+                       <gco:CharacterString>pylos2.png</gco:CharacterString>
+                   </gmd:description>
+                   <gmd:function><gmd:CI_OnLineFunctionCode codeList="http://www.ifremer.fr/tematres/vocab/index.php?tema=99" codeListValue="quicklook"></gmd:CI_OnLineFunctionCode></gmd:function>
+               </gmd:CI_OnlineResource>                             
+           </sml:document>
+       </sml:DocumentList>              
+   </sml:documentation>
+    
+    <sml:history>
+        <sml:EventList>
+            <!---#################################################################################-->
+            <!-- Event may be optionnally typed according to the list available at:               -->
+            <!-- http://www.ifremer.fr/tematres/vocab/index.php?tema=87&/system-event             -->
+            <!-- when it is typed, the reference is stored in @definition                         -->
+            <!-- the related label is used in attribute @gml:id                                   -->
+            <!---#################################################################################-->
+            {{#events}}
+            <sml:event>
+                <sml:Event{{#definition}} definition="{{definition}}"{{/definition}}>
+                    <swe:description>{{description}}</swe:description>
+                    <sml:time>
+                        <gml:TimeInstant gml:id="{{id}}">
+                            <gml:timePosition>{{date}}</gml:timePosition>
+                        </gml:TimeInstant>
+                    </sml:time>                
+                </sml:Event>
+            </sml:event>
+            {{/events}}
+        </sml:EventList>        
+    </sml:history>
+    
+    <sml:configuration>
+        <sml:Settings>
+            <sml:setValue ref="sea_bottom_depth">{{bottomDepth}}</sml:setValue>
+        </sml:Settings>        
+    </sml:configuration>
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- 					Outputs 					                                                                        -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- list of actually available quantities in (as an example) the data a file:                                              -->
+    <!-- /home/coriolis_exp/spool/co01/co0134/co013407/co01340701/monthly/mooring/201410/MO_201410_TS_MO_61277.nc               -->
+    <!-- from outside IFREMER (login myocean):                                                                                  -->                
+    <!--ftp://vftp1.ifremer.fr/Core/INSITU_GLO_NRT_OBSERVATIONS_013_030/monthly/mooring/201410/MO_201410_TS_MO_61277.nc         -->
+    <!--The quantities are named after the netcdf variable name (PSAL, TEMP, ...)                                               -->
+    <!--CF standard names used as reference because it is close to the original description in data file.                       -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <sml:outputs>
+        <sml:OutputList>
+            <sml:output name="TIME" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0115/"/>
+            <sml:output name="TIME_QC" xlink:href=""/>
+            <sml:output name="LATITUDE" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0600/"/>
+            <sml:output name="LONGITUDE" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0554/"/>
+            <sml:output name="POSITION_QC" xlink:href=""/>
+            <sml:output name="GPS_LATITUDE" xlink:href="MISSINGMISSING"/>
+            <sml:output name="GPS_LONGITUDE" xlink:href="MISSINGMISSING"/>
+            <sml:output name="GPS_POSITION_QC" xlink:href=""/>
+            <sml:output name="DEPH" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0721/"/>
+            <sml:output name="DEPH_QC" xlink:href=""/>
+            <sml:output name="DEPH_DM" xlink:href=""/>
+            <sml:output name="PRES" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0330/"/>
+            <sml:output name="PRES_QC" xlink:href=""/>
+            <sml:output name="PRES_DM" xlink:href=""/>
+            <sml:output name="TEMP" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0335/"/>
+            <sml:output name="TEMP_QC" xlink:href=""/>
+            <sml:output name="TEMP_DM" xlink:href=""/>
+            <sml:output name="PSAL" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/IADIHDIJ/"/>
+            <sml:output name="PSAL_QC" xlink:href=""/>
+            <sml:output name="PSAL_DM" xlink:href=""/>
+            <sml:output name="HCSP" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0334/"/>
+            <sml:output name="HCSP_QC" xlink:href=""/>
+            <sml:output name="HCSH_DM" xlink:href=""/>
+            <sml:output name="HCDT" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0727/"/>
+            <sml:output name="HCDT_QC" xlink:href=""/>
+            <sml:output name="HCDT_DM" xlink:href=""/>
+            <sml:output name="DOX1" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CF12N801/"/>
+            <sml:output name="DOX1_QC" xlink:href=""/>
+            <sml:output name="DOX1_DM" xlink:href=""/>
+            <sml:output name="CPHL" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CF12S21/"/>
+            <sml:output name="CPHL_QC" xlink:href=""/>
+            <sml:output name="CPHL_DM" xlink:href=""/>
+            <sml:output name="ATMS" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0022/"/>
+            <sml:output name="ATMS_QC" xlink:href=""/>
+            <sml:output name="ATMS_DM" xlink:href=""/>
+            <sml:output name="DRYT" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0023/"/>
+            <sml:output name="DRYT_QC" xlink:href=""/>
+            <sml:output name="DRYT_DM" xlink:href=""/>
+            <sml:output name="WSPD" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0038/"/>
+            <sml:output name="WSPD_QC" xlink:href=""/>
+            <sml:output name="WSPD_DM" xlink:href=""/>
+            <sml:output name="GSPD" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0039/"/>
+            <sml:output name="GSPD_QC" xlink:href=""/>
+            <sml:output name="GSPD_DM" xlink:href=""/>
+            <sml:output name="WDIR" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0036/"/>
+            <sml:output name="WDIR_QC" xlink:href=""/>
+            <sml:output name="WDIR_DM" xlink:href=""/>
+            <sml:output name="VTZA" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0388/"/>
+            <sml:output name="VTZA_QC" xlink:href=""/>
+            <sml:output name="VTZA_DM" xlink:href=""/>
+            <sml:output name="VTPK" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFV13N31/"/>
+            <sml:output name="VTPK_QC" xlink:href=""/>
+            <sml:output name="VTPK_DM" xlink:href=""/>
+            <sml:output name="VTDH" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0385/"/>
+            <sml:output name="VTDH_QC" xlink:href=""/>
+            <sml:output name="VTDH_DM" xlink:href=""/>
+            <sml:output name="VDIR" xlink:href="http://vocab.nerc.ac.uk/collection/P07/current/CFSN0384/"/>
+            <sml:output name="VDIR_QC" xlink:href=""/>
+            <sml:output name="VDIR_DM" xlink:href=""/>
+            
+            
+            <!-- description proposed by Andree -->
+            <!--
+            <sml:output name="Wind_speed" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/EWSB"/>
+            <sml:output name="Wind_direction" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/EWSB"/>
+            <sml:output name="Air_pressure" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/CAPH"/>
+            <sml:output name="Air_temperature" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/CDTA"/>
+            <sml:output name="Wave_height" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/WVST"/>
+            <sml:output name="Wave_direction" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/GWDR"/>
+            <sml:output name="Sea_surface_temperature" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/PSST"/>
+            <sml:output name="Currents" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/RFVL"/>
+            <sml:output name="CT" xlink:href="http://vocab.ndg.nerc.ac.uk/term/XXXX/current/XXXX"/>
+            <sml:output name="CH4" xlink:href="http://vocab.ndg.nerc.ac.uk/term/XXXX/current/XXXX"/>
+            <sml:output name="CO2" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/TCO2"/>
+            <sml:output name="Turbidity" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/TSED"/>
+            <sml:output name="pH" xlink:href="http://vocab.ndg.nerc.ac.uk/term/XXXX/current/XXXX"/>
+            <sml:output name="Oxygen" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/DOXY"/>
+            <sml:output name="Pressure" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/AHGT"/>
+            <sml:output name="Salinity" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/AHGT"/>
+            <sml:output name="Water_temperature" xlink:href="http://vocab.ndg.nerc.ac.uk/term/P021/current/TEMP"/>
+            -->
+        </sml:OutputList>
+    </sml:outputs>
+
+    <sml:localReferenceFrame>
+        <sml:SpatialFrame id="LOCAL_FRAME">
+            <sml:origin>Z origin is at sea surface</sml:origin>
+            <sml:axis name="Z"></sml:axis>
+        </sml:SpatialFrame>
+    </sml:localReferenceFrame>
+    
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- 	          System location	                  -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <sml:position>        
+        <gml:Point gml:id="stationLocation" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:coordinates>{{position.latitude}} {{position.longitude}}</gml:coordinates>
+        </gml:Point>        
+    </sml:position>
+    
+    
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!--       Observatory components:                     -->
+    <!-- 	   List of instruments or sensors	          -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <sml:components>
+        <sml:ComponentList>
+            <!-- @name:  re-use name of the sensor from sensor sensorML                         -->
+            <!-- @href : use uri of the hosted sensor as submitted to the data ingestion system -->
+            {{#instruments}}
+            <sml:component name="{{name}}" xlink:href="{{url}}"/>
+            {{/instruments}}
+        </sml:ComponentList>
+    </sml:components>
+    
+   
+
+</sml:PhysicalSystem>
