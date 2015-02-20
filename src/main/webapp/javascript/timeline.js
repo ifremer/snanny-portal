@@ -188,7 +188,9 @@ function accumulateData(data) {
 	data.forEach(function(observation) {
 		var time = observation.get('time');
 		rising.push(time.begin);
-		falling.push(time.end);
+		if (time.end) {
+			falling.push(time.end);
+		}
 	});
 	
 	rising.sort();
@@ -236,12 +238,14 @@ function accumulateData(data) {
 	events.forEach(function(event) {
 		ret.push({ "event": +event, "value": +accumulated[event] });
 	});
-
-	/*
-	ret.forEach(function(each) {
-		console.log(each.event + " " + each.value);
-	});
-	*/
 	
+	// if last value is not 0, set now to this value
+	if (ret.length > 0) {
+		var lastValue = ret[ret.length - 1].value;
+		if (lastValue != 0) {
+			ret.push({ "event": new Date().getTime(), "value": lastValue });
+		}
+	}
+
 	return ret;
 }

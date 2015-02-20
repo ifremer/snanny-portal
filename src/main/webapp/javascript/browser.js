@@ -12,9 +12,21 @@ function showObservations(observations) {
 
 		// Iterate over each observation, to display informations
 		observations.forEach(function(observation) {
-			observationsContainer.innerHTML += "<li>" + observation.get('id') + " " + observation.get('author') + " " + observation.get('description')
-					+ " from " + new Date(observation.get('time').begin).toLocaleString() + " to "
-					+ new Date(observation.get('time').end).toLocaleString() + " " + observation.get('result') + " " + observation.get('bbox') + "</li>";
+			observationsContainer.innerHTML += "<li>" 
+//					+ "<a href='javascript:showDetail(\"" + observation.get('id') + "\", \"visualisations-" + observation.get('id') + "\", \"" + observation.get('description') + "\");'>" 
+					+ "<a href='/api/rest/observations/" + observation.get('id') + "/results' target='_blank'>" 
+//					+ observation.get('id') 
+					+ observation.get('description')
+					+ " <i>(" + observation.get('author') + ")</i>" 
+					+ "</a>" + " " 
+//					+ observation.get('author') + " " 
+//					+ observation.get('description')
+//					+ " from " + new Date(observation.get('time').begin).toLocaleString() + " to "
+//					+ new Date(observation.get('time').end).toLocaleString() + " " 
+//					+ observation.get('result') + " " 
+//					+ observation.get('bbox')
+					+ "<div class='visualisation' id='visualisations-" + observation.get('id') + "' style='display: none;'></div>"
+					+ "</li>";
 		});
 
 		observationsContainer.innerHTML += "</ul>";
@@ -36,8 +48,24 @@ function filterObservationsByPosition() {
 	
 	if (selectionFeature.getGeometry() != undefined && selectionFeature.getGeometry() != null) {
 
-		observationsSource.forEachFeatureIntersectingExtent(selectionFeature.getGeometry().getExtent(), function(observation) {
-			observations.push(observation);
+		filter = function(observation) {
+			// Observation without bounding box
+			if (observation.getProperties().bbox == undefined || observation.getProperties().bbox.length == 0) {
+				return true;
+			}
+			
+			var geometry = observation.getGeometry();
+			if (geometry.intersectsExtent(selectionFeature.getGeometry().getExtent())) {
+				return true;
+			}
+			
+			return false;
+		};
+		
+		observationsSource.forEachFeature(function(observation) {
+			if (filter(observation)) {
+				observations.push(observation);
+			}
 		});
 
 	} else {
@@ -64,6 +92,9 @@ function filterObservationsByTime(observations) {
 		filter = function(observation) {
 			var observationBegin = observation.get('time').begin;
 			var observationEnd = observation.get('time').end;
+			if (observationEnd == undefined) {
+				observationEnd = new Date().getTime();
+			}
 			var selectionStart = (+timelineSelection.extent()[0]);
 			var selectionEnd = (+timelineSelection.extent()[1]);
 			
@@ -127,5 +158,115 @@ function loadObservations(observationsURL) {
 		
 		stopLoading();
 		
+	});
+}
+
+function showDetail(observationID, container, title) {
+//	showDetailEnvision(observationID, container, title);
+//	showDetailNVD3(observationID, container, title);
+	showDetailDygraph(observationID, container, title);
+}
+
+function showDetailEnvision(observationID, container, title) {
+	container = document.getElementById(container);
+	d3.json('/api/rest/observations/' + observationID + '/results.json', function(data) {
+		var options = {
+				container : container,
+				data : {
+					detail : data[0].values,
+					summary : data[0].values
+				},
+	//			An initial selection
+//				selection : {
+//					data : {
+//						x : {
+//							min : 100,
+//							max : 200
+//						}
+//					}
+//				}
+		};
+	
+		new envision.templates.TimeSeries(options);
+	});
+}
+
+var graphs = [];
+var graphsSync = null;
+
+function showDetailDygraph(observationID, container, title) {
+	
+	document.getElementById(container).style.cssText = '';
+	graphs.push(new Dygraph(container, '/api/rest/observations/' + observationID + '/results', {
+	  legend: 'always',
+//      errorBars: true,
+//	  title: title,
+//	  showRoller: true,
+//	  rollPeriod: 14,
+//	  customBars: true,
+//	  ylabel: 'Temperature (F)', // FIXME: find right unit
+	}));
+	
+	if (graphsSync != null) {
+		graphsSync.detach();
+	}
+	if (graphs.length >= 2) {
+		graphsSync = Dygraph.synchronize(graphs, {
+			 selection: true,
+			 zoom: false,
+			 range: false
+		});
+	}
+	
+}
+
+function showDetailNVD3(observationID, container, title) {
+	d3.json('/api/rest/observations/' + observationID + '/results.json', function(data) {
+		
+		document.getElementById(container).style.cssText = '';
+		
+		data.forEach(function(each, index) {
+			var eachContainer = container + '-' + index;
+			nv.addGraph(function() {
+				//var chart = nv.models.cumulativeLineChart()
+				var chart = nv.models.lineChart()
+				.x(function(d) { return d[0] })
+				.y(function(d) { return d[1] })
+				.color(d3.scale.category10().range())
+				.useInteractiveGuideline(true)
+				;
+				
+				chart.xAxis
+				.axisLabel('Time')
+				.tickFormat(function(d) {
+					return d3.time.format('%x')(new Date(d))
+				})
+				;
+				
+				chart.yAxis
+				.axisLabel(each.key)				// FIXME: find unit
+				.tickFormat(d3.format(',.1f'))	// FIXME: find unit
+				;
+				
+				chart.y2Axis
+//					.axisLabel(each.key)				// FIXME: find unit
+				.tickFormat(d3.format(',.1f'))	// FIXME: find unit
+				;
+				
+				if (data == null || data.length == 0) {
+					d3.select('#' + eachContainer).html("");
+				}
+				
+				d3.select('#' + eachContainer)
+				.datum([ each ])
+				.transition().duration(500)
+				.call(chart);
+				
+				//TODO: Figure out a good way to do this automatically
+				nv.utils.windowResize(chart.update);
+				
+				return chart;
+			});
+		});
 	});
 }
