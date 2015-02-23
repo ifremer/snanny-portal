@@ -1,18 +1,19 @@
 function showObservations(observations) {
-	var observationsContainer = document.getElementById('observations');
+	var observationsContainer = jQuery('#observations');
 
 	// Clear "observations" panel
-	observationsContainer.innerHTML = "";
+	observationsContainer.html("");
 
 	if (observations != undefined && observations.length > 0) {
 		// Display header with observation's count
-		observationsContainer.innerHTML += "<h3>" + observations.length + " observation" + (observations.length > 1 ? "s" : "") + "</h3>";
+		observationsContainer.append(jQuery("<h3>" + observations.length + " observation" + (observations.length > 1 ? "s" : "") + "</h3>"));
 
-		observationsContainer.innerHTML += "<ul>";
+		var observationsList = jQuery("<ul></ul>");
+		observationsContainer.append(observationsList);
 
 		// Iterate over each observation, to display informations
 		observations.forEach(function(observation) {
-			observationsContainer.innerHTML += "<li>" 
+			observationsList.append(jQuery("<li>" 
 //					+ "<a href='javascript:showDetail(\"" + observation.get('id') + "\", \"visualisations-" + observation.get('id') + "\", \"" + observation.get('description') + "\");'>" 
 					+ "<a href='/api/rest/observations/" + observation.get('id') + "/results' target='_blank'>" 
 //					+ observation.get('id') 
@@ -26,10 +27,10 @@ function showObservations(observations) {
 //					+ observation.get('result') + " " 
 //					+ observation.get('bbox')
 					+ "<div class='visualisation' id='visualisations-" + observation.get('id') + "' style='display: none;'></div>"
-					+ "</li>";
+					+ "</li>"
+			));
 		});
 
-		observationsContainer.innerHTML += "</ul>";
 	}
 }
 
@@ -157,6 +158,7 @@ function loadObservations(observationsURL) {
 		initializeTimeline(observations);
 		
 		stopLoading();
+		
 		
 	});
 }
