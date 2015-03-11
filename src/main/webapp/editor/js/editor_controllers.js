@@ -4,7 +4,8 @@ var controllers = angular.module('sensornanny.editor.controllers', []);
 
 controllers.controller('MooredPlatformCtrl', function ($scope, $routeParams, $location, $http, editorService) {
 
-  $scope.mooredPlatformTemplate = 'forms/mooredplatform_platform_handlebars.xml';
+//  $scope.mooredPlatformTemplate = 'forms/mooredplatform_platform_handlebars.xml';
+  $scope.mooredPlatformTemplate = 'forms/mooredplatform_platform_mustache.xml';
 
   $scope.tabs = [
     {title: "General observatory", active: true, disabled: false},
