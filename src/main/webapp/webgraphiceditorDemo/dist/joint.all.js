@@ -16816,7 +16816,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 
 // A tiny library for making your live easier when dealing with SVG.
 
-// Copyright © 2012 - 2014 client IO (http://client.io)
+// Copyright Â© 2012 - 2014 client IO (http://client.io)
 
 (function(root, factory) {
 
@@ -18171,7 +18171,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
 	        // 3P1 = 2P0 + P3
 	        firstControlPoints[0] = point((2 * knots[0].x + knots[1].x) / 3,
 	                                      (2 * knots[0].y + knots[1].y) / 3);
-	        // P2 = 2P1 – P0
+	        // P2 = 2P1 â€“ P0
 	        secondControlPoints[0] = point(2 * firstControlPoints[0].x - knots[0].x,
 	                                       2 * firstControlPoints[0].y - knots[0].y);
 	        return [firstControlPoints, secondControlPoints];
@@ -18240,7 +18240,7 @@ if ( typeof window === "object" && typeof window.document === "object" ) {
         },
 
         // Solves an inversion problem -- Given the (x, y) coordinates of a point which lies on
-        // a parametric curve x = x(t)/w(t), y = y(t)/w(t), ﬁnd the parameter value t
+        // a parametric curve x = x(t)/w(t), y = y(t)/w(t), ï¬�nd the parameter value t
         // which corresponds to that point.
         // @param control points (start, control start, control end, end)
         // @return a function accepts a point and returns t.
@@ -19351,7 +19351,7 @@ var joint = {
 
             prefix: function(value, precision) {
 
-                var prefixes = _.map(['y','z','a','f','p','n','µ','m','','k','M','G','T','P','E','Z','Y'], function(d, i) {
+                var prefixes = _.map(['y','z','a','f','p','n','Âµ','m','','k','M','G','T','P','E','Z','Y'], function(d, i) {
                     var k = Math.pow(10, abs(8 - i) * 3);
                     return {
                         scale: i > 8 ? function(d) { return d / k; } : function(d) { return d * k; },
@@ -21741,6 +21741,81 @@ joint.dia.LinkView = joint.dia.CellView.extend({
 	this.listenTo(this.model, 'change:labels change:labelMarkup', function() {
             this.renderLabels().updateLabelPositions();
         });
+	
+	this.listenTo(this.model, 'change:linkType', function(cell,type) {
+		 var attrs;
+		
+		    switch (type) {
+
+		    case 'wired':
+		    	
+		    	//TODO add ID to ref
+		    	cell._previousAttributes.past=2;
+		        attrs = {
+		    		'.connection': { 'stroke-dasharray': '0' }
+		        };
+		       
+		       
+
+		        break;
+
+		    case 'remote data transmission':
+		     
+		        
+		        
+		        
+		        console.log(cell._previousAttributes);
+		    	if(cell._previousAttributes.past==undefined || cell._previousAttributes.past==2 ){
+		    	
+		    		cell._previousAttributes.past=1;
+		    
+		        attrs = {
+		    		'.connection': { 'stroke-dasharray': '5,5' }
+		        };
+		     
+		        
+		           var sourceId = cell.get('source').id
+		         , targetId =  cell.get('target').id;
+
+		    
+		       if (sourceId && targetId) {
+		    	   console.log(cell);
+		    	   		
+		   		console.log("removeLIIINK");
+		   		
+		   		if(this.paper.model.getCell(targetId)!=undefined)
+		   		console.log(this.paper.model.getCell(targetId).get('ref').splice(this.paper.model.getCell(targetId).get('ref').indexOf(sourceId),1));
+		   		console.log(cell);
+		   		}
+		       
+		       console.log(cell.changed.linktype);
+		      
+		    	}
+		        break;
+
+		    		  
+
+		
+
+		    default:
+
+		        throw "BPMN: Unknown Flow Type: " + type;
+		    }
+
+		    cell.attr(attrs);
+		    console.log(cell.changed);
+		    console.log("*******************************************************");
+		    });
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
         this.listenTo(this.model, 'change:vertices change:vertexMarkup', function(cell, changed, opt) {
             this.renderVertexMarkers();
             // If the vertices have been changed by a translation we do update only if the link was
@@ -34097,6 +34172,7 @@ joint.ui.Inspector = Backbone.View.extend({
         });
 
         var $input = $(inputHtml);
+      
         $field.append($input);
 
         // `options.attrs` allows for setting arbitrary attributes on the generated HTML.
@@ -34112,6 +34188,8 @@ joint.ui.Inspector = Backbone.View.extend({
                 var $listItem = $(joint.templates.inspector['list-item.html']({
                     index: idx
                 }));
+                console.log("a************************************************************************************************");
+                console.log($listItem);
 
                 this.renderTemplate($listItem, options.item, path + '/' + idx);
 
@@ -34167,11 +34245,11 @@ joint.ui.Inspector = Backbone.View.extend({
 
         var $inputX = this._byPath['position/x'];
         var $inputY = this._byPath['position/y'];
-
         var position = this.getModel().get('position');
         
         if ($inputX) { $inputX.val(position.x); }
         if ($inputY) { $inputY.val(position.y); }
+       
     },
     updateInputSize: function() {
 
@@ -34296,14 +34374,112 @@ joint.ui.Inspector = Backbone.View.extend({
     },
 
     updateCell: function($attr, attrPath) {
+    //set UUID in UUID cell in the inspector
+    	
+    	
+    	
+        /*
+       
+        
+        var $attribute =  $('button.btn-list-add').closest('[data-attribute]');
+         var path = 'custom/output';
+        var options = this.getOptions($attribute);
+        console.log("a************************************************************************************************");
+        console.log($('button.btn-list-add'));
+        console.log($attribute);
+        console.log(path);
+        console.log(options);
+        //btn list add
+        // Take the index of the last list item and increase it by one.
+        var $lastListItem = $attribute.children('.list-items').children('.list-item').last();
+        
+        var lastIndex = $lastListItem.length === 0 ? -1 : parseInt($lastListItem.attr('data-index'), 10);
+        var index = lastIndex + 1;
+        
+        var $listItem = $(joint.templates.inspector['list-item.html']({ index: index }));
+        console.log("b************************************************************************************************");
+        console.log($lastListItem);
+        console.log(lastIndex);
+        console.log(index);
+        console.log($listItem);
+            
+        this.renderTemplate($listItem, options.item, path + '/' + index);
 
+        $('button.btn-list-add').parent().children('.list-items').append($listItem);
+        console.log("c************************************************************************************************");
+        console.log($('button.btn-list-add').parent().children('.list-items'));
+        
+        /*   
+        console.log("e**********************************************************************************");
+        console.log( $('btn-list-add'));*/
+    	/* var link = this.command.data.attributes || this.graph.getCell(command.data.id).toJSON();
+         
+         console.log(link.type);
+         if(link.type=='link')
+      	  {
+      	   
+         var sourceId = link.source.id
+           , targetId = link.target.id;
+
+         // source and target are both cells
+         if (sourceId && targetId) {
+
+     	// deny loops if settings don't allow them
+     	if (!loops && sourceId === targetId) {
+     	    return next('Loop are not allowed');
+     	}
+     	
+     	//find source and target type attribute (parameter "type" in settings)
+     	var sourceType =  this.graph.getCell(sourceId).get(type), targetType =  this.graph.getCell(targetId).get(type);
+     	if(sourceType=='basic.Sensor' && targetType=='basic.Platform')
+     		{
+     		var sensorsRef = [];
+     		console.log(this.graph.getCell(targetId).get('id'));
+     		sensorsRef.push(this.graph.getCell(targetId).get('id'));
+     	 console.log(this.graph.getCell(targetId).set('sensorsRef',sensorsRef));
+     	 
+     	
+     	   
+     		}
+         }
+      	  }*/
         var cell = this.getModel();
-
+        
         var byPath = {};
 
         if ($attr) {
             // We are updating only one specific attribute
-            byPath[attrPath] = $attr;
+        	
+        	//console.log("-------"+attrPath);
+        	if(attrPath=="custom/classifier/0/name")
+        {
+        		$attr.on('focus', _.bind(function() { 
+        			
+        			var availableTags = [
+        		
+    	                             	"transmission mode",
+    	                             	"vertical Reference",
+    	                             	"deployment status",
+    	                             	"BASIC",
+    	                             	"Scheme"
+    	                             ];
+    	          $attr.autocomplete({
+    	                             	source: availableTags}); 
+          		
+    	        console.log("Autocomplete"+$attr); 	
+		}, this));
+        		$attr.on('focusout', _.bind(function() { 
+        		
+        		
+        		
+            this.updateCell($attr, attrPath);
+        		
+        		
+        		}, this));
+        	     	
+            
+        }
+        	byPath[attrPath] = $attr;
         } else {
             // No parameters given. We are updating all attributes
             byPath = this._byPath;
@@ -34436,23 +34612,69 @@ joint.ui.Inspector = Backbone.View.extend({
         var $attribute = $target.closest('[data-attribute]');
         var path = $attribute.attr('data-attribute');
         var options = this.getOptions($attribute);
-
+      //  console.log("a************************************************************************************************");
+       // console.log($target);
+       /* console.log($attribute);
+        console.log(path);
+        
+        console.log(options);*/
+        //btn list add
         // Take the index of the last list item and increase it by one.
         var $lastListItem = $attribute.children('.list-items').children('.list-item').last();
+        
         var lastIndex = $lastListItem.length === 0 ? -1 : parseInt($lastListItem.attr('data-index'), 10);
         var index = lastIndex + 1;
-
+        
         var $listItem = $(joint.templates.inspector['list-item.html']({ index: index }));
+     //   console.log("b************************************************************************************************");
+       // console.log("AAAAAAAAA"+$lastListItem);
+        // console.log("BBBBBBBBB"+lastIndex);
+        // console.log("CCCCCCCCCCC"+index);
+        // console.log("DDDDDDDDD"+$listItem);
         
         this.renderTemplate($listItem, options.item, path + '/' + index);
 
         $target.parent().children('.list-items').append($listItem);
+        console.log("c************************************************************************************************");
+        console.log($target.parent().children('.list-items'));
+        
         $listItem.find('input:first').focus();
 
         this.trigger('render');
         
+       
+       if(path=='custom/classifier')
+        	{
+        	var path='custom/classifier/'+index+'/name';
+          var $auto = this._byPath['custom/classifier/'+index+'/name'];
+           
+      	var availableTags = [
+      	           		
+"transmission mode",
+	"vertical Reference",
+	"deployment status",
+	"BASIC",
+	"Scheme"
+                          ];
+       $auto.autocomplete({
+                          	source: availableTags}); 
+		
+     console.log("azazazazazazutocomplete"+$auto); 
+     this.updateCell($auto,path);
+          
+      
+        
+         console.log("2");
+        	
+        	 
+        	
+  //  console.log("AddlistIteeeem"+$auto);
+        	
+        	
+        	}
+        
         if (this.options.live) {
-            this.updateCell();
+        	this.updateCell();
         }
     },
     
@@ -37583,7 +37805,7 @@ function crossCount(g) {
  * This function searches through a ranked and ordered graph and counts the
  * number of edges that cross. This algorithm is derived from:
  *
- *    W. Barth et al., Bilayer Cross Counting, JGAA, 8(2) 179–194 (2004)
+ *    W. Barth et al., Bilayer Cross Counting, JGAA, 8(2) 179â€“194 (2004)
  */
 function twoLayerCrossCount(g, layer1, layer2) {
   var indices = [];
@@ -37877,7 +38099,7 @@ function findViolatedConstraint(cg, nodeData) {
 var util = require('./util');
 
 /*
- * The algorithms here are based on Brandes and Köpf, "Fast and Simple
+ * The algorithms here are based on Brandes and KÃ¶pf, "Fast and Simple
  * Horizontal Coordinate Assignment".
  */
 module.exports = function() {
@@ -41243,7 +41465,7 @@ joint.layout.DirectedGraph = {
 
 // Resources:
 //      Efficient and High Quality Force-Directed Graph Drawing, Yifan Hu
-//      Simple Algorithms for Network Visualization: A Tutorial, Michael J. McGufﬁn
+//      Simple Algorithms for Network Visualization: A Tutorial, Michael J. McGufï¬�n
 //      Graph Drawing by Force-directed Placement, Thomas M. J. Fruchterman and Edward M. Reingold
 //      D3.js, http://d3js.org
 
@@ -41740,6 +41962,11 @@ joint.layout.TreeLayout = Backbone.Model.extend({
                 target: { id: id },
                 hidden: isParentCollapsed
             });
+            newLink.attr({
+                '.connection': { stroke: 'blue' }
+                
+            });
+            
             this.graph.addCell(newLink);
         }
 

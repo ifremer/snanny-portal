@@ -10,7 +10,14 @@ joint.shapes.basic.Sensor = joint.shapes.basic.Generic.extend({
         attrs: {
         	'text': { 'font-size': 14, text: '', 'text-anchor': 'middle', 'ref-x': .5, 'ref-dy': 20, ref: 'image', 'y-alignment': 'middle', fill: 'black', 'font-family': 'Arial, helvetica, sans-serif' }
         
-        }
+        },
+        ref :[]  ,
+        
+        uuid :[]
+        
+        
+            
+        
 
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -25,8 +32,12 @@ joint.shapes.basic.Boat = joint.shapes.basic.Generic.extend({
         size: { width: 60, height: 60 },
         attrs: {
         	'text': { 'font-size': 14, text: '', 'text-anchor': 'middle', 'ref-x': .5, 'ref-dy': 20, ref: 'image', 'y-alignment': 'middle', fill: 'black', 'font-family': 'Arial, helvetica, sans-serif' }
+        	
         
-        }
+        },
+        ref :[],
+        uuid :[]
+        
 
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
@@ -43,8 +54,11 @@ joint.shapes.basic.Platform = joint.shapes.basic.Generic.extend({
         attrs: {
         	'text': { 'font-size': 14, text: '', 'text-anchor': 'middle', 'ref-x': .5, 'ref-dy': 20, ref: 'image', 'y-alignment': 'middle', fill: 'black', 'font-family': 'Arial, helvetica, sans-serif' }
         
-        }
-
+        },
+      
+        ref :[],
+        
+        uuid :[]
     }, joint.shapes.basic.Generic.prototype.defaults)
 });
 /***************************************************************************************************************************/
@@ -63,29 +77,61 @@ var CommonInspectorInputs = {
 
 var CommonInspectorGroups = {
 
-    text: { label: 'Text', index: 2 },
-    presentation: { label: 'Presentation', index: 4 },
-    geometry: { label: 'Geometry', index: 3 },
-    data: { label: 'System description', index: 1 }
+    text: { label: 'Text', index: 6 },
+    presentation: { label: 'Presentation', index: 5 },
+    geometry: { label: 'Geometry', index: 4 },
+    data: { label: 'System description', index: 1 },
+    identifier: { label: 'identifier', index: 2 },
+    classifier: { label : 'other tags', index: 3}
+   
     
 };
 
 var SensorType = {
 		
+		 
+	
+	
 		 custom: { 
-			 	
-			 	output : { type :'list',item: {
+			 
+			 
+			 output : { type :'list',item: {
+                 type: 'object',
+                 properties: {
+                     name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the output channel' } } },                                   
+                     URI: { type: 'text', inlined: true, label: 'URI', index: 2, attrs: { label: { 'data-tooltip': 'identifier' } } }
+                         
+                     
+                 }
+             },  group: 'data', index: 1, label: 'Output'} ,
+             
+			 
+		
+			 
+			 			   	
+                
+                identifier : { type :'list',item: {
                     type: 'object',
                     properties: {
-                        name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': '' } } },                                   
-                        URI: { type: 'text', label: 'URI', index: 2, attrs: { label: { 'data-tooltip': '' } } }
+                        name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the unique identifier key' } } },                                   
+                        URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
                             
                         
                     }
-                },  group: 'data', index: 1, label: 'Output'} ,
-				Manufacturer: { type: 'text', group: 'data', index: 1, label: 'Manufacturer'},
-		    	Model : {type: 'text', group: 'data', index: 1, label: 'Model'}
-		    	
+                },  group: 'identifier', index: 1, label: 'Identifier'} ,
+                
+                classifier : { type :'list',item: {
+                    type: 'object',
+                    properties: {
+                        name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the proprety' } } },                                   
+                        URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
+                            
+                        
+                    }
+                },  group: 'classifier', index: 1, label: 'Other tags', attrs: { label: { 'data-tooltip': 'classifier' } }} ,
+                
+                               
+					    	
 		    }	
 		
 		
@@ -95,26 +141,45 @@ var SensorType = {
 
 var BoatType = {
 		
-		 custom: { 
-			 	
-			 	output : { type :'list',item: {
-                 type: 'object',
-                 properties: {
-                     name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': '' } } },                                   
-                     URI: { type: 'text', label: 'URI', index: 2, attrs: { label: { 'data-tooltip': '' } } }
-                         
-                     
-                 }
-             },  group: 'data', index: 1, label: 'Output'} ,
-				Manufacturer: { type: 'object', properties: {
-                    ID1: { type: 'text', label: 'ID1', index: 1, attrs: { label: { 'data-tooltip': '' } } },                                   
-                    ID2: { type: 'text', label: 'URI', index: 2, attrs: { label: { 'data-tooltip': '' } } }
+	
+	
+		custom: { 
+			
+			
+		 	
+		 	output : { type :'list',item: {
+                type: 'object',
+                properties: {
+                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the output channel' } } },                                   
+                    URI: { type: 'text', inlined: true, label: 'URI', index: 2, attrs: { label: { 'data-tooltip': 'identifier' } } }
                         
                     
-                }, group: 'data', index: 1, label: 'Manufacturer'},
-		    	Model : {type: 'text', group: 'data', index: 1, label: 'Model'}
-		    	
-		    }	
+                }
+            },  group: 'data', index: 1, label: 'Output'} ,
+            
+            identifier : { type :'list',item: {
+                type: 'object',
+                properties: {
+                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the unique identifier key' } } },                                   
+                    URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
+                        
+                    
+                }
+            },  group: 'identifier', index: 1, label: 'Identifier'} ,
+            
+            classifier : { type :'list',item: {
+                type: 'object',
+                properties: {
+                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the proprety' } } },                                   
+                    URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
+                        
+                    
+                }
+            },  group: 'classifier', index: 1, label: 'Other tags', attrs: { label: { 'data-tooltip': 'classifier' } }} ,
+            
+                           
+				    	
+	    }	
 		
 		
 		
@@ -123,22 +188,46 @@ var BoatType = {
 
 var PlatformType = {
 		
-		 custom: { 
-			 	
-			 	output : { type :'list',item: {
-                 type: 'object',
-                 properties: {
-                     name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': '' } } },                                   
-                     URI: { type: 'text', label: 'URI', index: 2, attrs: { label: { 'data-tooltip': '' } } }
-                         
-                     
-                 }
-             },  group: 'data', index: 1, label: 'Output'} ,
-				Manufacturer: { type: 'text', group: 'data', index: 1, label: 'Manufacturer'},
-		    	Model : {type: 'text', group: 'data', index: 1, label: 'Model'}
-		    	
-		    }	
 		
+		
+		custom: { 
+			
+			 
+			
+		 	
+		 	output : { type :'list',item: {
+                type: 'object',
+                properties: {
+                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the output channel' } } },                                   
+                    URI: { type: 'text', inlined: true, label: 'URI', index: 2, attrs: { label: { 'data-tooltip': 'identifier' } } }
+                        
+                    
+                }
+            },  group: 'data', index: 1, label: 'Output'} ,
+            
+            identifier : { type :'list',item: {
+                type: 'object',
+                properties: {
+                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the unique identifier key' } } },                                   
+                    URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
+                        
+                    
+                }
+            },  group: 'identifier', index: 1, label: 'Identifier'} ,
+            
+            classifier : { type :'list',item: {
+                type: 'object',
+                properties: {
+                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the proprety' } } },                                   
+                    URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
+                        
+                    
+                }
+            },  group: 'classifier', index: 1, label: 'Other tags', attrs: { label: { 'data-tooltip': 'classifier' } }} ,
+            
+                           
+				    	
+	    }	
 		
 		
 };
@@ -192,22 +281,25 @@ var InspectorDefs = {
         inputs: {
             attrs: {
                 '.connection': {
-                    'stroke-width': { type: 'range', min: 0, max: 50, defaultValue: 1, unit: 'px', group: 'connection', label: 'stroke width', index: 1 },
-                    'stroke': { type: 'color', group: 'connection', label: 'stroke color', index: 2 },
-                    'stroke-dasharray': { type: 'select', options: ['0', '1', '5,5', '5,10', '10,5', '5,1', '15,10,5,10,15'], group: 'connection', label: 'stroke dasharray', index: 3 }
-                },
+                    'stroke-width': { type: 'range', min: 0, max: 50, defaultValue: 1, unit: 'px', group: 'connection', label: 'stroke width', index: 2 },
+                    'stroke': { type: 'color', group: 'connection', label: 'stroke color', index: 3 },
+                     },
                 '.marker-source': {
                     transform: { type: 'range', min: 1, max: 15, unit: 'x scale', defaultValue: 'scale(1)', valueRegExp: '(scale\\()(.*)(\\))', group: 'marker-source', label: 'source arrowhead size', index: 1 },
-                    fill: { type: 'color', group: 'marker-source', label: 'soure arrowhead color', index: 2 }
+                    fill: { type: 'color', group: 'marker-source', label: 'soure arrowhead color', index: 5 }
                 },
                 '.marker-target': {
                     transform: { type: 'range', min: 1, max: 15, unit: 'x scale', defaultValue: 'scale(1)', valueRegExp: '(scale\\()(.*)(\\))', group: 'marker-target', label: 'target arrowhead size', index: 1 },
-                    fill: { type: 'color', group: 'marker-target', label: 'target arrowhead color', index: 2 }
+                    fill: { type: 'color', group: 'marker-target', label: 'target arrowhead color', index: 6 }
                 }
             },
-            smooth: { type: 'toggle', group: 'connection', index: 4 },
-            manhattan: { type: 'toggle', group: 'connection', index: 5 },
-            labels: {
+            smooth: { type: 'toggle', group: 'connection', index: 4},
+            manhattan: { type: 'toggle', group: 'connection', index:7 },
+            linkType: { type: 'select', options: ['wired', 'remote data transmission'], group: 'connection', defaultValue :'wired', label: 'type', index: 3 }
+            
+                    /* type : { type : 'select', group : 'connection', index: 1 , options: ['wiring', 'teletransmission'],
+                label: 'type' }
+           /* labels: {
                 type: 'list',
                 group: 'labels',
                 attrs: {
@@ -224,7 +316,7 @@ var InspectorDefs = {
                         }
                     }
                 }
-            }
+            }*/
 
         },
         groups: {
@@ -312,6 +404,7 @@ var InspectorDefs = {
            
         }, CommonInspectorInputs,SensorType),
         groups: CommonInspectorGroups
+    
     },
     
     'basic.Boat': {
@@ -336,6 +429,7 @@ var InspectorDefs = {
             }
         }, CommonInspectorInputs,BoatType),
         groups: CommonInspectorGroups
+       
     },
     
     'basic.Platform': {
@@ -613,7 +707,8 @@ var InspectorDefs = {
             outer: { label: 'Outer polygon', index: 2 },
             inner: { label: 'Inner polygon', index: 3 },
             geometry: { label: 'Geometry', index: 4 },
-            data: { label: 'Data', index: 5 }
+            data: { label: 'Data', index: 5 },
+            
         }
     },
     

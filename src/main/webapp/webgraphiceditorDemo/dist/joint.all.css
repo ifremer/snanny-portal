@@ -796,11 +796,11 @@ unmatched elements opaque instead of completely invisible which is the default.
 .inspector input,
 .inspector textarea {
    width: 200px;
-   text-shadow: 0 -1px 0 #000;
-   color: #ddd;
+   text-shadow: 0 -1px 0 #ddd;
+   color: #000;
    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1),0px 0 0 1px rgba(255,255,255,0.1);
    border: 1px solid black;
-   background: transparent;
+   background-color: rgb(237, 238, 239);
    height: 20px;
    line-height: 20px;
    
@@ -1036,7 +1036,7 @@ unmatched elements opaque instead of completely invisible which is the default.
    margin-top: 2px;
    border: 1px solid rgb(36, 36, 36);
    padding: 10px;
-   background-color: rgb(58, 58, 58);
+   background-color: rgb(60, 60,60);
    box-shadow: inset 0 0 2px gray;
 }
 .inspector .list-item input {

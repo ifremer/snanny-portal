@@ -21,12 +21,17 @@
         <link rel="stylesheet" type="text/css" href="./css/statusbar.css" />
         <link rel="stylesheet" type="text/css" href="./css/freetransform.css" />
         <link rel="stylesheet" type="text/css" href="./css/style.css" />
+        <link href="./src/jquery-ui.css" rel="stylesheet">
     </head>
     <body>
         <h1>Marine Observations Demo</h1>
+
+
+
         <div class="toolbar-container">
-        	<button id="btn-open" class="btn" data-tooltip="Load a project from a valid json file"><span>Load</span></button>
-        	<button id="btn-save" class="btn" data-tooltip="Save project in zip file"> <span>Save</span></button>
+        	<!--<button id="btn-open" class="btn" data-tooltip="Load a project from a valid json file"><span>Load</span></button>-->
+        	<button id="btn-save" class="btn" data-tooltip="Save as SensorML package"> <span>Save</span></button>
+        	
         	<button id="btn-exportJSON" class="btn"  data-tooltip="Export graph as JSON"> export as JSON</button>
             <button id="btn-undo" class="btn" data-tooltip="Undo"><img src="./img/undo.png" alt="Undo"/></button>
             <button id="btn-redo" class="btn" data-tooltip="Redo"><img src="./img/redo.png" alt="Redo"/></button>
@@ -59,7 +64,10 @@
             <button class="btn-collapse" title="Collapse all">-</button>
         </div>
         <div class="paper-container"></div>
-        <div class="inspector-container"></div>
+        <div class="inspector-container">
+        <img src="./img/ifremer.png"  style="width:240px; height:100px;" /> 
+            
+         </div>
         <div class="navigator-container"></div>
         <div class="statusbar-container">
         <div class="status"></div>
@@ -74,7 +82,7 @@
 
 		<!-- <script src="js/jszip-2.4.0-3.js"></script> --> 
 		<script src="./src/jszip-2.4.0-3.min.js"></script> 
-
+		
 		<!-- <script src="js/FileSaver.js"></script> --> 
 		<script src="./src/FileSaver.min.js"></script> 
 		<script src="./src/Blob.js"></script> 
@@ -88,6 +96,10 @@
         <script src="./src/stencil.js"></script>
        
         <script src="./src/main.js"></script>
+         <script src="./src/external/jquery/jquery.js"></script>
+		
+		
+		<script src="./src/jquery-ui.js"></script>
         
 	<!--[if IE 9]>
 	    <script src="./lib/base64.js"></script>
@@ -106,6 +118,9 @@
             // Uncomment the following line and comment the line after if you
             // want to use channels.
             //var app = new Rappid({ channelUrl: 'ws://localhost:4141' });
+
+
+
             var app = new Rappid;
             Backbone.history.start();
         </script>
