@@ -1,0 +1,11 @@
+A HTTP server can be launched with
+python -m SimpleHTTPServer 8888
+It will expose all files in current folder via HTTP.
+
+In order to access editor, use the following URL :
+
+http://localhost:8888
+
+Angular's routes defined :
+ - #/mooredPlatform/new (default)
+ - #/mooredPlatform/edit/<id>
