@@ -26,9 +26,9 @@ function initializeTimeline(data) {
 	// Compute X axis
 	var current_first_time = Number.MAX_VALUE;
 	var timeExtent = d3.extent(data, function(d) {
-		var time  = d.get('time');
-		var begin = new Date(d.get('time').begin);
-		var end   = new Date(d.get('time').end);
+		var time  = d.time;
+		var begin = new Date(d.time.begin);
+		var end   = new Date(d.time.end);
 		if (begin < current_first_time) {
 			current_first_time = begin;
 			return begin;
@@ -48,11 +48,8 @@ function initializeTimeline(data) {
 		.tickPadding(8)
 	;
 	
-	// Accumulate data for Y axis
-	var accumulated = accumulateData(data);
-
 	// Compute Y axis
-	var valueExtent = d3.extent(accumulated, function(d) {
+	var valueExtent = d3.extent(data, function(d) {
 		return d.value;
 	});
 
@@ -103,18 +100,11 @@ function initializeTimeline(data) {
 	;
 
 	function timelineSelectionEnd() {
-		startLoading();
-		
-		var observations = filterObservationsByPosition();
-		observations     = filterObservationsByTime(observations);
-		selectObservations(observations);
-		showObservations(observations);
-		
-		stopLoading();
+		getObservationsCount();
+		getObservations();
 	}
 	
-	setTimelineAll(allObservations());
-	
+	setTimelineAll(data);
 }
 
 function timelineDraw() {
@@ -123,12 +113,12 @@ function timelineDraw() {
 	timelineSvg.select("path.area").attr("d", timelineArea);
 }
 
-function timelineZoom3() {
+function timelineZoomExp2() {
 	d3.event.transform(timelineX); // TODO d3.behavior.zoom should support extents
 	draw();
 }
 
-function timelineZoom() {
+function timelineZoomExp1() {
 	console.log("timelineZoom");
 	
 	  var container = d3.select('#timeline');
@@ -145,13 +135,10 @@ function setTimelineAll(data) {
 	
 	var container = d3.select('#timeline');
 	var context   = container.select('svg').select('g');
-	
-	// Accumulate data for Y axis
-	var accumulated = accumulateData(data);
 
 	context
 		.append("path")
-		.datum(accumulated)
+		.datum(data)
 		.attr("class", "areaAll")
 		.attr("d", timelineArea)
 	;
@@ -164,88 +151,13 @@ function setTimeline(data) {
 	var context   = container.select('svg').select('g');
 
 	context.selectAll('path.area').remove();
-	
-	// Accumulate data for Y axis
-	var accumulated = accumulateData(data);
 
 	context
 		.append("path")
-		.datum(accumulated)
+		.datum(data)
 		.attr("class", "area")
 		.attr("d", timelineArea)
 //		.attr("transform", "translate(" + 0 + "," + 0 + ")scale(" + 1 + ", " + (1 / timelineXScale) + ")")
 	;
 	
-}
-
-function accumulateData(data) {
-	var accumulated = {};
-	var ret = [];
-	
-	var rising  = [];
-	var falling = [];
-	
-	data.forEach(function(observation) {
-		var time = observation.get('time');
-		rising.push(time.begin);
-		if (time.end) {
-			falling.push(time.end);
-		}
-	});
-	
-	rising.sort();
-	falling.sort();
-	
-	var current = 0;
-	var decreasing;
-	var incrementing;
-	rising.forEach(function(event) {
-		
-		while (falling.length > 0 && falling[0] <= event) {
-			var decrease = falling.shift();
-			if (decreasing != decrease && incrementing != event) {
-				accumulated[decrease - 1] = current;
-			}
-			current--;
-			accumulated[decrease] = current;
-			decreasing = decrease;
-		}
-		
-		if (incrementing != event && decreasing != event) {
-			accumulated[event - 1] = current;
-		}
-		current++;
-		accumulated[event] = current;
-		incrementing = event;
-		
-	});
-	
-	falling.forEach(function(event) {
-		accumulated[event - 1] = current;
-		current--;
-		accumulated[event] = current;
-	});
-	
-	falling.length = 0;
-	
-	var events = [];
-	for (var event in accumulated) {
-		events.push(event);
-	}
-	
-	events.sort();
-	
-	events.forEach(function(event) {
-		ret.push({ "event": +event, "value": +accumulated[event] });
-	});
-	
-	// if last value is not 0, set now to this value
-	if (ret.length > 0) {
-		var lastValue = ret[ret.length - 1].value;
-		if (lastValue != 0) {
-			ret.push({ "event": new Date().getTime(), "value": lastValue });
-		}
-	}
-
-	return ret;
 }

@@ -100,9 +100,11 @@
 		<script src="javascript/map.js" charset="utf-8"></script>
 		<script src="javascript/timeline.js" charset="utf-8"></script>
 		<script src="javascript/browser.js" charset="utf-8"></script>
+		<script src="javascript/geohash.js" charset="utf-8"></script>
+		<script src="javascript/timehash.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
-			loadObservations("/api/rest/observations");
+			loadObservationsCount("/api/rest/observations/synthetic/map", "/api/rest/observations/synthetic/timeline");
 		</script>
 		
 		<!-- Latest compiled and minified JavaScript -->

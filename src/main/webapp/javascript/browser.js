@@ -17,7 +17,7 @@ function showObservations(observations) {
 //					+ "<a href='javascript:showDetail(\"" + observation.get('id') + "\", \"visualisations-" + observation.get('id') + "\", \"" + observation.get('description') + "\");'>" 
 					+ "<a href='/api/rest/observations/" + observation.get('id') + "/results' target='_blank'>" 
 //					+ observation.get('id') 
-					+ observation.get('description')
+					+ observation.get('name')
 					+ " <i>(" + observation.get('author') + ")</i>" 
 					+ "</a>" + " " 
 //					+ observation.get('author') + " " 
@@ -50,10 +50,10 @@ function filterObservationsByPosition() {
 	if (selectionFeature.getGeometry() != undefined && selectionFeature.getGeometry() != null) {
 
 		filter = function(observation) {
-			// Observation without bounding box
-			if (observation.getProperties().bbox == undefined || observation.getProperties().bbox.length == 0) {
-				return true;
-			}
+//			// Observation without bounding box
+//			if (observation.getProperties().bbox == undefined || observation.getProperties().bbox.length == 0) {
+//				return true;
+//			}
 			
 			var geometry = observation.getGeometry();
 			if (geometry.intersectsExtent(selectionFeature.getGeometry().getExtent())) {
@@ -91,18 +91,12 @@ function filterObservationsByTime(observations) {
 		};
 	} else {
 		filter = function(observation) {
-			var observationBegin = observation.get('time').begin;
-			var observationEnd = observation.get('time').end;
-			if (observationEnd == undefined) {
-				observationEnd = new Date().getTime();
-			}
+			var observationResultTimestamp = observation.get('resulttimestamp') * 1000;
+
 			var selectionStart = (+timelineSelection.extent()[0]);
 			var selectionEnd = (+timelineSelection.extent()[1]);
 			
-			return (selectionStart <= observationBegin && observationBegin <= selectionEnd)
-			|| (observationBegin <= selectionStart && selectionEnd <= observationEnd)
-			|| (selectionStart <= observationEnd && selectionEnd >= observationEnd)
-			|| (selectionStart <= observationBegin && selectionEnd >= observationEnd);
+			return selectionStart <= observationResultTimestamp && observationResultTimestamp <= selectionEnd;
 		};
 	}
 	
@@ -129,12 +123,110 @@ function filterObservations() {
 	return observations;
 }
 
+function getObservationsCount() {
+	var extent = map.getView().calculateExtent(map.getSize());
+	var bottomLeft = ol.extent.getBottomLeft(extent);
+	var topRight = ol.extent.getTopRight(extent);
+	
+	var bbox = [ parseFloat(bottomLeft[1].toFixed(2)), parseFloat(bottomLeft[0].toFixed(2)), parseFloat(topRight[1].toFixed(2)), parseFloat(topRight[0].toFixed(2)) ];
+	var timerange = [ 0, new Date().getTime() ];
+	if (timelineSelection != null && !timelineSelection.empty()) {
+		timerange = [ (+timelineSelection.extent()[0]), (+timelineSelection.extent()[1]) ];
+	}
+//	loadObservationsCount("/api/rest/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), "/api/rest/observations/synthetic/timeline?bbox=" + bbox.join(",") + "&time=" + timerange.join(","));
+	loadObservationsCount("/api/rest/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), "/api/rest/observations/synthetic/timeline?bbox=" + bbox.join(","));
+}
+
+function getObservations() {
+	var extent = map.getView().calculateExtent(map.getSize());
+	var bottomLeft = ol.extent.getBottomLeft(extent);
+	var topRight = ol.extent.getTopRight(extent);
+	
+	var bbox = [ parseFloat(bottomLeft[1].toFixed(2)), parseFloat(bottomLeft[0].toFixed(2)), parseFloat(topRight[1].toFixed(2)), parseFloat(topRight[0].toFixed(2)) ];
+	var timerange = [ 0, new Date().getTime() ];
+	if (timelineSelection != null && !timelineSelection.empty()) {
+		timerange = [ (+timelineSelection.extent()[0]), (+timelineSelection.extent()[1]) ];
+	}
+	
+	d3.json("/api/rest/observations?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), function(err, data) {
+		observationsSource.clear();
+
+		if (data && data.features && data.features.length > 0) {
+			var vectorSource = new ol.source.GeoJSON({
+				projection : 'EPSG:4326',
+				object : data
+			});
+			
+			observationsCountSource.clear();
+			
+			observationsSource.addFeatures(vectorSource.getFeatures());
+		}
+		
+		observations = filterObservations();
+		showObservations(observations);
+		
+		console.log(err);
+		console.log(data);
+	});
+	
+}
+
 function startLoading() {
 	document.getElementsByTagName('body')[0].classList.add("chargement");
 }
 
 function stopLoading() {
 	document.getElementsByTagName('body')[0].classList.remove("chargement");	
+}
+
+var timelineInitialized = false;
+
+function loadObservationsCount(mapZoomURL, timelineZoomURL) {
+	var loadingCount = 0;
+	
+	if (mapZoomURL) {
+		d3.json(mapZoomURL, function(err, data) {
+			var vectorSource = new ol.source.GeoJSON({
+				projection : 'EPSG:4326',
+				object : data
+			});
+			
+			observationsCountSource.clear();
+			observationsCountSource.addFeatures(vectorSource.getFeatures());
+			
+			// FIXME: 
+			selectionFeature.setGeometry(undefined);
+			
+			if (--loadingCount == 0) {
+				stopLoading();
+			}
+		});
+		if (!timelineInitialized) {
+			loadingCount++;
+		}
+	}
+
+	if (timelineZoomURL) {
+		d3.json(timelineZoomURL, function(err, data) {
+			if (!timelineInitialized) {
+				initializeTimeline(data);
+				timelineInitialized = true;
+			} else {
+				setTimeline(data);
+			}
+	
+			if (--loadingCount == 0) {
+				stopLoading();
+			}
+		});
+		if (!timelineInitialized) {
+			loadingCount++;
+		}
+	}
+	
+	if (loadingCount > 0) {
+		startLoading();
+	}
 }
 
 function loadObservations(observationsURL) {
@@ -149,7 +241,7 @@ function loadObservations(observationsURL) {
 		observationsSource.clear();
 		observationsSource.addFeatures(vectorSource.getFeatures());
 		
-		selectionFeature.setGeometry(undefined);
+//		selectionFeature.setGeometry(undefined);
 
 		observations = filterObservations();
 

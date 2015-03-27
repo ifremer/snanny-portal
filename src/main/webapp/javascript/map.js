@@ -61,21 +61,42 @@ var map = new ol.Map({
 });
 
 var observation_style = new ol.style.Style({
+	image: new ol.style.Circle({
+		radius: 3,
+		fill: new ol.style.Fill({
+			color : 'rgba(255, 255, 255, 0.5)'
+		})
+	}),
+	zIndex: 1
+});
+
+var observation_style_no_seems_to_work_with_point = new ol.style.Style({
 	fill : new ol.style.Fill({
-		// color : 'rgba(255, 255, 255, 0.2)'
+		color : 'rgba(0, 0, 0, 1.0)'
 //		color : 'rgba(255, 160, 122, 0.05)' // LightSalmon #FFA07A
-		color : 'rgba(104, 142, 35, 0.05)' // OliveDrab  #688E23
+//		color : 'rgba(104, 142, 35, 0.05)' // OliveDrab  #688E23
 	}),
 
 	stroke : new ol.style.Stroke({
-//		color : 'rgba(255, 160, 122, 0.15)', // LightSalmon #FFA07A
-		color : 'rgba(104, 142, 35, 0.25)', // OliveDrab  #688E23
+		color : 'rgba(255, 255, 255, 1.0)',
+//		color : 'rgba(255, 160, 122, 1.0)', // LightSalmon #FFA07A
+//		color : 'rgba(104, 142, 35, 0.25)', // OliveDrab  #688E23
 		width : 1
 	}),
 	zIndex : 1
 });
 
 var selected_style = new ol.style.Style({
+	image: new ol.style.Circle({
+		radius: 3,
+		fill: new ol.style.Fill({
+			color : 'rgba(255, 255, 255, 1.0)'
+		})
+	}),
+	zIndex: 2
+});
+
+var selected_style_no_seems_to_work_with_point = new ol.style.Style({
 	fill : new ol.style.Fill({
 		// color : 'rgba(70, 130, 180, 0.2)' // SteelBlue #4682B4
 		// color : 'rgba(255, 160, 122, 0.05)' // LightSalmon #FFA07A
@@ -101,6 +122,48 @@ var selection_style = new ol.style.Style({
 	zIndex : 3
 });
 
+var observation_count_style = (function() {
+	var color = function(red, green, blue, alpha) {
+		return 'rgba(' + red + ',' + green + ',' + blue + ',' + alpha + ')';
+	};
+	return function(feature, resolution) {
+		return [new ol.style.Style({
+			fill: new ol.style.Fill({
+//				color : color(154, 205, 50, Math.floor((feature.get('ratio') * 10) / 100) / 10)
+				color : color(154, 205, 50, Math.floor((feature.get('ratio_visible') * 10) / 100) / 10)
+			}),
+			zIndex: 0
+		})];
+	};
+})();
+
+var observation_count_style_backup = (function() {
+	var compute = function(average, alpha) {
+		var red   = 0;
+		var green = 0;
+		var blue  = 255;
+		
+		if (average <= 50) {
+			green = Math.floor((average * 255) / 50);
+			blue  = Math.floor(((50 - average) * 255) / 50);
+		} else {
+			red   = Math.floor(((average - 50) * 255) / 50);
+			green = Math.floor(((100 - average) * 255) / 50);
+			blue  = 0;
+		}
+		
+		return 'rgba(' + red + ',' + green + ',' + blue + ',' + alpha + ')';
+	};
+	return function(feature, resolution) {
+		return [new ol.style.Style({
+			fill: new ol.style.Fill({
+				color : compute(feature.get('average'), 0.20)
+			}),
+			zIndex: 0
+		})];
+	};
+})();
+
 var observationsSource = new ol.source.GeoJSON({
 	projection : 'EPSG:4326'
 });
@@ -108,6 +171,15 @@ var observationsSource = new ol.source.GeoJSON({
 map.addLayer(new ol.layer.Vector({
 	source : observationsSource,
 	style : observation_style
+}));
+
+var observationsCountSource = new ol.source.GeoJSON({
+	projection : 'EPSG:4326'
+});
+
+map.addLayer(new ol.layer.Vector({
+	source : observationsCountSource,
+	style : observation_count_style
 }));
 
 // Layer de sélection
@@ -154,8 +226,6 @@ dragBox.on('boxend', function(e) {
 	selectionFeature.setGeometry(dragBox.getGeometry());
 
 	var observations = filterObservationsByPosition();
-	setTimeline(observations);
-
 	observations = filterObservationsByTime(observations);
 	selectObservations(observations);
 
@@ -180,8 +250,6 @@ map.on('click', function(e) {
 	// FIXME: hack pour resélectionner les observations à l'écran
 	setTimeout(function() {
 		var observations = filterObservationsByPosition();
-		setTimeline(observations);
-
 		observations = filterObservationsByTime(observations);
 		selectObservations(observations);
 
@@ -190,4 +258,9 @@ map.on('click', function(e) {
 		stopLoading();
 	}, 500);
 
+});
+
+map.on('moveend', function(evt) {
+	getObservationsCount();
+	getObservations();
 });
