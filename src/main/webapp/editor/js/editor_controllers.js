@@ -153,8 +153,8 @@ controllers.controller('MooredPlatformCtrl', function ($scope, $routeParams, $lo
         $scope.tabs[2].disabled = false;
         if ($scope.instrumentsForm.$valid) {
           
-          // return editorService.generatePlatform('forms/mooredplatform_platform_mustache.xml', $scope.platform)
-          return editorService.generatePlatform('forms/mooredplatform_platform_handlebars.xml', $scope.platform)
+          return editorService.generatePlatform('forms/mooredplatform_platform_mustache.xml', $scope.platform)
+          //return editorService.generatePlatform('forms/mooredplatform_platform_handlebars.xml', $scope.platform)
           .then(function(platformContent) {
             editorService.makeArchive($scope.platform.observatoryName + ".zip", $scope.platform.observatoryName + ".xml", platformContent);
           });
