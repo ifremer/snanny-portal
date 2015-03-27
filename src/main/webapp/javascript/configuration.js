@@ -1,0 +1,1 @@
+var SNANNY_API = "/api/rest";

@@ -15,7 +15,7 @@ function showObservations(observations) {
 		observations.forEach(function(observation) {
 			observationsList.append(jQuery("<li>" 
 //					+ "<a href='javascript:showDetail(\"" + observation.get('id') + "\", \"visualisations-" + observation.get('id') + "\", \"" + observation.get('description') + "\");'>" 
-					+ "<a href='/api/rest/observations/" + observation.get('id') + "/results' target='_blank'>" 
+					+ "<a href='" + SNANNY_API + "/observations/" + observation.get('id') + "/results' target='_blank'>" 
 //					+ observation.get('id') 
 					+ observation.get('name')
 					+ " <i>(" + observation.get('author') + ")</i>" 
@@ -133,8 +133,8 @@ function getObservationsCount() {
 	if (timelineSelection != null && !timelineSelection.empty()) {
 		timerange = [ (+timelineSelection.extent()[0]), (+timelineSelection.extent()[1]) ];
 	}
-//	loadObservationsCount("/api/rest/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), "/api/rest/observations/synthetic/timeline?bbox=" + bbox.join(",") + "&time=" + timerange.join(","));
-	loadObservationsCount("/api/rest/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), "/api/rest/observations/synthetic/timeline?bbox=" + bbox.join(","));
+//	loadObservationsCount(SNANNY_API + "/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), SNANNY_API + "/observations/synthetic/timeline?bbox=" + bbox.join(",") + "&time=" + timerange.join(","));
+	loadObservationsCount(SNANNY_API + "/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), SNANNY_API + "/observations/synthetic/timeline?bbox=" + bbox.join(","));
 }
 
 function getObservations() {
@@ -148,7 +148,7 @@ function getObservations() {
 		timerange = [ (+timelineSelection.extent()[0]), (+timelineSelection.extent()[1]) ];
 	}
 	
-	d3.json("/api/rest/observations?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), function(err, data) {
+	d3.json(SNANNY_API + "/observations?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), function(err, data) {
 		observationsSource.clear();
 
 		if (data && data.features && data.features.length > 0) {
@@ -263,7 +263,7 @@ function showDetail(observationID, container, title) {
 
 function showDetailEnvision(observationID, container, title) {
 	container = document.getElementById(container);
-	d3.json('/api/rest/observations/' + observationID + '/results.json', function(data) {
+	d3.json(SNANNY_API + '/observations/' + observationID + '/results.json', function(data) {
 		var options = {
 				container : container,
 				data : {
@@ -291,7 +291,7 @@ var graphsSync = null;
 function showDetailDygraph(observationID, container, title) {
 	
 	document.getElementById(container).style.cssText = '';
-	graphs.push(new Dygraph(container, '/api/rest/observations/' + observationID + '/results', {
+	graphs.push(new Dygraph(container, SNANNY_API + '/observations/' + observationID + '/results', {
 	  legend: 'always',
 //      errorBars: true,
 //	  title: title,
@@ -315,7 +315,7 @@ function showDetailDygraph(observationID, container, title) {
 }
 
 function showDetailNVD3(observationID, container, title) {
-	d3.json('/api/rest/observations/' + observationID + '/results.json', function(data) {
+	d3.json(SNANNY_API + '/observations/' + observationID + '/results.json', function(data) {
 		
 		document.getElementById(container).style.cssText = '';
 		
