@@ -5,31 +5,54 @@ function showObservations(observations) {
 	observationsContainer.html("");
 
 	if (observations != undefined && observations.length > 0) {
-		// Display header with observation's count
-		observationsContainer.append(jQuery("<h3>" + observations.length + " observation" + (observations.length > 1 ? "s" : "") + "</h3>"));
 
 		var observationsList = jQuery("<ul></ul>");
-		observationsContainer.append(observationsList);
+    
+    var uuids = {};
+    
+    var observationsCount = 0;
 
 		// Iterate over each observation, to display informations
 		observations.forEach(function(observation) {
-			observationsList.append(jQuery("<li>" 
-//					+ "<a href='javascript:showDetail(\"" + observation.get('id') + "\", \"visualisations-" + observation.get('id') + "\", \"" + observation.get('description') + "\");'>" 
-					+ "<a href='" + SNANNY_API + "/observations/" + observation.get('id') + "/results' target='_blank'>" 
-//					+ observation.get('id') 
-					+ observation.get('name')
-					+ " <i>(" + observation.get('author') + ")</i>" 
-					+ "</a>" + " " 
-//					+ observation.get('author') + " " 
-//					+ observation.get('description')
-//					+ " from " + new Date(observation.get('time').begin).toLocaleString() + " to "
-//					+ new Date(observation.get('time').end).toLocaleString() + " " 
-//					+ observation.get('result') + " " 
-//					+ observation.get('bbox')
-					+ "<div class='visualisation' id='visualisations-" + observation.get('id') + "' style='display: none;'></div>"
-					+ "</li>"
-			));
+      
+      var uuid = observation.get('uuid');
+      
+      if (uuids[uuid] == undefined) {
+      
+        var resultFilename = (observation.get('result').match(/[^\\/]+\.[^\\/]+$/) || []).pop();
+        
+        observationsList.append(jQuery("<li>" 
+  //					+ "<a href='javascript:showDetail(\"" + observation.get('id') + "\", \"visualisations-" + observation.get('id') + "\", \"" + observation.get('description') + "\");'>" 
+            + "<a href='" + SNANNY_API + "/observations/" + observation.get('id') + "/results' target='_blank'>" 
+  //					+ observation.get('id') 
+  //					+ observation.get('name')
+            + resultFilename
+            + " <i>(" + observation.get('author') + ")</i>" 
+            + "</a>" + " " 
+  //					+ observation.get('author') + " " 
+  //					+ observation.get('description')
+  //					+ " from " + new Date(observation.get('time').begin).toLocaleString() + " to "
+  //					+ new Date(observation.get('time').end).toLocaleString() + " " 
+  //					+ observation.get('result') + " " 
+  //					+ observation.get('bbox')
+            + "<div class='visualisation' id='visualisations-" + observation.get('id') + "' style='display: none;'></div>"
+            + "</li>"
+        ));
+        
+        observationsCount++;
+        
+        // Simulate a Set collection
+        uuids[uuid] = 1;
+      
+      }
 		});
+    
+    // Display header with observation's count
+		observationsContainer.append(jQuery("<h3>" + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h3>"));
+    
+    observationsContainer.append(jQuery("<h4>from " + moment(+timelineSelection.extent()[0]).format('lll') + " to " + moment(+timelineSelection.extent()[1]).format('lll') + "</h4>"));
+    
+    observationsContainer.append(observationsList);
 
 	}
 }
