@@ -50,7 +50,9 @@ function showObservations(observations) {
     // Display header with observation's count
 		observationsContainer.append(jQuery("<h3>" + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h3>"));
     
-    observationsContainer.append(jQuery("<h4>from " + moment(+timelineSelection.extent()[0]).format('lll') + " to " + moment(+timelineSelection.extent()[1]).format('lll') + "</h4>"));
+    if (timelineSelection != null && !timelineSelection.empty()) {
+      observationsContainer.append(jQuery("<h4>from " + moment(+timelineSelection.extent()[0]).format('lll') + " to " + moment(+timelineSelection.extent()[1]).format('lll') + "</h4>"));
+    }
     
     observationsContainer.append(observationsList);
 
