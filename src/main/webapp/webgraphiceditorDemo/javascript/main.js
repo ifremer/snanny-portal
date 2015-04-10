@@ -1,5 +1,22 @@
+var x = location.search;
+console.log(x);
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+var filename = undefined;
+if(getParameterByName('file')!=null)
+filename = getParameterByName('filename');
+console.log(filename);
+var filecontents=undefined;
+var ajaxfinished=0;
 
+    /* AJAX requests */
 
+ 
+ 
 function showStatus(message, type) {
 
     $('.status').removeClass('info error success').addClass(type).html(message);
@@ -11,18 +28,10 @@ function showStatus(message, type) {
 var ajaxTemplateSensor;
 var ajaxTemplatePlatform;
 var ajaxTemplateBoat;
-var owncloudJSON;
-var filename;
-if( $('#path').val()!=undefined)
-owncloudJSON=$('#path').val();
-if( $('#filename').val()!=undefined)
-filename=$('#filename').val();
 
 
 
 
-
-	
 
 var Rappid = Backbone.Router.extend({
 
@@ -67,18 +76,21 @@ var Rappid = Backbone.Router.extend({
 
     // Create a graph, paper and wrap the paper in a PaperScroller.
     initializePaper: function() {
-    	$.get( "/webgraphiceditorDemo/webgraphiceditor/src/sensor", function( data ) {
+   	$.get( "/webgraphiceditorDemo/forms/sensor", function( data ) {
     		  ajaxTemplateSensor=data;
     		 
     		});
-    	$.get( "/webgraphiceditorDemo/webgraphiceditor/src/boat", function( data ) {
+    	$.get( "/webgraphiceditorDemo/forms/boat", function( data ) {
     		 ajaxTemplateBoat=data;
     		 
     		});
-    	$.get( "/webgraphiceditorDemo/webgraphiceditor/src/platform", function( data ) {
+    	$.get( "/webgraphiceditorDemo/forms/platform", function( data ) {
     		 ajaxTemplatePlatform=data;
     		 
     		});
+			
+    	
+ 
         this.graph = new joint.dia.Graph;
 
         this.graph.on('add', function(cell, collection, opt) {
@@ -135,12 +147,26 @@ var Rappid = Backbone.Router.extend({
         }, this));
 
         this.snapLines = new joint.ui.Snaplines({ paper: this.paper });
-        
+        console.log("*****************************************//////**********************//////////***********");
+   
       var pop = {"cells":[{"type":"basic.Platform","size":{"width":60,"height":60},"ref":[],"uuid":["b1a85d05-5463-42b2-b49f-b7fdb79918b5"],"position":{"x":310,"y":390},"angle":0,"id":"b1a85d05-5463-42b2-b49f-b7fdb79918b5","embeds":"","z":1,"custom":{"output":[],"identifier":[],"classifier":[]},"attrs":{"text":{"font-size":"9","text":"uiuiuuiui","ref-x":"0.5","ref-dy":"20","fill":"#000000","font-family":"Arial","display":"","stroke":"#000000","stroke-width":"0","font-weight":"400"},"image":{"width":80,"height":80,"xlink:href":""}}}]};
    	 	//if(bla!=undefined)
-       if(owncloudJSON!=undefined)
-        this.graph.fromJSON(jQuery.parseJSON(owncloudJSON));  
-      
+			
+		
+       $.ajax({
+         url:    'http://localhost/owncloud/index.php/apps/WGEPlugin/ajax/loadfile.php' 
+                  
+                  + '?file=' 
+                  + filename,
+         success: function(result) {
+                     filecontents=result.data.filecontents;
+                  },
+         async:   false
+    }); 
+		if(filecontents!=undefined)
+	this.graph.fromJSON(jQuery.parseJSON(filecontents));	      
+   
+	
     
     },
 
@@ -614,7 +640,7 @@ var Rappid = Backbone.Router.extend({
         $('#btn-undo').on('click', _.bind(this.commandManager.undo, this.commandManager));
         $('#btn-redo').on('click', _.bind(this.commandManager.redo, this.commandManager));
         $('#btn-clear').on('click', _.bind(this.graph.clear, this.graph));
-      //  $('#btn-svg').on('click', _.bind(this.paper.openAsSVG, this.paper));
+        $('#btn-svg').on('click', _.bind(this.paper.openAsSVG, this.paper));
         $('#btn-png').on('click', _.bind(this.paper.openAsPNG, this.paper));
         $('#btn-zoom-in').on('click', _.bind(function() { this.paperScroller.zoom(0.2, { max: 5, grid: 0.2 }); }, this));
         $('#btn-zoom-out').on('click', _.bind(function() { this.paperScroller.zoom(-0.2, { min: 0.2, grid: 0.2 }); }, this));
@@ -633,18 +659,15 @@ var Rappid = Backbone.Router.extend({
         $('#btn-print').on('click', _.bind(this.paper.print, this.paper));
         $('#btn-exportJSON').on('click', _.bind(this.toJSON, this));
         //$('#btn-open').on('click', _.bind('', this));
-      
+        $('#btn-odf').on('click', _.bind(function() { 
+        	
+        	
+        
+        }, this));
+        
         $('#btn-save').on('click', _.bind(function() {
-        		
         	
-        
-        
-        
-        	var model = this.graph.toJSON();
-        	
-   			
-   			
-        		var url = 'http://***.ifremer.fr/owncloud/index.php/apps/WGEPlugin/ajax/savefile.php' ;
+        		var url = 'http://localhost/owncloud/index.php/apps/WGEPlugin/ajax/savefile.php' ;
       var frame = $('<IFRAME style="display:none" name="hidden-form">' + '</IFRAME>');
 	var form = $('<form enctype="application/json" action=' + url + ' method="post" target="hidden-form" >' +
   '<input type="text" name="filecontents" id="filecontents" value="qqqq"  />' +  '<input type="text" name="patha" id="patha" value="qqqq"  />'+
@@ -655,8 +678,10 @@ var Rappid = Backbone.Router.extend({
 	$("#filecontents").val(JSON.stringify(this.graph.toJSON()));
 	$("#patha").val(filename);
 	form.submit();
-	
-	
+        
+        	 console.log("Hereee AJAAAAAX");
+        	var model = this.graph.toJSON();
+        	
         	for (var i in model.cells)
         	{
         		if( model.cells[i].type=="basic.Sensor" || model.cells[i].type=="basic.Platform"  || model.cells[i].type=="basic.Boat" )
@@ -730,6 +755,8 @@ var Rappid = Backbone.Router.extend({
         		}
         		
         	}
+        
+        	
 
         	// TODO: save instruments
 
@@ -877,6 +904,7 @@ var Rappid = Backbone.Router.extend({
     
   
 });
+
 
 
 

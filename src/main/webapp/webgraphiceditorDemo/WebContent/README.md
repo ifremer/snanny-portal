@@ -1,1 +1,0 @@
-Web graphic editor demo for marine observations based on JointJS and Rappid toolkit
