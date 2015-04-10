@@ -1,1 +1,1 @@
-var SNANNY_API = "/snanny-api/rest";
+var SNANNY_API = "/api/rest";
