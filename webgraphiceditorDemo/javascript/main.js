@@ -76,15 +76,15 @@ var Rappid = Backbone.Router.extend({
 
     // Create a graph, paper and wrap the paper in a PaperScroller.
     initializePaper: function() {
-   	$.get( "/webgraphiceditorDemo/forms/sensor", function( data ) {
+   	$.get( "./forms/sensor", function( data ) {
     		  ajaxTemplateSensor=data;
     		 
     		});
-    	$.get( "/webgraphiceditorDemo/forms/boat", function( data ) {
+    	$.get( "./forms/boat", function( data ) {
     		 ajaxTemplateBoat=data;
     		 
     		});
-    	$.get( "/webgraphiceditorDemo/forms/platform", function( data ) {
+    	$.get( "./forms/platform", function( data ) {
     		 ajaxTemplatePlatform=data;
     		 
     		});

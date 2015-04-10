@@ -8,20 +8,20 @@
 
         <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet" type="text/css" />
 
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/joint.all.css" />
+        <link rel="stylesheet" type="text/css" href="./css/joint.all.css" />
 
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/layout.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/paper.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/inspector.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/navigator.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/stencil.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/halo.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/selection.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/toolbar.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/statusbar.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/freetransform.css" />
-        <link rel="stylesheet" type="text/css" href="/webgraphiceditorDemo/css/style.css" />
-        <link href="/webgraphiceditorDemo/css/jquery-ui.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="./css/layout.css" />
+        <link rel="stylesheet" type="text/css" href="./css/paper.css" />
+        <link rel="stylesheet" type="text/css" href="./css/inspector.css" />
+        <link rel="stylesheet" type="text/css" href="./css/navigator.css" />
+        <link rel="stylesheet" type="text/css" href="./css/stencil.css" />
+        <link rel="stylesheet" type="text/css" href="./css/halo.css" />
+        <link rel="stylesheet" type="text/css" href="./css/selection.css" />
+        <link rel="stylesheet" type="text/css" href="./css/toolbar.css" />
+        <link rel="stylesheet" type="text/css" href="./css/statusbar.css" />
+        <link rel="stylesheet" type="text/css" href="./css/freetransform.css" />
+        <link rel="stylesheet" type="text/css" href="./css/style.css" />
+        <link href="./css/jquery-ui.css" rel="stylesheet">
     </head>
     <body>
         <h1>Marine Observations Demo</h1>
@@ -33,14 +33,14 @@
         	<button id="btn-save" class="btn" data-tooltip="Save as SensorML package"> <span>Save</span></button>
         	
         	<button id="btn-exportJSON" class="btn"  data-tooltip="Export graph as JSON"> export as JSON</button>
-            <button id="btn-undo" class="btn" data-tooltip="Undo"><img src="/webgraphiceditorDemo/images/undo.png" alt="Undo"/></button>
-            <button id="btn-redo" class="btn" data-tooltip="Redo"><img src="/webgraphiceditorDemo/images/redo.png" alt="Redo"/></button>
-            <button id="btn-clear" class="btn" data-tooltip="Clear Paper"><img src="/webgraphiceditorDemo/images/clear.png" alt="Clear"/></button>
+            <button id="btn-undo" class="btn" data-tooltip="Undo"><img src="./images/undo.png" alt="Undo"/></button>
+            <button id="btn-redo" class="btn" data-tooltip="Redo"><img src="./images/redo.png" alt="Redo"/></button>
+            <button id="btn-clear" class="btn" data-tooltip="Clear Paper"><img src="./images/clear.png" alt="Clear"/></button>
             <button id="btn-svg" class="btn" data-tooltip="Open as SVG in a New Window">export as SVG</button>
             <button id="btn-png" class="btn" data-tooltip="Open as PNG in a New Window">export as PNG</button>
-            <button id="btn-print" class="btn" data-tooltip="Open a Print Dialog"><img src="/webgraphiceditorDemo/images/print.png" alt="Print"/></button>
-            <button id="btn-zoom-in" class="btn" data-tooltip="Zoom In"><img src="/webgraphiceditorDemo/images/zoomin.png" alt="Zoom in"/></button>
-            <button id="btn-zoom-out" class="btn" data-tooltip="Zoom Out"><img src="/webgraphiceditorDemo/images/zoomout.png" alt="Zoom out"/></button>
+            <button id="btn-print" class="btn" data-tooltip="Open a Print Dialog"><img src="./images/print.png" alt="Print"/></button>
+            <button id="btn-zoom-in" class="btn" data-tooltip="Zoom In"><img src="./images/zoomin.png" alt="Zoom in"/></button>
+            <button id="btn-zoom-out" class="btn" data-tooltip="Zoom Out"><img src="./images/zoomout.png" alt="Zoom out"/></button>
             <input id="fileName" type="text" value="MarineObservation-1"/>
             
             
@@ -48,8 +48,8 @@
               <span id="zoom-level">100</span>
               <span>%</span>
             </div>
-            <button id="btn-zoom-to-fit" class="btn" data-tooltip="Zoom To Fit"><img src="/webgraphiceditorDemo/images/zoomtofit.png" alt="Zoom To Fit"/></button>
-            <button id="btn-fullscreen" class="btn" data-tooltip="Toggle Fullscreen Mode"><img src="/webgraphiceditorDemo/images/fullscreen.png" alt="Fullscreen"/></button>
+            <button id="btn-zoom-to-fit" class="btn" data-tooltip="Zoom To Fit"><img src="./images/zoomtofit.png" alt="Zoom To Fit"/></button>
+            <button id="btn-fullscreen" class="btn" data-tooltip="Toggle Fullscreen Mode"><img src="./images/fullscreen.png" alt="Fullscreen"/></button>
             <!--  <button id="btn-to-front" class="btn" data-tooltip="Bring Object to Front">to front</button>
             <button id="btn-to-back" class="btn" data-tooltip="Send Object to Back">to back</button>-->
             <button id="btn-layout" class="btn" data-tooltip="Auto-layout Graph">layout</button>
@@ -66,7 +66,7 @@
         </div>
         <div class="paper-container"></div>
         <div class="inspector-container">
-        <img src="/webgraphiceditorDemo/images/ifremer.png"  style="width:240px; height:100px;" /> 
+        <img src="./images/ifremer.png"  style="width:240px; height:100px;" /> 
             
          </div>
         <div class="navigator-container"></div>
@@ -79,29 +79,29 @@
         </div>
 		
 <!-- 		<script src="./src/handlebars-v2.0.0.js"></script>  -->
-		<script src="/webgraphiceditorDemo/javascript/mustache.js"></script> 
+		<script src="./javascript/mustache.js"></script> 
 
 		<!-- <script src="js/jszip-2.4.0-3.js"></script> --> 
-		<script src="/webgraphiceditorDemo/javascript/jszip-2.4.0-3.min.js"></script> 
+		<script src="./javascript/jszip-2.4.0-3.min.js"></script> 
 		
 		<!-- <script src="js/FileSaver.js"></script> --> 
-		<script src="/webgraphiceditorDemo/javascript/FileSaver.min.js"></script> 
+		<script src="./javascript/FileSaver.min.js"></script> 
 		
-		<script src="/webgraphiceditorDemo/javascript/Blob.js"></script> 
-        <script src="/webgraphiceditorDemo/javascript/joint.js"></script>
+		<script src="./javascript/Blob.js"></script> 
+        <script src="./javascript/joint.js"></script>
 
-        <script src="/webgraphiceditorDemo/javascript/joint.all.js"></script>
+        <script src="./javascript/joint.all.js"></script>
 
-        <script src="/webgraphiceditorDemo/javascript/keyboard.js"></script>
+        <script src="./javascript/keyboard.js"></script>
 
-        <script src="/webgraphiceditorDemo/javascript/inspector.js"></script>
-        <script src="/webgraphiceditorDemo/javascript/stencil.js"></script>
+        <script src="./javascript/inspector.js"></script>
+        <script src="./javascript/stencil.js"></script>
        
-        <script src="/webgraphiceditorDemo/javascript/main.js"></script>
-         <script src="/webgraphiceditorDemo/javascript/jquery.js"></script>
+        <script src="./javascript/main.js"></script>
+         <script src="./javascript/jquery.js"></script>
 		
 		
-		<script src="/webgraphiceditorDemo/javascript/jquery-ui.js"></script>
+		<script src="./javascript/jquery-ui.js"></script>
 		
         
 	<!--[if IE 9]>

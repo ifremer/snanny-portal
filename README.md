@@ -8,11 +8,11 @@ Edit, save and export in sensorML
 
 To create a new platform go to :
 
-    http://localhost:8080/portal/editor/#/mooredPlatform/new
+    http://localhost/snanny-portal/editor/#/mooredPlatform/new
 
 Update a platform with id cc4a17de-d614-b03b-5f0b-414e7b0e9483 (beware information are not read from couchbase back-end or SOS service, To Be Done):
 
-    http://localhost:8080/portal/editor/#/mooredPlatform/edit/cc4a17de-d614-b03b-5f0b-414e7b0e9483
+    http://localhost/snanny-portal/editor/#/mooredPlatform/edit/cc4a17de-d614-b03b-5f0b-414e7b0e9483
 
 
 
@@ -22,5 +22,5 @@ Draw, save and export in sensorML
 Done with Rappid (http://jointjs.com/about-rappid)
 
 Go to:
-    http://localhost:8080/portal/webgraphiceditorDemo/webgraphiceditor/
+    http://localhost/snanny-portal/webgraphiceditorDemo/webgraphiceditor/
 
