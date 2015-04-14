@@ -1,19 +1,23 @@
-var x = location.search;
-console.log(x);
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+
 var filename = undefined;
 if(getParameterByName('file')!=null)
 filename = getParameterByName('filename');
-console.log(filename);
-var filecontents=undefined;
-var ajaxfinished=0;
 
-    /* AJAX requests */
+var filecontents=undefined;
+
+var user = undefined;
+if(getParameterByName('user')!=null)
+user=getParameterByName('user');
+
+var dir = undefined;
+if(getParameterByName('dir')!=null)
+dir = getParameterByName('dir');    
 
  
  
@@ -147,23 +151,23 @@ var Rappid = Backbone.Router.extend({
         }, this));
 
         this.snapLines = new joint.ui.Snaplines({ paper: this.paper });
-        console.log("*****************************************//////**********************//////////***********");
+        
    
-      var pop = {"cells":[{"type":"basic.Platform","size":{"width":60,"height":60},"ref":[],"uuid":["b1a85d05-5463-42b2-b49f-b7fdb79918b5"],"position":{"x":310,"y":390},"angle":0,"id":"b1a85d05-5463-42b2-b49f-b7fdb79918b5","embeds":"","z":1,"custom":{"output":[],"identifier":[],"classifier":[]},"attrs":{"text":{"font-size":"9","text":"uiuiuuiui","ref-x":"0.5","ref-dy":"20","fill":"#000000","font-family":"Arial","display":"","stroke":"#000000","stroke-width":"0","font-weight":"400"},"image":{"width":80,"height":80,"xlink:href":""}}}]};
-   	 	//if(bla!=undefined)
-			
+     
 		
        $.ajax({
-         url:    'http://localhost/owncloud/index.php/apps/WGEPlugin/ajax/loadfile.php' 
+         url:    owncloudserverLink+'/owncloud/index.php/apps/WGEPlugin/ajax/filecontents.php' 
                   
-                  + '?file=' 
-                  + filename,
+                  + '?file=' + filename + '&dir='+ dir +'&user='+ user,
          success: function(result) {
+
+
                      filecontents=result.data.filecontents;
                   },
          async:   false
     }); 
-		if(filecontents!=undefined)
+
+		if(filecontents!=undefined && filecontents!="")
 	this.graph.fromJSON(jQuery.parseJSON(filecontents));	      
    
 	
@@ -544,35 +548,31 @@ var Rappid = Backbone.Router.extend({
         	 if(link.type !='link')
      		{
      		 
-        		 console.log(this.graph.getCell(link.id).get('uuid').push(link.id));
+        		 this.graph.getCell(link.id).get('uuid').push(link.id);
 
-        		 console.log(this.graph.getCell(link.id));
+        		this.graph.getCell(link.id);
      		}
-           console.log(link.type);
+           
            if(link.type=='link')
         	  {
-        	   console.log("111111111111111111111111111111");
-        	   console.log(this.graph.getCell(link.id));
+        	   
+        	  
            var sourceId = link.source.id
              , targetId = link.target.id;
 
         
            if (sourceId && targetId) {
 
-       	             		
-       		console.log("*************************************");
-       	 
-           	
-        	console.log(this.graph.getCell(targetId).get('ref').push(sourceId));
-        	console.log(this.graph.getCell(targetId).get('ref'));
-        	console.log(this.graph.getCell(targetId));
-        	//console.log(this.graph.getCell(targetId).get('ref').remove(this.graph.getCell(targetId).get('ref').indexOf(sourceId)));
+       	      
+        	this.graph.getCell(targetId).get('ref').push(sourceId);
+        	this.graph.getCell(targetId).get('ref');
+        	this.graph.getCell(targetId);
         	
        	
        	   
        		}
      
-           console.log("ici ici ici");
+           
            return next();
         }
         	  }  , this));
@@ -590,9 +590,7 @@ var Rappid = Backbone.Router.extend({
         		 
         		 
        var link = command.data.attributes || this.graph.getCell(command.data.id).toJSON();
-       console.log(link);
-       console.log("looooooooooooooool"+link);
-       console.log(link.type);
+      
        if(link.type=='link')
     	  {
     	   
@@ -603,14 +601,14 @@ var Rappid = Backbone.Router.extend({
        if (sourceId && targetId) {
 
     	   		
-   		console.log("remove*************************************");
+   	
 
    		if(this.graph.getCell(targetId)!=undefined)
-   		console.log(this.graph.getCell(targetId).get('ref').splice(this.graph.getCell(targetId).get('ref').indexOf(sourceId),1));
+   		this.graph.getCell(targetId).get('ref').splice(this.graph.getCell(targetId).get('ref').indexOf(sourceId),1);
     	
    		}
  
-       console.log("ici ici ici");
+    
       
     }
     	  }} , this));
@@ -658,7 +656,6 @@ var Rappid = Backbone.Router.extend({
         $('#btn-fullscreen').on('click', _.bind(this.toggleFullscreen, this));
         $('#btn-print').on('click', _.bind(this.paper.print, this.paper));
         $('#btn-exportJSON').on('click', _.bind(this.toJSON, this));
-        //$('#btn-open').on('click', _.bind('', this));
         $('#btn-odf').on('click', _.bind(function() { 
         	
         	
@@ -667,19 +664,21 @@ var Rappid = Backbone.Router.extend({
         
         $('#btn-save').on('click', _.bind(function() {
         	
-        		var url = 'http://localhost/owncloud/index.php/apps/WGEPlugin/ajax/savefile.php' ;
+        		var url = owncloudserverLink+'/owncloud/index.php/apps/WGEPlugin/ajax/savefile.php' ;
       var frame = $('<IFRAME style="display:none" name="hidden-form">' + '</IFRAME>');
 	var form = $('<form enctype="application/json" action=' + url + ' method="post" target="hidden-form" >' +
-  '<input type="text" name="filecontents" id="filecontents" value="qqqq"  />' +  '<input type="text" name="patha" id="patha" value="qqqq"  />'+
+  '<input type="text" name="filecontents" id="filecontents"   />' +  '<input type="text" name="filename" id="filename"   />'+  '<input type="text" name="dir" id="dir" value='+dir+' />'+
    '</form>');
 	
 	$('body').append(form);
 	$('body').append(frame);
 	$("#filecontents").val(JSON.stringify(this.graph.toJSON()));
-	$("#patha").val(filename);
+	$("#filename").val(filename);
 	form.submit();
+	
         
-        	 console.log("Hereee AJAAAAAX");
+        
+        	 
         	var model = this.graph.toJSON();
         	
         	for (var i in model.cells)
@@ -688,13 +687,11 @@ var Rappid = Backbone.Router.extend({
         			{
         			
         		var elem = model.cells[i].id;
-        		//console.log("id ::::"+elem);
-        		//console.log(this.graph.getCell(elem).attr('text').text);
         		if(this.graph.getCell(elem).attr('text').text=='' ) 
         			{
         		this.graph.getCell(elem).attr('text').text="UNNAMEDElement"+i;
         		model.cells[i].attrs.text.text="UNNAMEDElement"+i;
-        		console.log("naaaammmme"+model.cells[i].attrs.text.text);
+        		//console.log("namme"+model.cells[i].attrs.text.text);
         		
         			}
         		for (var j in model.cells[i].ref)
@@ -703,7 +700,7 @@ var Rappid = Backbone.Router.extend({
         			
         			if(this.graph.getCell(ref)!=null)
         			model.cells[i].ref[j]=this.graph.getCell(ref).attr('text').text;
-        			console.log("reeeeeeeeeefff ******"+model.cells[i].ref[j]);
+        			//console.log("ref"+model.cells[i].ref[j]);
 			
 				}
         		
@@ -717,24 +714,22 @@ var Rappid = Backbone.Router.extend({
         	
         	var zip = new JSZip();
         	var name = document.getElementById('fileName').value;
-        	zip.file(name+".json", JSON.stringify(this.graph.toJSON()));
+        	zip.file(name+".moe", JSON.stringify(this.graph.toJSON()));
         	
         	
         	for (var i in model.cells) { 
         		if( model.cells[i].type=="basic.Sensor")
         		{	
         			
-        			
-        			console.log(model.cells[i]);
+        			    			
         			var generated = Mustache.render(ajaxTemplateSensor, model.cells[i]);
         			//console.log(generated); 
         			var generatedDecode = $('<textarea />').html(generated).text();
-                	
                 	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
         		}
         		if( model.cells[i].type=="basic.Platform")
         		{	
-        			console.log(model.cells[i]);
+        			
         			var generated = Mustache.render(ajaxTemplatePlatform,model.cells[i]);
         			//console.log(generated); 
         			var generatedDecode = $('<textarea />').html(generated).text();
@@ -745,9 +740,9 @@ var Rappid = Backbone.Router.extend({
         		
         		if( model.cells[i].type=="basic.Boat")
         		{	
-        			//console.log(model.cells[i]);
+        			
         			var generated = Mustache.render(ajaxTemplateBoat,model.cells[i]);
-        			//console.log(generated); 
+        			
         			var generatedDecode = $('<textarea />').html(generated).text();
                 	
                 	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
@@ -758,8 +753,7 @@ var Rappid = Backbone.Router.extend({
         
         	
 
-        	// TODO: save instruments
-
+        	
         	var content = zip.generate({type:"blob"});
         	saveAs(content, name+".zip"); }, this));
         
