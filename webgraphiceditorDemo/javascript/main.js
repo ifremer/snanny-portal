@@ -6,7 +6,7 @@ function getParameterByName(name) {
 }
 
 var filename = undefined;
-if(getParameterByName('file')!=null)
+if(getParameterByName('filename')!=null)
 filename = getParameterByName('filename');
 
 var filecontents=undefined;
@@ -637,14 +637,135 @@ var Rappid = Backbone.Router.extend({
         
         $('#btn-undo').on('click', _.bind(this.commandManager.undo, this.commandManager));
         $('#btn-redo').on('click', _.bind(this.commandManager.redo, this.commandManager));
-        $('#btn-clear').on('click', _.bind(this.graph.clear, this.graph));
-        $('#btn-svg').on('click', _.bind(this.paper.openAsSVG, this.paper));
-        $('#btn-png').on('click', _.bind(this.paper.openAsPNG, this.paper));
+        
+       
+       
         $('#btn-zoom-in').on('click', _.bind(function() { this.paperScroller.zoom(0.2, { max: 5, grid: 0.2 }); }, this));
         $('#btn-zoom-out').on('click', _.bind(function() { this.paperScroller.zoom(-0.2, { min: 0.2, grid: 0.2 }); }, this));
-     
-     
-        
+        $( "li.sensorml" ).on('click', _.bind(function() {
+        	
+    	
+    
+    
+    	 
+    	var model = this.graph.toJSON();
+    	
+    	for (var i in model.cells)
+    	{
+    		if( model.cells[i].type=="basic.Sensor" || model.cells[i].type=="basic.Platform"  || model.cells[i].type=="basic.Boat" )
+    			{
+    			
+    		var elem = model.cells[i].id;
+    		if(this.graph.getCell(elem).attr('text').text=='' ) 
+    			{
+    		this.graph.getCell(elem).attr('text').text="UNNAMEDElement"+i;
+    		model.cells[i].attrs.text.text="UNNAMEDElement"+i;
+    		//console.log("namme"+model.cells[i].attrs.text.text);
+    		
+    			}
+    		for (var j in model.cells[i].ref)
+			{
+    			var ref = model.cells[i].ref[j];
+    			
+    			if(this.graph.getCell(ref)!=null)
+    			model.cells[i].ref[j]=this.graph.getCell(ref).attr('text').text;
+    			//console.log("ref"+model.cells[i].ref[j]);
+		
+			}
+    		
+    		
+    		
+    		
+    			}
+    				 			
+    			
+    	}
+    	
+    	var zip = new JSZip();
+    	var name = document.getElementById('fileName').value;
+    	
+    	
+    	
+    	for (var i in model.cells) { 
+    		if( model.cells[i].type=="basic.Sensor")
+    		{	
+    			
+    			    			
+    			var generated = Mustache.render(ajaxTemplateSensor, model.cells[i]);
+    			//console.log(generated); 
+    			var generatedDecode = $('<textarea />').html(generated).text();
+            	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
+    		}
+    		if( model.cells[i].type=="basic.Platform")
+    		{	
+    			
+    			var generated = Mustache.render(ajaxTemplatePlatform,model.cells[i]);
+    			//console.log(generated); 
+    			var generatedDecode = $('<textarea />').html(generated).text();
+            	
+            	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
+    			
+    		}
+    		
+    		if( model.cells[i].type=="basic.Boat")
+    		{	
+    			
+    			var generated = Mustache.render(ajaxTemplateBoat,model.cells[i]);
+    			
+    			var generatedDecode = $('<textarea />').html(generated).text();
+            	
+            	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
+    			
+    		}
+    		
+    	}
+    
+    	
+
+    	
+    	var content = zip.generate({type:"blob"});
+    	saveAs(content, name+".zip"); }, this));
+      $( "li.png" ).on('click', _.bind(this.paper.openAsPNG, this.paper));
+      $( "#fileInput" ).on('click', _.bind(function () {
+    	 
+    		var graph= this;
+    	  var fileInput = document.getElementById('fileInput');
+    	
+		fileInput.addEventListener('change', function(e) {
+			var file = fileInput.files[0];
+			
+			var parts = file.name.split(".");
+			if(parts[1]=="moe")
+				{
+			
+		
+				console.log("1.5");
+				var reader = new FileReader();
+				
+				reader.onload = function(e) {
+					console.log("2");
+					graph.fromJSON(jQuery.parseJSON(reader.result));
+					
+				}
+
+				reader.readAsText(file);	
+				
+				
+				}
+			
+		});}, this.graph));
+      $( "li.todevice" ).on('click', _.bind(function() {
+    	  
+    	  var zip = new JSZip();
+    	var name = document.getElementById('fileName').value;
+    	zip.file(name+".moe", JSON.stringify(this.graph.toJSON()));
+    	var content = zip.generate({type:"blob"});
+    	saveAs(content, name+".zip");
+    	}, this));
+      $( "li.svg" ).on('click', _.bind(this.paper.openAsSVG, this.paper));
+      $( "li.new" ).on('click', _.bind(this.graph.clear, this.graph));
+      $( '#btn-clear' ).on('click', _.bind(this.graph.clear, this.graph));
+      
         $('#btn-zoom-to-fit').on('click', _.bind(function() {
             this.paperScroller.zoomToFit({
                 padding: 20,
@@ -662,7 +783,7 @@ var Rappid = Backbone.Router.extend({
         
         }, this));
         
-        $('#btn-save').on('click', _.bind(function() {
+        $("li.save").on('click', _.bind(function() {
         	
         		var url = owncloudserverLink+'/owncloud/index.php/apps/WGEPlugin/ajax/savefile.php' ;
       var frame = $('<IFRAME style="display:none" name="hidden-form">' + '</IFRAME>');
@@ -675,87 +796,20 @@ var Rappid = Backbone.Router.extend({
 	$("#filecontents").val(JSON.stringify(this.graph.toJSON()));
 	$("#filename").val(filename);
 	form.submit();
-	
+	console.log(filename);
+	if(filename=="")
+		{
+		var zip = new JSZip();
+    	var name = document.getElementById('fileName').value;
+    	zip.file(name+".moe", JSON.stringify(this.graph.toJSON()));
+    	var content = zip.generate({type:"blob"});
+    	saveAs(content, name+".zip"); 
+		
+		
+		}
         
         
-        	 
-        	var model = this.graph.toJSON();
-        	
-        	for (var i in model.cells)
-        	{
-        		if( model.cells[i].type=="basic.Sensor" || model.cells[i].type=="basic.Platform"  || model.cells[i].type=="basic.Boat" )
-        			{
-        			
-        		var elem = model.cells[i].id;
-        		if(this.graph.getCell(elem).attr('text').text=='' ) 
-        			{
-        		this.graph.getCell(elem).attr('text').text="UNNAMEDElement"+i;
-        		model.cells[i].attrs.text.text="UNNAMEDElement"+i;
-        		//console.log("namme"+model.cells[i].attrs.text.text);
-        		
-        			}
-        		for (var j in model.cells[i].ref)
-				{
-        			var ref = model.cells[i].ref[j];
-        			
-        			if(this.graph.getCell(ref)!=null)
-        			model.cells[i].ref[j]=this.graph.getCell(ref).attr('text').text;
-        			//console.log("ref"+model.cells[i].ref[j]);
-			
-				}
-        		
-        		
-        		
-        		
-        			}
-        				 			
-        			
-        	}
-        	
-        	var zip = new JSZip();
-        	var name = document.getElementById('fileName').value;
-        	zip.file(name+".moe", JSON.stringify(this.graph.toJSON()));
-        	
-        	
-        	for (var i in model.cells) { 
-        		if( model.cells[i].type=="basic.Sensor")
-        		{	
-        			
-        			    			
-        			var generated = Mustache.render(ajaxTemplateSensor, model.cells[i]);
-        			//console.log(generated); 
-        			var generatedDecode = $('<textarea />').html(generated).text();
-                	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
-        		}
-        		if( model.cells[i].type=="basic.Platform")
-        		{	
-        			
-        			var generated = Mustache.render(ajaxTemplatePlatform,model.cells[i]);
-        			//console.log(generated); 
-        			var generatedDecode = $('<textarea />').html(generated).text();
-                	
-                	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
-        			
-        		}
-        		
-        		if( model.cells[i].type=="basic.Boat")
-        		{	
-        			
-        			var generated = Mustache.render(ajaxTemplateBoat,model.cells[i]);
-        			
-        			var generatedDecode = $('<textarea />').html(generated).text();
-                	
-                	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
-        			
-        		}
-        		
-        	}
-        
-        	
-
-        	
-        	var content = zip.generate({type:"blob"});
-        	saveAs(content, name+".zip"); }, this));
+        }, this));
         
 
         // toFront/toBack must be registered on mousedown. SelectionView empties the selection
