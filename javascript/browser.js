@@ -185,13 +185,19 @@ function getObservations() {
 			observationsCountSource.clear();
 			
 			observationsSource.addFeatures(vectorSource.getFeatures());
+
+			observations = filterObservations();
+			showObservations(observations);
+			
 		}
+
+
+   		//console.log(err);
+                //console.log(data);
 		
-		observations = filterObservations();
-		showObservations(observations);
 		
-		console.log(err);
-		console.log(data);
+		
+		
 	});
 	
 }
@@ -220,7 +226,7 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 			observationsCountSource.addFeatures(vectorSource.getFeatures());
 			
 			// FIXME: 
-			selectionFeature.setGeometry(undefined);
+			//selectionFeature.setGeometry(undefined);
 			
 			if (--loadingCount == 0) {
 				stopLoading();

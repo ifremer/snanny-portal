@@ -122,6 +122,35 @@ var selection_style = new ol.style.Style({
 	zIndex : 3
 });
 
+
+var getObservationCountText = function(feature, resolution){
+  var maxResolution = 0.05; 
+  var text = feature.get('count');
+
+  if (map.getView().getResolution() > maxResolution) {
+    text = '';
+  }
+  return text;
+
+};
+
+
+var createTextStyle = function(feature, resolution) {
+
+  return new ol.style.Text({
+    textAlign: "left",
+    textBaseline: "top",
+//    font: 'Courier New',
+    text: getObservationCountText(feature, resolution),
+    size: '10px',
+    fill: new ol.style.Fill({color: 'rgba(0, 0, 0, 0, 0.25)'}),
+    stroke: new ol.style.Stroke({color: 'rgba(0, 0, 0, 0, 0.25)'}),
+    offsetX: 0,
+    offsetY: 0,
+    rotation: 0
+  });
+};
+
 var observation_count_style = (function() {
 	var color = function(red, green, blue, alpha) {
 		return 'rgba(' + red + ',' + green + ',' + blue + ',' + alpha + ')';
@@ -129,13 +158,23 @@ var observation_count_style = (function() {
 	return function(feature, resolution) {
 		return [new ol.style.Style({
 			fill: new ol.style.Fill({
-				color : color(154, 205, 50, Math.floor((feature.get('ratio') * 10) / 100) / 10)
+//				color : color(154, 205, 50, Math.floor((feature.get('ratio') * 10) / 100) / 10),
+				color : color(154, 205, 50, Math.floor(10.0*Math.log(feature.get('ratio')+1) / Math.log(100.0))/10.0),
 //				color : color(154, 205, 50, Math.floor((feature.get('ratio_visible') * 10) / 100) / 10)
 			}),
-			zIndex: 0
+			zIndex: 0,
+			text: createTextStyle(feature, resolution)			
 		})];
 	};
 })();
+
+
+
+
+
+
+
+
 
 var observation_count_style_backup = (function() {
 	var compute = function(average, alpha) {
@@ -170,7 +209,7 @@ var observationsSource = new ol.source.GeoJSON({
 
 map.addLayer(new ol.layer.Vector({
 	source : observationsSource,
-	style : observation_style
+	style : observation_style	
 }));
 
 var observationsCountSource = new ol.source.GeoJSON({
