@@ -129,8 +129,8 @@ var observation_count_style = (function() {
 	return function(feature, resolution) {
 		return [new ol.style.Style({
 			fill: new ol.style.Fill({
-//				color : color(154, 205, 50, Math.floor((feature.get('ratio') * 10) / 100) / 10)
-				color : color(154, 205, 50, Math.floor((feature.get('ratio_visible') * 10) / 100) / 10)
+				color : color(154, 205, 50, Math.floor((feature.get('ratio') * 10) / 100) / 10)
+//				color : color(154, 205, 50, Math.floor((feature.get('ratio_visible') * 10) / 100) / 10)
 			}),
 			zIndex: 0
 		})];
