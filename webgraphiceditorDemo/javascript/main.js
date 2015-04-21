@@ -156,7 +156,7 @@ var Rappid = Backbone.Router.extend({
      
 		
        $.ajax({
-         url:    owncloudserverLink+'/owncloud/index.php/apps/WGEPlugin/ajax/filecontents.php' 
+         url:    owncloudserverLink+'/index.php/apps/WGEPlugin/ajax/filecontents.php' 
                   
                   + '?file=' + filename + '&dir='+ dir +'&user='+ user,
          success: function(result) {
@@ -785,7 +785,7 @@ var Rappid = Backbone.Router.extend({
         
         $("li.save").on('click', _.bind(function() {
         	
-        		var url = owncloudserverLink+'/owncloud/index.php/apps/WGEPlugin/ajax/savefile.php' ;
+        		var url = owncloudserverLink+'/index.php/apps/WGEPlugin/ajax/savefile.php' ;
       var frame = $('<IFRAME style="display:none" name="hidden-form">' + '</IFRAME>');
 	var form = $('<form enctype="application/json" action=' + url + ' method="post" target="hidden-form" >' +
   '<input type="text" name="filecontents" id="filecontents"   />' +  '<input type="text" name="filename" id="filename"   />'+  '<input type="text" name="dir" id="dir" value='+dir+' />'+
