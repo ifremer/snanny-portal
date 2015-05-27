@@ -1,67 +1,4 @@
-// Type Sensor
-joint.shapes.basic.Sensor = joint.shapes.basic.Generic.extend({
 
-	  markup: '<g class="rotatable"><g class="scalable"><image/></g><text/></g>',
-
-    defaults: joint.util.deepSupplement({
-
-        type: 'basic.Sensor',
-        size: { width: 60, height: 60 },
-        attrs: {
-        	'text': { 'font-size': 14, text: '', 'text-anchor': 'middle', 'ref-x': .5, 'ref-dy': 20, ref: 'image', 'y-alignment': 'middle', fill: 'black', 'font-family': 'Arial, helvetica, sans-serif' }
-        
-        },
-        ref :[]  ,
-        
-        uuid :[]
-        
-        
-            
-        
-
-    }, joint.shapes.basic.Generic.prototype.defaults)
-});
-// Type Boat
-joint.shapes.basic.Boat = joint.shapes.basic.Generic.extend({
-
-	  markup: '<g class="rotatable"><g class="scalable"><image/></g><text/></g>',
-
-    defaults: joint.util.deepSupplement({
-
-        type: 'basic.Boat',
-        size: { width: 60, height: 60 },
-        attrs: {
-        	'text': { 'font-size': 14, text: '', 'text-anchor': 'middle', 'ref-x': .5, 'ref-dy': 20, ref: 'image', 'y-alignment': 'middle', fill: 'black', 'font-family': 'Arial, helvetica, sans-serif' }
-        	
-        
-        },
-        ref :[],
-        uuid :[]
-        
-
-    }, joint.shapes.basic.Generic.prototype.defaults)
-});
-// Type Platform
-
-joint.shapes.basic.Platform = joint.shapes.basic.Generic.extend({
-
-	  markup: '<g class="rotatable"><g class="scalable"><image/></g><text/></g>',
-
-    defaults: joint.util.deepSupplement({
-
-        type: 'basic.Platform',
-        size: { width: 60, height: 60 },
-        attrs: {
-        	'text': { 'font-size': 14, text: '', 'text-anchor': 'middle', 'ref-x': .5, 'ref-dy': 20, ref: 'image', 'y-alignment': 'middle', fill: 'black', 'font-family': 'Arial, helvetica, sans-serif' }
-        
-        },
-      
-        ref :[],
-        
-        uuid :[]
-    }, joint.shapes.basic.Generic.prototype.defaults)
-});
-/***************************************************************************************************************************/
 var CommonInspectorInputs = {
 
     size: {
@@ -82,7 +19,8 @@ var CommonInspectorGroups = {
     geometry: { label: 'Geometry', index: 4 },
     data: { label: 'System description', index: 1 },
     identifier: { label: 'identifier', index: 2 },
-    classifier: { label : 'other tags', index: 3}
+    classifier: { label : 'other tags', index: 3},
+    event: { label : 'event', index: 2}
    
     
 };
@@ -90,15 +28,16 @@ var CommonInspectorGroups = {
 var SensorType = {
 		
 		 
-	
+		 description: { type: 'textarea', group: 'data',  label: 'Description', index: 1, attrs: { label: { 'data-tooltip': 'Description of the element' } } },  
 	
 		 custom: { 
 			 
+			 imported : { type : 'toggle', label :'Export' ,group :'data', index: 1 },
 			 
 			 output : { type :'list',item: {
                  type: 'object',
                  properties: {
-                     name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the output channel' } } },                                   
+                     name: { type: 'text', 'readOnly':true, label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the output channel' } } },                                   
                      URI: { type: 'text', inlined: true, label: 'URI', index: 2, attrs: { label: { 'data-tooltip': 'identifier' } } }
                          
                      
@@ -113,12 +52,21 @@ var SensorType = {
                 identifier : { type :'list',item: {
                     type: 'object',
                     properties: {
-                        name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the unique identifier key' } } },                                   
+                        name: { type: 'text', label: 'name', readOnly: true,index: 1, attrs: { label: { 'data-tooltip': 'label of the unique identifier key' } } },                                   
                         URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
                             
                         
                     }
                 },  group: 'identifier', index: 1, label: 'Identifier'} ,
+                event : { type :'list',item: {
+                    type: 'object',
+                    properties: {
+                        date: { type: 'text', label: 'Date', index: 1, attrs: { label: { 'data-tooltip': 'Date' } } },                                   
+                        description: { type: 'text',  label: 'Description', index: 2, attrs: { label: { 'data-tooltip': 'Event description' } } }
+                            
+                        
+                    }
+                },  group: 'event', index: 1, label: 'Event', attrs: { label: { 'data-tooltip': 'Events' } }} ,
                 
                 classifier : { type :'list',item: {
                     type: 'object',
@@ -129,10 +77,14 @@ var SensorType = {
                         
                     }
                 },  group: 'classifier', index: 1, label: 'Other tags', attrs: { label: { 'data-tooltip': 'classifier' } }} ,
+               
+                
                 
                                
 					    	
-		    }	
+		    },
+		  	
+		 
 		
 		
 		
@@ -141,12 +93,14 @@ var SensorType = {
 
 var BoatType = {
 		
-	
+		description: { type: 'textarea', group: 'data',  label: 'Description', index: 1, attrs: { label: { 'data-tooltip': 'Description of the element' } } },  
+		
 	
 		custom: { 
 			
 			
-		 	
+			 imported : { type : 'toggle', label :'Export' ,group :'data', index: 1 },
+			 
 		 	output : { type :'list',item: {
                 type: 'object',
                 properties: {
@@ -161,11 +115,20 @@ var BoatType = {
                 type: 'object',
                 properties: {
                     name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the unique identifier key' } } },                                   
-                    URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
+                    URI: { type: 'text',  label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
                         
                     
                 }
             },  group: 'identifier', index: 1, label: 'Identifier'} ,
+            event : { type :'list',item: {
+                type: 'object',
+                properties: {
+                    date: { type: 'text', label: 'Date', index: 1, attrs: { label: { 'data-tooltip': 'Date' } } },                                   
+                    description: { type: 'text',  label: 'Description', index: 2, attrs: { label: { 'data-tooltip': 'Event description' } } }
+                        
+                    
+                }
+            },  group: 'event', index: 1, label: 'Event', attrs: { label: { 'data-tooltip': 'Events' } }} ,
             
             classifier : { type :'list',item: {
                 type: 'object',
@@ -188,12 +151,13 @@ var BoatType = {
 
 var PlatformType = {
 		
+		description: { type: 'textarea', group: 'data',  label: 'Description', index: 1, attrs: { label: { 'data-tooltip': 'Description of the element' } } },  
 		
 		
 		custom: { 
 			
 			 
-			
+			 imported : { type : 'toggle', label :'Export' ,group :'data', index: 1 },
 		 	
 		 	output : { type :'list',item: {
                 type: 'object',
@@ -204,6 +168,7 @@ var PlatformType = {
                     
                 }
             },  group: 'data', index: 1, label: 'Output'} ,
+           
             
             identifier : { type :'list',item: {
                 type: 'object',
@@ -214,6 +179,15 @@ var PlatformType = {
                     
                 }
             },  group: 'identifier', index: 1, label: 'Identifier'} ,
+            event : { type :'list',item: {
+                type: 'object',
+                properties: {
+                    date: { type: 'text', label: 'Date', index: 1, attrs: { label: { 'data-tooltip': 'Date' } } },                                   
+                    description: { type: 'text',  label: 'Description', index: 2, attrs: { label: { 'data-tooltip': 'Event description' } } }
+                        
+                    
+                }
+            },  group: 'event', index: 1, label: 'Event', attrs: { label: { 'data-tooltip': 'Events' } }} ,
             
             classifier : { type :'list',item: {
                 type: 'object',
@@ -297,26 +271,6 @@ var InspectorDefs = {
             manhattan: { type: 'toggle', group: 'connection', index:7 },
             linkType: { type: 'select', options: ['wired', 'remote data transmission'], group: 'connection', defaultValue :'wired', label: 'type', index: 3 }
             
-                    /* type : { type : 'select', group : 'connection', index: 1 , options: ['wiring', 'teletransmission'],
-                label: 'type' }
-           /* labels: {
-                type: 'list',
-                group: 'labels',
-                attrs: {
-                    label: { 'data-tooltip': 'Set (possibly multiple) labels for the link' }
-                },
-                item: {
-                    type: 'object',
-                    properties: {
-                        position: { type: 'range', min: 0.1, max: .9, step: .1, defaultValue: .5, label: 'position', index: 2, attrs: { label: { 'data-tooltip': 'Position the label relative to the source of the link' } } },
-                        attrs: {
-                            text: {
-                                text: { type: 'text', label: 'text', defaultValue: 'label', index: 1, attrs: { label: { 'data-tooltip': 'Set text of the label' } } }
-                            }
-                        }
-                    }
-                }
-            }*/
 
         },
         groups: {
@@ -327,61 +281,7 @@ var InspectorDefs = {
         }
     },
 
-    // Basic
-    // -----
-
-  /*  'basic.Rect': {
-
-        inputs: _.extend({
-            attrs: {
-                text: inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                rect: inp({
-                    fill: { group: 'presentation', index: 1 },
-                    'stroke-width': { group: 'presentation', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'presentation', index: 3 },
-                    rx: { group: 'presentation', index: 4 },
-                    ry: { group: 'presentation', index: 5 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },*/
-    
-    /*'basic.Circle': {
-
-        inputs: _.extend({
-            attrs: {
-                text: inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                circle: inp({
-                    fill: { group: 'presentation', index: 1 },
-                    'stroke-width': { group: 'presentation', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { type: 'select', options: ['0', '1', '5,5', '5,10', '10,5', '5,1', '15,10,5,10,15'], group: 'presentation', index: 3 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-    */
+   
     'basic.Sensor': {
 
         inputs: _.extend({
@@ -454,672 +354,4 @@ var InspectorDefs = {
         }, CommonInspectorInputs,PlatformType),
         groups: CommonInspectorGroups
     },
-    // DEVS
-    // ----
-    
-    'devs.Atomic': {
-        
-        inputs: _.extend({
-            attrs: {
-                '.label': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9, min: 0, max: 30, step: 1 }
-                }),
-                rect: inp({
-                    fill: { group: 'presentation', index: 1 },
-                    'stroke-width': { min: 0, max: 30, defaultValue: 1, unit: 'px', group: 'presentation', index: 2 },
-                    'stroke-dasharray': { group: 'presentation', index: 3 },
-                    'rx': { group: 'presentation', index: 4 },
-                    'ry': { group: 'presentation', index: 5 }
-                }),
-                '.inPorts circle': inp({
-                    fill: { group: 'presentation', index: 6, label: 'Input ports fill color' }
-                }),
-                '.outPorts circle': inp({
-                    fill: { group: 'presentation', index: 7, label: 'Output ports fill color' }
-                })
-            },
-            inPorts: { type: 'list', item: { type: 'text' }, group: 'data', index: -2 },
-            outPorts: { type: 'list', item: { type: 'text' }, group: 'data', index: -1 }
-            
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-
-    // FSA
-    // ---
-
-    'fsa.StartState': {
-
-        inputs: _.extend({
-            attrs: {
-                circle: inp({
-                    fill: { group: 'presentation', index: 1 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-
-    'fsa.EndState': {
-
-        inputs: _.extend({
-            attrs: {
-                '.outer': inp({
-                    fill: { group: 'presentation', index: 1, label: 'Outer circle fill color' },
-                    'stroke-dasharray': { group: 'presentation', index: 2, label: 'Outer circle stroke dasharray' }
-                }),
-                '.inner': inp({
-                    fill: { group: 'presentation', index: 3, label: 'Inner circle fill color' }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-    
-    'fsa.State': {
-
-        inputs: _.extend({
-            attrs: {
-                text: inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                circle: inp({
-                    fill: { group: 'presentation', index: 1 },
-                    'stroke-width': { group: 'presentation', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { type: 'select', options: ['0', '1', '5,5', '5,10', '10,5', '5,1', '15,10,5,10,15'], group: 'presentation', index: 3 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-
-    // PN
-    // --
-    
-    'pn.Place': {
-
-        inputs: _.extend({
-            attrs: {
-                '.label': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9, min: -50, max: 0, step: 1 }
-                }),
-                '.root': inp({
-                    fill: { group: 'presentation', index: 1 },
-                    'stroke-width': { group: 'presentation', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { type: 'select', options: ['0', '1', '5,5', '5,10', '10,5', '5,1', '15,10,5,10,15'], group: 'presentation', index: 3 }
-                })
-            },
-            tokens: { type: 'number', min: 1, max: 500, group: 'data', index: 1 }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-
-    'pn.Transition': {
-
-        inputs: _.extend({
-            attrs: {
-                '.label': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9, min: -50, max: 0, step: 1 }
-                }),
-                rect: inp({
-                    fill: { group: 'presentation', index: 1 },
-                    'stroke-width': { group: 'presentation', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'presentation', index: 3 },
-                    rx: { group: 'presentation', index: 4 },
-                    ry: { group: 'presentation', index: 5 }
-                })
-            }
-        }, CommonInspectorInputs),
-
-        groups: CommonInspectorGroups
-    },
-
-    // ERD
-    // ---
-
-    'erd.Entity': {
-
-        inputs: _.extend({
-            attrs: {
-                'text': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                '.outer': inp({
-                    fill: { group: 'presentation', index: 1 },
-                    stroke: { group: 'presentation', index: 2 },
-                    'stroke-width': { group: 'presentation', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'presentation', index: 4 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-    
-    'erd.WeakEntity': {
-
-        inputs: _.extend({
-            attrs: {
-                'text': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                '.outer': inp({
-                    fill: { group: 'outer', index: 1 },
-                    stroke: { group: 'outer', index: 2 },
-                    'stroke-width': { group: 'outer', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'outer', index: 4 }
-                }),
-                '.inner': inp({
-                    fill: { group: 'inner', index: 1 },
-                    stroke: { group: 'inner', index: 2 },
-                    'stroke-width': { group: 'inner', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'inner', index: 4 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: {
-            text: { label: 'Text', index: 1 },
-            outer: { label: 'Outer polygon', index: 2 },
-            inner: { label: 'Inner polygon', index: 3 },
-            geometry: { label: 'Geometry', index: 4 },
-            data: { label: 'Data', index: 5 }
-        }
-    },
-
-    'erd.Relationship': {
-
-        inputs: _.extend({
-            attrs: {
-                'text': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                '.outer': inp({
-                    fill: { group: 'outer', index: 1 },
-                    stroke: { group: 'outer', index: 2 },
-                    'stroke-width': { group: 'outer', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'outer', index: 4 }
-                }),
-                '.inner': inp({
-                    fill: { group: 'inner', index: 1 },
-                    stroke: { group: 'inner', index: 2 },
-                    'stroke-width': { group: 'inner', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'inner', index: 4 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: {
-            text: { label: 'Text', index: 1 },
-            outer: { label: 'Outer polygon', index: 2 },
-            inner: { label: 'Inner polygon', index: 3 },
-            geometry: { label: 'Geometry', index: 4 },
-            data: { label: 'Data', index: 5 },
-            
-        }
-    },
-    
-    'erd.IdentifyingRelationship': {
-        
-        inputs: _.extend({
-            attrs: {
-                'text': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                '.outer': inp({
-                    fill: { group: 'outer', index: 1 },
-                    stroke: { group: 'outer', index: 2 },
-                    'stroke-width': { group: 'outer', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'outer', index: 4 }
-                }),
-                '.inner': inp({
-                    fill: { group: 'inner', index: 1 },
-                    stroke: { group: 'inner', index: 2 },
-                    'stroke-width': { group: 'inner', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'inner', index: 4 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: {
-            text: { label: 'Text', index: 1 },
-            outer: { label: 'Outer polygon', index: 2 },
-            inner: { label: 'Inner polygon', index: 3 },
-            geometry: { label: 'Geometry', index: 4 },
-            data: { label: 'Data', index: 5 }
-        }
-    },
-
-    'erd.Key': {
-
-        inputs: _.extend({
-            attrs: {
-                'text': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                '.outer': inp({
-                    fill: { group: 'presentation', index: 1 },
-                    stroke: { group: 'presentation', index: 2 },
-                    'stroke-width': { group: 'presentation', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'presentation', index: 4 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-    
-    'erd.Normal': {
-
-        inputs: _.extend({
-            attrs: {
-                'text': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                '.outer': inp({
-                    fill: { group: 'presentation', index: 1 },
-                    stroke: { group: 'presentation', index: 2 },
-                    'stroke-width': { group: 'presentation', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'presentation', index: 4 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-
-    'erd.Multivalued': {
-
-        inputs: _.extend({
-            attrs: {
-                'text': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                '.outer': inp({
-                    fill: { group: 'outer', index: 1 },
-                    stroke: { group: 'outer', index: 2 },
-                    'stroke-width': { group: 'outer', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'outer', index: 4 }
-                }),
-                '.inner': inp({
-                    fill: { group: 'inner', index: 1 },
-                    stroke: { group: 'inner', index: 2 },
-                    'stroke-width': { group: 'inner', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'inner', index: 4 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: {
-            text: { label: 'Text', index: 1 },
-            outer: { label: 'Outer ellipse', index: 2 },
-            inner: { label: 'Inner ellipse', index: 3 },
-            geometry: { label: 'Geometry', index: 4 },
-            data: { label: 'Data', index: 5 }
-        }
-    },
-
-    'erd.Derived': {
-
-        inputs: _.extend({
-            attrs: {
-                'text': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                '.outer': inp({
-                    fill: { group: 'presentation', index: 1 },
-                    stroke: { group: 'presentation', index: 2 },
-                    'stroke-width': { group: 'presentation', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'presentation', index: 4 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-
-    'erd.ISA': {
-
-        inputs: _.extend({
-            attrs: {
-                'text': inp({
-                    text: { group: 'text', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9 }
-                }),
-                'polygon': inp({
-                    fill: { group: 'presentation', index: 1 },
-                    stroke: { group: 'presentation', index: 2 },
-                    'stroke-width': { group: 'presentation', index: 3, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'presentation', index: 4 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: CommonInspectorGroups
-    },
-
-    // UML
-    // ---
-
-    'uml.Class': {
-
-        inputs: _.extend({
-            attrs: {
-                '.uml-class-name-text': inp({
-                    'font-size': { group: 'name', index: 2 },
-                    'font-family': { group: 'name', index: 3 }
-                }),
-                '.uml-class-attrs-text': inp({
-                    'font-size': { group: 'attributes', index: 2 },
-                    'font-family': { group: 'attributes', index: 3 }
-                }),
-                '.uml-class-methods-text': inp({
-                    'font-size': { group: 'methods', index: 2 },
-                    'font-family': { group: 'methods', index: 3 }
-                }),
-                '.uml-class-name-rect': inp({
-                    fill: { group: 'name', index: 4 },
-                    'stroke-width': { group: 'name', index: 5, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'name', index: 6 },
-                    rx: { group: 'name', index: 7 },
-                    ry: { group: 'name', index: 8 }
-                }),
-                '.uml-class-attrs-rect': inp({
-                    fill: { group: 'attributes', index: 4 },
-                    'stroke-width': { group: 'attributes', index: 5, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'attributes', index: 6 },
-                    rx: { group: 'attributes', index: 7 },
-                    ry: { group: 'attributes', index: 8 }
-                }),
-                '.uml-class-methods-rect': inp({
-                    fill: { group: 'methods', index: 4 },
-                    'stroke-width': { group: 'methods', index: 5, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'methods', index: 6 },
-                    rx: { group: 'methods', index: 7 },
-                    ry: { group: 'methods', index: 8 }
-                })
-            },
-            name: { type: 'text', group: 'name', index: 1, label: 'Class name' },
-            attributes: { type: 'list', item: { type: 'text' }, group: 'attributes', index: 1, label: 'Attributes' },
-            methods: { type: 'list', item: { type: 'text' }, group: 'methods', index: 1, label: 'Methods' }
-        }, CommonInspectorInputs),
-        groups: {
-            name: { label: 'Class name', index: 1 },
-            attributes: { label: 'Attributes', index: 2 },
-            methods: { label: 'Methods', index: 3 },
-            geometry: { label: 'Geometry', index: 4 },
-            data: { label: 'Data', index: 5 }
-        }
-    },
-    
-    'uml.Interface': {
-
-        inputs: _.extend({
-            attrs: {
-                '.uml-class-name-rect': inp({
-                    fill: { group: 'name', index: 1 },
-                    'stroke-width': { group: 'name', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'name', index: 3 },
-                    rx: { group: 'name', index: 4 },
-                    ry: { group: 'name', index: 5 }
-                }),
-                '.uml-class-attrs-rect': inp({
-                    fill: { group: 'attributes', index: 1 },
-                    'stroke-width': { group: 'attributes', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'attributes', index: 3 },
-                    rx: { group: 'attributes', index: 4 },
-                    ry: { group: 'attributes', index: 5 }
-                }),
-                '.uml-class-methods-rect': inp({
-                    fill: { group: 'methods', index: 1 },
-                    'stroke-width': { group: 'methods', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'methods', index: 3 },
-                    rx: { group: 'methods', index: 4 },
-                    ry: { group: 'methods', index: 5 }
-                })
-            },
-            name: { type: 'text', group: 'name', index: 0, label: 'Interface name' },
-            attributes: { type: 'list', item: { type: 'text' },  group: 'attributes', index: 0, label: 'Attributes' },
-            methods: { type: 'list', item: { type: 'text' }, group: 'methods', index: 0, label: 'Methods' }
-        }, CommonInspectorInputs),
-        groups: {
-            name: { label: 'Interface name', index: 1 },
-            attributes: { label: 'Attributes', index: 2 },
-            methods: { label: 'Methods', index: 3 },
-            geometry: { label: 'Geometry', index: 4 },
-            data: { label: 'Data', index: 5 }
-        }
-    },
-
-    'uml.Abstract': {
-
-        inputs: _.extend({
-            attrs: {
-                '.uml-class-name-rect': inp({
-                    fill: { group: 'name', index: 1 },
-                    'stroke-width': { group: 'name', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'name', index: 3 },
-                    rx: { group: 'name', index: 4 },
-                    ry: { group: 'name', index: 5 }
-                }),
-                '.uml-class-attrs-rect': inp({
-                    fill: { group: 'attributes', index: 1 },
-                    'stroke-width': { group: 'attributes', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'attributes', index: 3 },
-                    rx: { group: 'attributes', index: 4 },
-                    ry: { group: 'attributes', index: 5 }
-                }),
-                '.uml-class-methods-rect': inp({
-                    fill: { group: 'methods', index: 1 },
-                    'stroke-width': { group: 'methods', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'methods', index: 3 },
-                    rx: { group: 'methods', index: 4 },
-                    ry: { group: 'methods', index: 5 }
-                })
-            },
-            name: { type: 'text', group: 'name', index: 0, label: 'Abstract class name' },
-            attributes: { type: 'list', item: { type: 'text' }, group: 'attributes', index: 0, label: 'Attributes' },
-            methods: { type: 'list', item: { type: 'text' }, group: 'methods', index: 0, label: 'Methods' }
-        }, CommonInspectorInputs),
-        groups: {
-            data: { label: 'Data', index: 5 },
-            text: { label: 'Text', index: 2 },
-            presentation: { label: 'Presentation', index: 4 },
-            geometry: { label: 'Geometry', index: 3 },
-            data: { label: 'System description', index: 1 }
-        }
-    },
-
-    'uml.State': {
-
-        inputs: _.extend({
-            name: { group: 'text', index: 1, type: "text" },
-            events: { group: 'events', index: 1, type: "list", item: { type: "text" }},
-            attrs: {
-                '.uml-state-name': inp({
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-y': { group: 'text', index: 9, min: -20, max: 20, step: 1 }
-                }),
-                '.uml-state-body': inp({
-                    fill: { group: 'presentation', index: 1 },
-                    stroke: { group: 'presentation', index: 2 },
-                    'stroke-width': { group: 'presentation', index: 4, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'presentation', index: 5 },
-                    rx: { group: 'presentation', index: 6 },
-                    ry: { group: 'presentation', index: 7 }
-                }),
-                '.uml-state-separator': inp({
-                    stroke: { group: 'presentation', index: 3, label: 'Horizontal rule stroke color' }
-                }),
-                '.uml-state-events': inp({
-                    'font-size': { group: 'events', index: 2 },
-                    'font-family': { group: 'events', index: 3 },
-                    'font-weight': { group: 'events', index: 4 },
-                    fill: { group: 'events', index: 5 },
-                    stroke: { group: 'events', index: 6 },
-                    'stroke-width': { group: 'events', index: 7 },
-                    'ref-x': { group: 'events', index: 8, min: -20, max: 20, step: 1 },
-                    'ref-y': { group: 'events', index: 9, min: -20, max: 20, step: 1 }
-                }),
-            },
-        }, CommonInspectorInputs),
-        groups: {
-            text: { label: 'State name text', index: 1 },
-            events: { label: 'State events text', index: 2 },
-            presentation: { label: 'Presentation', index: 3 },
-            geometry: { label: 'Geometry', index: 4 },
-            data: { label: 'Data', index: 5 }
-        }
-    },
-
-    // Org
-    // ---
-
-    'org.Member': {
-        
-        inputs: _.extend({
-            attrs: {
-                '.rank': inp({
-                    text: { group: 'rank', index: 1 },
-                    'font-size': { group: 'rank', index: 2 },
-                    'font-family': { group: 'rank', index: 3 },
-                    'font-weight': { group: 'rank', index: 4 },
-                    fill: { group: 'rank', index: 5 },
-                    stroke: { group: 'rank', index: 6 },
-                    'stroke-width': { group: 'rank', index: 7 },
-                    'ref-x': { group: 'rank', index: 8 },
-                    'ref-y': { group: 'rank', index: 9 }
-                }),
-                '.name': inp({
-                    text: { group: 'name', index: 1 },
-                    'font-size': { group: 'name', index: 2 },
-                    'font-family': { group: 'name', index: 3 },
-                    'font-weight': { group: 'name', index: 4 },
-                    fill: { group: 'name', index: 5 },
-                    stroke: { group: 'name', index: 6 },
-                    'stroke-width': { group: 'name', index: 7 },
-                    'ref-x': { group: 'name', index: 8 },
-                    'ref-y': { group: 'name', index: 9 }
-                }),
-                '.card': inp({
-                    fill: { group: 'presentation', index: 1 },
-                    'stroke-width': { group: 'presentation', index: 2, min: 0, max: 30, defaultValue: 1 },
-                    'stroke-dasharray': { group: 'presentation', index: 3 },
-                    rx: { group: 'presentation', index: 4 },
-                    ry: { group: 'presentation', index: 5 }
-                }),
-                image: inp({
-                    'xlink:href': { group: 'photo', index: 1 }
-                })
-            }
-        }, CommonInspectorInputs),
-        groups: {
-            rank: { label: 'Rank', index: 1 },
-            name: { label: 'Name', index: 2 },
-            photo: { label: 'Photo', index: 3 },
-            presentation: { label: 'Presentation', index: 4 },
-            geometry: { label: 'Geometry', index: 5 },
-            data: { label: 'Data', index: 6 }
-        }
-    }
 };

@@ -1,1 +1,1 @@
-var owncloudserverLink ='http://localhost';
+var owncloudserverLink ='http://localhost/owncloud';

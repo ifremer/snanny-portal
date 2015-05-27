@@ -1,60 +1,6 @@
 <!DOCTYPE html>
 <html>
-<style type="text/css">
 
-/*style the main menu*/
-.myMenu {
-display : inline;
-	margin:0;
-	padding:0;
-}
-
-.myMenu li {
-	list-style:none;
-	float:left;
-	font:12px Arial, Helvetica, sans-serif #111;
-}
-
-.myMenu li a:link, .myMenu li a:visited {
-	display:block;
-	text-decoration:none;
-	background-color:#FBFBFB;
-	padding: 0.5em 2em;
-	margin:0;
-	border-right: 1px solid #D4D4D4;
-	color:#111;
-}
-
-.myMenu li a:hover {
-	background-color:#09F;	
-}
-
-/*style the sub menu*/
-.myMenu li ul {
-	position:absolute;
-	visibility:hidden;
-	border-top:1px solid #D4D4D4;
-	margin:0;
-	padding:0;
-}
-
-.myMenu li ul li {
-
-	display:inline;
-	float:none;
-}
-
-.myMenu li ul li a:link, .myMenu li ul li a:visited {
-	background-color:#FBFBFB;
-	width:auto;
-}
-
-.myMenu li ul li a:hover {
-	background-color:#09F;	
-}
-
-
-</style>
     <head>
         <meta charset="utf8"/>
 <!--        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/> -->
@@ -76,6 +22,8 @@ display : inline;
         <link rel="stylesheet" type="text/css" href="./css/statusbar.css" />
         <link rel="stylesheet" type="text/css" href="./css/freetransform.css" />
         <link rel="stylesheet" type="text/css" href="./css/style.css" />
+        <link rel="stylesheet" type="text/css" href="./css/dropDownButton.css" />
+         <link rel="stylesheet" type="text/css" href="./css/preLoading.css" />
         <link href="./css/jquery-ui.css" rel="stylesheet">
         
       <!-- Javascript -->
@@ -89,6 +37,7 @@ display : inline;
 
         
         <div class="stencil-container">
+        <div class="se-pre-con"></div>
             <label>Palette</label>
             <button class="btn-expand" title="Expand all">+</button>
             <button class="btn-collapse" title="Collapse all">-</button>
@@ -104,9 +53,11 @@ display : inline;
    		 <li><a href="#"><span>Open </span></a>
     	<ul>
     	 <li class="fromowncloud"><a href="#">from owncloud </a></li>
-               
+    	
+    	
+         <div class="file_button_container" id="fromdevice"><input type="file" id="fileInput" /></div>      
         
-    	 <input type="file" id="fileInput" name="myfile">
+ 
      
                        
         </ul>
@@ -184,11 +135,22 @@ display : inline;
         <span class="rt-colab"></span>
         
         
+        </div>
+        <div id="dialog-box" title="Owncloud file saver">
+         <iframe id="myIframe" width="800" height="400" src=""></iframe>
+        FileName: <input type="text" id="filenameTyped" value=".moe" /> 
         
         </div>
+        <div id="dialog-choice" title="Save Data to">
+                
+        </div>
+        
 		
 <!-- 		<script src="./src/handlebars-v2.0.0.js"></script>  -->
 		<script src="./javascript/configuration.js"></script>
+		
+			<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+		
 		<script src="./javascript/mustache.js"></script> 
 
 		<!-- <script src="js/jszip-2.4.0-3.js"></script> --> 
@@ -203,16 +165,17 @@ display : inline;
         <script src="./javascript/joint.all.js"></script>
 
         <script src="./javascript/keyboard.js"></script>
-
+        <script src="./javascript/Platform.js"></script>
+		 <script src="./javascript/Sensor.js"></script>
         <script src="./javascript/inspector.js"></script>
         <script src="./javascript/stencil.js"></script>
-       
+        <script src="./javascript/ajaxRequestHandler.js"></script>
         <script src="./javascript/main.js"></script>
          <script src="./javascript/jquery.js"></script>
-		
+		<script src="./javascript/handlebars-v3.0.3.js"></script>
 		
 		<script src="./javascript/jquery-ui.js"></script>
-		
+	
         
 	<!--[if IE 9]>
 	    <script src="./lib/base64.js"></script>
@@ -231,10 +194,20 @@ display : inline;
             // Uncomment the following line and comment the line after if you
             // want to use channels.
             //var app = new Rappid({ channelUrl: 'ws://localhost:4141' });
-
+ 
 $(document).ready(function() {
-		$('.myMenu > li').bind('mouseover', openSubMenu);
+		
+	$('.myMenu > li').bind('mouseover', openSubMenu);
 		$('.myMenu > li').bind('mouseout', closeSubMenu);
+		$('#fromdevice').hover(function() {
+			  $(this).toggleClass( "file_button_container" );
+			  $(this).toggleClass( "file_button_container_withHover" );
+			 
+			}, function() {
+				$(this).removeClass( "file_button_container_withHover" );
+				$(this).addClass( "file_button_container" );
+				console.log(this);
+			});
 		
 		function openSubMenu() {
 			$(this).find('ul').css('visibility', 'visible');	
@@ -246,11 +219,19 @@ $(document).ready(function() {
 				   
 });
 
-            var app = new Rappid;
-            Backbone.history.start();
+
+/**
+ * 
+ */
+
+var app = new Rappid;
+Backbone.history.start();
+
+
+   
          
-          
        
+        	
         </script>
     </body>
 </html>

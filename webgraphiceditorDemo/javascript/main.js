@@ -1,3 +1,6 @@
+var choice=-1;
+
+var userPreferences;
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -60,7 +63,8 @@ var Rappid = Backbone.Router.extend({
         this.inspectorClosedGroups = {};
 
         this.initializePaper();
-        this.initializeStencil();
+       this.initializeAjaxRequests();
+      this.initializeStencil();
         this.initializeSelection();
         this.initializeHaloAndInspector();
         this.initializeNavigator();
@@ -80,6 +84,7 @@ var Rappid = Backbone.Router.extend({
 
     // Create a graph, paper and wrap the paper in a PaperScroller.
     initializePaper: function() {
+    	
    	$.get( "./forms/sensor", function( data ) {
     		  ajaxTemplateSensor=data;
     		 
@@ -155,22 +160,27 @@ var Rappid = Backbone.Router.extend({
    
      
 		
-       $.ajax({
+      $.ajax({
          url:    owncloudserverLink+'/index.php/apps/WGEPlugin/ajax/filecontents.php' 
                   
                   + '?file=' + filename + '&dir='+ dir +'&user='+ user,
          success: function(result) {
 
 
-                     filecontents=result.data.filecontents;
+                   filecontents=result.data.filecontents;
                   },
          async:   false
     }); 
+      
+    
+       
 
 		if(filecontents!=undefined && filecontents!="")
-	this.graph.fromJSON(jQuery.parseJSON(filecontents));	      
+			{
+	this.graph.fromJSON(jQuery.parseJSON(filecontents));	    
    
-	
+			
+			}
     
     },
 
@@ -191,6 +201,8 @@ var Rappid = Backbone.Router.extend({
 
     // Create and populate stencil.
     initializeStencil: function() {
+    	
+    	
 
         this.stencil = new joint.ui.Stencil({
             graph: this.graph,
@@ -253,7 +265,7 @@ var Rappid = Backbone.Router.extend({
     },
 
     initializeSelection: function() {
-        
+    	
         this.selection = new Backbone.Collection;
         this.selectionView = new joint.ui.SelectionView({ paper: this.paper, graph: this.graph, model: this.selection });
 
@@ -542,9 +554,55 @@ var Rappid = Backbone.Router.extend({
         	 var loops = false //link loops allowed / denied
              , paperPin = true //allow link to pin to paper
              , type = 'type' // attribute name in the cell the rules working with
-          
+            	
+        	
+        	
+        	
+        	 
            var link = command.data.attributes || this.graph.getCell(command.data.id).toJSON();
+        	 console.log("lol",link.custom)
+        	 if(link.type=='basic.Sensor' ||link.type=='basic.Platform')
+     		{
+     		
+     		
+     		var resultId = $.grep(link.custom.identifier, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType") });
+     		var resultOut = $.grep(link.custom.output, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType")});
+     		var resultClass = $.grep(link.custom.classifier, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType")});
+     		for( var i in resultId)
+     			{
+     			
+     			$( "input[value="+resultId[i].name+"]" ).prop('disabled', true);
+ 				$( "input[value="+resultId[i].name+"]" ).css({'background-color' : '#D4D0C8'});
 
+     			$( "input[value="+resultId[i].URI+"]" ).prop('disabled', true);
+     			$( "input[value="+resultId[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
+     			}
+     		for( var i in resultOut)
+ 			{
+     			$( "input[value="+resultOut[i].name+"]" ).prop('disabled', true);
+ 				$( "input[value="+resultOut[i].name+"]" ).css({'background-color' : '#D4D0C8'});
+
+     			$( "input[value="+resultOut[i].URI+"]" ).prop('disabled', true);
+     			$( "input[value="+resultOut[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
+ 			}
+     		
+     		for( var i in resultClass)
+ 			{
+     			$( "input[value="+resultClass[i].name+"]" ).prop('disabled', true);
+ 				$( "input[value="+resultClass[i].name+"]" ).css({'background-color' : '#D4D0C8'});
+
+     			$( "input[value="+resultClass[i].URI+"]" ).prop('disabled', true);
+     			$( "input[value="+resultClass[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
+ 			
+ 			
+ 			}
+     		}
+     
+         
+        	   
+        	  
+           
+        	 console.log( this.graph.getCell(link));
         	 if(link.type !='link')
      		{
      		 
@@ -644,83 +702,92 @@ var Rappid = Backbone.Router.extend({
         $('#btn-zoom-out').on('click', _.bind(function() { this.paperScroller.zoom(-0.2, { min: 0.2, grid: 0.2 }); }, this));
         $( "li.sensorml" ).on('click', _.bind(function() {
         	
-    	
+        	
+        	
+        	var zip = new JSZip();
+        	var name = document.getElementById('fileName').value;
+        	
+        	var model = this.graph.toJSON();
+        	
     
-    
-    	 
-    	var model = this.graph.toJSON();
-    	
-    	for (var i in model.cells)
-    	{
-    		if( model.cells[i].type=="basic.Sensor" || model.cells[i].type=="basic.Platform"  || model.cells[i].type=="basic.Boat" )
+        	for (var i in model.cells)
+        	{
+        		
+            	console.log(model.cells[i])
+        		if( model.cells[i].type=="basic.Sensor" || model.cells[i].type=="basic.Platform"   )
+        			{
+        			
+        		var elem = model.cells[i].id;
+        		if(this.graph.getCell(elem).attr('text').text=='' ) 
+        			{
+        		this.graph.getCell(elem).attr('text').text="UNNAMEDElement"+i;
+        		model.cells[i].attrs.text.text="UNNAMEDElement"+i;
+        		//console.log("namme"+model.cells[i].attrs.text.text);
+        		
+        			}
+        		for (var j in model.cells[i].ref)
     			{
-    			
-    		var elem = model.cells[i].id;
-    		if(this.graph.getCell(elem).attr('text').text=='' ) 
-    			{
-    		this.graph.getCell(elem).attr('text').text="UNNAMEDElement"+i;
-    		model.cells[i].attrs.text.text="UNNAMEDElement"+i;
-    		//console.log("namme"+model.cells[i].attrs.text.text);
+        			var ref = model.cells[i].ref[j];
+        			
+        			if(this.graph.getCell(ref)!=null)
+        			model.cells[i].ref[j]=this.graph.getCell(ref).attr('text').text;
+        			//console.log("ref"+model.cells[i].ref[j]);
     		
     			}
-    		for (var j in model.cells[i].ref)
-			{
-    			var ref = model.cells[i].ref[j];
-    			
-    			if(this.graph.getCell(ref)!=null)
-    			model.cells[i].ref[j]=this.graph.getCell(ref).attr('text').text;
-    			//console.log("ref"+model.cells[i].ref[j]);
-		
-			}
-    		
-    		
-    		
-    		
-    			}
-    				 			
-    			
-    	}
-    	
-    	var zip = new JSZip();
-    	var name = document.getElementById('fileName').value;
-    	
-    	
-    	
-    	for (var i in model.cells) { 
-    		if( model.cells[i].type=="basic.Sensor")
-    		{	
-    			
-    			    			
-    			var generated = Mustache.render(ajaxTemplateSensor, model.cells[i]);
-    			//console.log(generated); 
-    			var generatedDecode = $('<textarea />').html(generated).text();
-            	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
-    		}
-    		if( model.cells[i].type=="basic.Platform")
-    		{	
-    			
-    			var generated = Mustache.render(ajaxTemplatePlatform,model.cells[i]);
-    			//console.log(generated); 
-    			var generatedDecode = $('<textarea />').html(generated).text();
-            	
-            	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
-    			
-    		}
-    		
-    		if( model.cells[i].type=="basic.Boat")
-    		{	
-    			
-    			var generated = Mustache.render(ajaxTemplateBoat,model.cells[i]);
-    			
-    			var generatedDecode = $('<textarea />').html(generated).text();
-            	
-            	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
-    			
-    		}
-    		
-    	}
-    
-    	
+        		
+        		
+        		
+        		
+        			}
+        				 			
+        			
+        	}
+        	
+        	for (var i in model.cells) { 
+        		
+        		if( model.cells[i].type=="basic.Platform")
+        		{	
+        		
+        		model.cells[i].custom.output = model.cells[i].custom.output.filter(function (el) {
+                         return el.Ref !== "PlatformType";
+                        });
+        		model.cells[i].custom.classifier = model.cells[i].custom.output.filter(function (el) {
+                    return el.Ref !== "PlatformType";
+                   });
+        		
+        		console.log( model.cells[i].custom.output)
+        			var template = Handlebars.compile(ajaxTemplatePlatform);
+        			var generated = template(model.cells[i]);
+        			
+        			        			//console.log(generated); 
+        			var generatedDecode = $('<textarea />').html(generated).text();
+                	
+                	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
+        			
+        		}
+        		if( model.cells[i].type=="basic.Sensor")
+        		{	
+        		
+        		model.cells[i].custom.output = model.cells[i].custom.output.filter(function (el) {
+                         return el.Ref !== "SensorType";
+                        });
+        		model.cells[i].custom.classifier = model.cells[i].custom.output.filter(function (el) {
+                    return el.Ref !== "SensorType";
+                   });
+        		
+        		console.log( model.cells[i].custom.output)
+        			var template = Handlebars.compile(ajaxTemplateSensor);
+        			var generated = template(model.cells[i]);
+        			
+        			        			//console.log(generated); 
+        			var generatedDecode = $('<textarea />').html(generated).text();
+                	
+                	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
+        			
+        		}
+        	}
+        	
+
 
     	
     	var content = zip.generate({type:"blob"});
@@ -737,7 +804,7 @@ var Rappid = Backbone.Router.extend({
 			var parts = file.name.split(".");
 			if(parts[1]=="moe")
 				{
-			
+				
 		
 				console.log("1.5");
 				var reader = new FileReader();
@@ -777,37 +844,241 @@ var Rappid = Backbone.Router.extend({
         $('#btn-fullscreen').on('click', _.bind(this.toggleFullscreen, this));
         $('#btn-print').on('click', _.bind(this.paper.print, this.paper));
         $('#btn-exportJSON').on('click', _.bind(this.toJSON, this));
-        $('#btn-odf').on('click', _.bind(function() { 
+        $('li.odt').on('click', _.bind(function() { 
+        	/*window.location.hash="#ODT";
+        	
+        	if(window.location.hash=="#ODT")
+        	{
+        		
+        		
+        		 var pom = document.createElement('a');
+        	        pom.setAttribute('href', 'data:application/json;charset=utf-8,' +JSON.stringify(this.graph.toJSON()));
+        	        pom.setAttribute('download', "moe.json");
+
+        	        pom.style.display = 'none';
+        	        document.body.appendChild(pom);
+
+        	        pom.click();
+
+        	        document.body.removeChild(pom);
+        	        
+        		
+        		
+        	}*/
         	
         	
+       
+        		var win=window.open("http://visi-common-tomcat2:8088/birt/frameset?__report=new_report_3.rptdesign"); 		win.focus();
+        
+     
+        
+        
+        
+        
+        
         
         }, this));
-        
+        $("li.toowncloud").on('click', _.bind(function() {
+          	var model =this.graph.toJSON();
+            
+            var toImport = []; 
+            
+            
+            $.each(model.cells, function(i, v) {
+          	 if(v.type!="link")
+          		 {
+          	   if(v.custom.imported)
+          		   {
+          		  
+          	  toImport.push(v);
+          		   } }
+          	    
+          	});
+          	
+            	
+                     	
+          	var graphicData=JSON.stringify(this.graph.toJSON());
+          	var pathChoosen="";
+          	var typedName="";
+          	$("#dialog-box").dialog({
+          	    autoOpen: false,
+          	    modal: true,
+          	    height: 600,
+          	    width: 900,
+          	    	
+          	      buttons: {
+          	        Save: function() {
+          	        	
+          	        	pathChoosen= $('#myIframe').contents().get(0).location.href ;
+          	        	typedName=$('#filenameTyped').val();
+          	        	$.ajax({
+          	        	    url: pathChoosen+'/'+typedName,
+          	        	    type: 'PUT',
+          	        	    data: graphicData, // or $('#myform').serializeArray()
+          	        	    success: function() { }
+          	        	});
+          	        	for (var i in toImport) { 
+          	        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
+          	        		console.log(userPreferences);
+          	        		$.ajax({
+          	        			
+          		        	    url: owncloudserverLink+'/remote.php/webdav/'+toImport[i].attrs.text.text+".moe",
+          		        	    type: 'PUT',
+          		        	    data: JSON.stringify({"cells":[toImport[i]]}), // or $('#myform').serializeArray()
+          		        	    success: function() { }
+          		        	});
+          	        		
+          	    			
+          	    		}
+          	        	
+          	        	$.ajax({
+          	        	    url: owncloudserverLink+'remote.php/webdav/'+".sensorNannyDraw",
+          	        	    type: 'PUT',
+          	        	    data: userPreferences, // or $('#myform').serializeArray()
+          	        	    success: function() { }
+          	        	});
+          	    		
+          	          $( this ).dialog( "close" );
+          	          
+          	        }
+          	      },
+          	    open: function(ev, ui){
+          	             $('#myIframe').attr('src',owncloudserverLink+'/remote.php/webdav');
+          	          }
+          	});
+
+
+          	    $('#dialog-box').dialog('open');
+        	
+        },this));
         $("li.save").on('click', _.bind(function() {
         	
-        		var url = owncloudserverLink+'/index.php/apps/WGEPlugin/ajax/savefile.php' ;
-      var frame = $('<IFRAME style="display:none" name="hidden-form">' + '</IFRAME>');
-	var form = $('<form enctype="application/json" action=' + url + ' method="post" target="hidden-form" >' +
-  '<input type="text" name="filecontents" id="filecontents"   />' +  '<input type="text" name="filename" id="filename"   />'+  '<input type="text" name="dir" id="dir" value='+dir+' />'+
-   '</form>');
+       if(choice==-1) 
+    	   {
+    	   
+    	   
+    	   
+        	    $( "#dialog-choice" ).dialog({
+        	      modal: true,
+        	      buttons: {
+        	        Device: function() {
+        	        	choice=0;
+        	        	 
+        	          $( this ).dialog( "close" );
+        	          $( "li.save" ).trigger( "click" );
+        	        },
+        	        Owncloud :function() {
+        	        	choice=1;
+        	        	$( this ).dialog( "close" );
+        	        	$( "li.save" ).trigger( "click" );
+        	        	
+        	        }
+        	      }
+        	    });
+        	 
+    	   }
+        	
+        	
+        	var model =this.graph.toJSON();
+  
+  var toImport = []; 
+  
+  
+  $.each(model.cells, function(i, v) {
+	 if(v.type!="link")
+		 {
+	   if(v.custom.imported)
+		   {
+		  
+	  toImport.push(v);
+		   } }
+	    
+	});
 	
-	$('body').append(form);
-	$('body').append(frame);
-	$("#filecontents").val(JSON.stringify(this.graph.toJSON()));
-	$("#filename").val(filename);
-	form.submit();
-	console.log(filename);
-	if(filename=="")
+  	
+   
+	
+	if(choice==0)
 		{
 		var zip = new JSZip();
     	var name = document.getElementById('fileName').value;
     	zip.file(name+".moe", JSON.stringify(this.graph.toJSON()));
+    	for (var i in toImport) { 
+    		
+    			zip.file(toImport[i].attrs.text.text+".moe",JSON.stringify({"cells":[toImport[i]]}));
+    			
+    		}
+    		
+    	
     	var content = zip.generate({type:"blob"});
     	saveAs(content, name+".zip"); 
 		
 		
 		}
-        
+	
+	if(choice==1)
+		{
+	
+	var graphicData=JSON.stringify(this.graph.toJSON());
+	
+	
+
+	// Convert the String to a JSON object
+	var myJSONObject = eval( '(' +  graphicData + ' )' );
+	
+	console.log(myJSONObject)
+	var pathChoosen="";
+	var typedName="";
+	$("#dialog-box").dialog({
+	    autoOpen: false,
+	    modal: true,
+	    height: 600,
+	    width: 900,
+	    	
+	      buttons: {
+	        Save: function() {
+	        	
+	        	pathChoosen= $('#myIframe').contents().get(0).location.href ;
+	        	typedName=$('#filenameTyped').val();
+	        	$.ajax({
+	        	    url: pathChoosen+'/'+typedName,
+	        	    type: 'PUT',
+	        	    data: graphicData, // or $('#myform').serializeArray()
+	        	    success: function() { }
+	        	});
+	        	for (var i in toImport) { 
+	        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
+	        		console.log(userPreferences);
+	        		$.ajax({
+	        			
+		        	    url: owncloudserverLink+'/remote.php/webdav/'+toImport[i].attrs.text.text+".moe",
+		        	    type: 'PUT',
+		        	    data: JSON.stringify({"cells":[toImport[i]]}), // or $('#myform').serializeArray()
+		        	    success: function() { }
+		        	});
+	        		
+	    			
+	    		}
+	        	
+	        	$.ajax({
+	        	    url: owncloudserverLink+'remote.php/webdav/'+".sensorNannyDraw",
+	        	    type: 'PUT',
+	        	    data: userPreferences, // or $('#myform').serializeArray()
+	        	    success: function() { }
+	        	});
+	    		
+	          $( this ).dialog( "close" );
+	          
+	        }
+	      },
+	    open: function(ev, ui){
+	             $('#myIframe').attr('src',owncloudserverLink+'/remote.php/webdav');
+	          }
+	});
+
+
+	    $('#dialog-box').dialog('open');
+		} 
         
         }, this));
         
@@ -948,7 +1219,90 @@ var Rappid = Backbone.Router.extend({
         var roomUrl = location.href.replace(location.hash, '') + '#' + room;
         $('.statusbar-container .rt-colab').html('Send this link to a friend to <b>collaborate in real-time</b>: <a href="' + roomUrl + '" target="_blank">' + roomUrl + '</a>');
     },
-   
+    initializeAjaxRequests: function() {
+        
+
+    	var rappid=this;
+    	if(location.search!="")
+    		{
+    	
+    	var importedData = []; 
+    	var sensorType;
+    	var req1= $.ajax({
+    	    url:    owncloudserverLink+'/remote.php/webdav/.sensorNannyDraw' 
+    	    
+    	    ,
+    	success: function(result) {
+
+    	 userPreferences=result;
+
+    	       },
+    	       
+    	       error: function(){
+    	    	 
+    	    	   }
+    	    
+    	});
+    	var req=[];
+
+
+
+
+
+    	$.when(req1).done(function(){
+    		
+    		console.log(1);
+    		var arr = userPreferences.split(';');
+    		
+    		for (var i in arr) { 
+    			
+    			  req[i]= $.ajax({
+    			    	    url: owncloudserverLink+'/remote.php/webdav/'+arr[i],
+    			    	    
+    			    	   
+    			    	    success: function(a) {
+    			    	    	importedData.push($.parseJSON(a));
+    			    	    	    			    	    	
+    			    	    },
+    			    	    
+    			    	 
+    			    	});
+    			  	}
+    		
+    		
+
+
+    		$.when.apply($, req).done(function(){
+
+    			console.log(arr.length-1);
+    			for (var i in arr) { 
+    		
+    				 console.log(importedData[i].cells[0].custom.imported=false);
+    			}
+    			for (var i in arr) { 
+    				Stencil.shapes.erd.push(new joint.shapes.basic.Platform(importedData[i].cells[0]));
+    				
+    				}
+    			
+    			rappid.initializeStencil();
+    		      
+    		   		$(".se-pre-con").fadeOut("fast");
+    		});
+    		
+    		
+    	    
+
+    	})
+    		}
+    	else
+    		{
+    		
+    		rappid.initializeStencil();
+    	    $(".se-pre-con").fadeOut("fast");
+    		
+    		}
+
+    }
     
   
 });

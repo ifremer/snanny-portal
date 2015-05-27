@@ -1,0 +1,87 @@
+/*style the main menu*/
+.myMenu {
+display : inline;
+	margin:0;
+	padding:0;
+}
+
+.myMenu li {
+	list-style:none;
+	float:left;
+	font:12px Arial, Helvetica, sans-serif #111;
+}
+
+.myMenu li a:link, .myMenu li a:visited {
+	display:block;
+	text-decoration:none;
+	background-color:#FBFBFB;
+	padding: 0.5em 2em;
+	margin:0;
+	border-right: 1px solid #D4D4D4;
+	color:#111;
+}
+
+.myMenu li a:hover {
+	background-color:#09F;	
+}
+
+/*style the sub menu*/
+.myMenu li ul {
+	position:absolute;
+	visibility:hidden;
+	border-top:1px solid #D4D4D4;
+	margin:0;
+	padding:0;
+}
+
+.myMenu li ul li {
+
+	display:inline;
+	float:none;
+}
+
+.myMenu li ul li a:link, .myMenu li ul li a:visited {
+	background-color:#FBFBFB;
+	width:auto;
+}
+
+.myMenu li ul li a:hover {
+	background-color:#09F;	
+}
+
+
+
+ .file_button_container,
+      .file_button_container input {
+           background: transparent url(../images/fromdevice.png) left top no-repeat;
+           height: 47px;
+           width: 263px;
+       }
+      
+
+       .file_button_container {
+           background: transparent url(../images/fromdevice.png) left top no-repeat;
+       }
+       
+    
+       .file_button_container input {
+           opacity: 0;
+       }
+       
+       
+   .file_button_container_withHover,
+      .file_button_container_withHover input {
+           background: transparent url(../images/fromdevicewithHover.png) left top no-repeat;
+           height: 47px;
+           width: 263px;
+       }
+      
+
+      .file_button_container_withHover {
+           background: transparent url(../images/fromdevicewithHover.png) left top no-repeat;
+       }
+       
+    
+       .file_button_container_withHover input {
+           opacity: 0;
+       }

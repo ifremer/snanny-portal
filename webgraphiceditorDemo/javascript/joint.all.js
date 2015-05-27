@@ -34032,7 +34032,7 @@ joint.ui.Inspector = Backbone.View.extend({
     },
 
     render: function() {
-
+    	
         this.$el.empty();
 
         var lastGroup;
@@ -34094,7 +34094,7 @@ joint.ui.Inspector = Backbone.View.extend({
     },
 
     resolveBindings: function(options) {
-
+    	
         switch(options.type) {
 
           case 'select': // options['options'] are transformed here to options['items']
@@ -34121,6 +34121,7 @@ joint.ui.Inspector = Backbone.View.extend({
     },
 
     updateBindings: function(path) {
+    	 
 
         // Find all inputs which are bound to the current input (i.e find all slaves).
         var slaves = _.reduce(this._bound, function(result, master, slave) {
@@ -34147,8 +34148,7 @@ joint.ui.Inspector = Backbone.View.extend({
 
         $el = $el || this.$el;
         opt = opt || {};
-
-        this.resolveBindings(options);
+              this.resolveBindings(options);
 
         // Wrap the input into a `.field` classed element so that we can easilly hide and show
         // the entire block.
@@ -34374,6 +34374,7 @@ joint.ui.Inspector = Backbone.View.extend({
     },
 
     updateCell: function($attr, attrPath) {
+    	
     //set UUID in UUID cell in the inspector
     	
     	
@@ -35285,6 +35286,7 @@ joint.ui.FreeTransform = Backbone.View.extend({
 
 	this.$el.html(joint.templates['freetransform.html'](this.template));
 
+	
 	// We have to use `attr` as jQuery `data` doesn't update DOM
 	this.$el.attr('data-type', this.options.cell.get('type'));
         this.$el.toggleClass('prevent-aspect-ratio', this.options.preventAspectRatio);
@@ -35292,7 +35294,48 @@ joint.ui.FreeTransform = Backbone.View.extend({
     },
 
     update: function() {
+   
+  
+    	
+    	if( this.options.cell.get('type')=='basic.Sensor' || this.options.cell.get('type')=='basic.Platform')
+    		{
+    		
+    		
+    		var resultId = $.grep(this.options.cell.get('custom').identifier, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType") });
+    		var resultOut = $.grep(this.options.cell.get('custom').output, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType")});
+    		var resultClass = $.grep(this.options.cell.get('custom').classifier, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType")});
+    		for( var i in resultId)
+    			{
+    			
+    			$( "input[value="+resultId[i].name+"]" ).prop('disabled', true);
+				$( "input[value="+resultId[i].name+"]" ).css({'background-color' : '#D4D0C8'});
 
+    			$( "input[value="+resultId[i].URI+"]" ).prop('disabled', true);
+    			$( "input[value="+resultId[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
+    			}
+    		for( var i in resultOut)
+			{
+    			$( "input[value="+resultOut[i].name+"]" ).prop('disabled', true);
+				$( "input[value="+resultOut[i].name+"]" ).css({'background-color' : '#D4D0C8'});
+
+    			$( "input[value="+resultOut[i].URI+"]" ).prop('disabled', true);
+    			$( "input[value="+resultOut[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
+			}
+    		
+    		for( var i in resultClass)
+			{
+    			$( "input[value="+resultClass[i].name+"]" ).prop('disabled', true);
+				$( "input[value="+resultClass[i].name+"]" ).css({'background-color' : '#D4D0C8'});
+
+    			$( "input[value="+resultClass[i].URI+"]" ).prop('disabled', true);
+    			$( "input[value="+resultClass[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
+			
+			
+			}
+    		}
+    
+    	
+     	   
 	var viewportCTM = this.options.paper.viewport.getCTM();
 
 	var bbox = this.options.cell.getBBox();
