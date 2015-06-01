@@ -64,12 +64,13 @@ var observation_style = new ol.style.Style({
 	image: new ol.style.Circle({
 		radius: 3,
 		fill: new ol.style.Fill({
-			color : 'rgba(255, 255, 255, 0.5)'
+			color : 'rgba(255, 255, 255, 0.7)'
 		})
 	}),
 	zIndex: 1
 });
 
+/*
 var observation_style_no_seems_to_work_with_point = new ol.style.Style({
 	fill : new ol.style.Fill({
 		color : 'rgba(0, 0, 0, 1.0)'
@@ -85,17 +86,19 @@ var observation_style_no_seems_to_work_with_point = new ol.style.Style({
 	}),
 	zIndex : 1
 });
+*/
 
 var selected_style = new ol.style.Style({
 	image: new ol.style.Circle({
 		radius: 3,
 		fill: new ol.style.Fill({
-			color : 'rgba(255, 255, 255, 1.0)'
+			color : 'rgba(255, 128, 0, 1.0)'
 		})
 	}),
 	zIndex: 2
 });
 
+/*
 var selected_style_no_seems_to_work_with_point = new ol.style.Style({
 	fill : new ol.style.Fill({
 		// color : 'rgba(70, 130, 180, 0.2)' // SteelBlue #4682B4
@@ -110,7 +113,9 @@ var selected_style_no_seems_to_work_with_point = new ol.style.Style({
 	}),
 	zIndex : 2
 });
+*/
 
+/*
 var selection_style = new ol.style.Style({
 	fill : new ol.style.Fill({
 		color : 'rgba(0, 0, 0, 0.125)'
@@ -121,6 +126,36 @@ var selection_style = new ol.style.Style({
 	}),
 	zIndex : 3
 });
+*/
+
+
+var getObservationCountText = function(feature, resolution){
+  var maxResolution = 0.05; 
+  var text = feature.get('count');
+
+  if (map.getView().getResolution() > maxResolution) {
+    text = '';
+  }
+  return text;
+
+};
+
+
+var createTextStyle = function(feature, resolution) {
+
+  return new ol.style.Text({
+    textAlign: "left",
+    textBaseline: "top",
+//    font: 'Courier New',
+    text: getObservationCountText(feature, resolution),
+    size: '10px',
+    fill: new ol.style.Fill({color: 'rgba(0, 0, 0, 0, 0.25)'}),
+    stroke: new ol.style.Stroke({color: 'rgba(0, 0, 0, 0, 0.25)'}),
+    offsetX: 0,
+    offsetY: 0,
+    rotation: 0
+  });
+};
 
 
 var getObservationCountText = function(feature, resolution){
@@ -207,6 +242,8 @@ var observationsSource = new ol.source.GeoJSON({
 	projection : 'EPSG:4326'
 });
 
+
+
 map.addLayer(new ol.layer.Vector({
 	source : observationsSource,
 	style : observation_style	
@@ -216,11 +253,71 @@ var observationsCountSource = new ol.source.GeoJSON({
 	projection : 'EPSG:4326'
 });
 
+
+// vue marine-traffic
 map.addLayer(new ol.layer.Vector({
 	source : observationsCountSource,
 	style : observation_count_style
 }));
 
+
+
+// event management on feature mouse over
+var selectedFeatures = [];
+
+// Unselect previous selected features
+function unselectPreviousFeatures() {
+	var i;
+	for(i=0; i< selectedFeatures.length; i++) {
+		selectedFeatures[i].setStyle(null);
+		$("#" + selectedFeatures[i].get("uuid")).attr("style", null);
+	}
+	selectedFeatures = [];
+}
+
+
+function selectObservationOnMap(uuid){
+	console.log("from highligh on map " + uuid);
+	unselectPreviousFeatures();
+	observationsSource.forEachFeature(function(observation) {
+			if(observation.get("uuid") == uuid){
+				observation.setStyle([
+							selected_style	        
+				]);
+				selectedFeatures.push(observation);
+			}
+		});
+}
+
+// Handle pointer
+map.on('pointermove', function(event) {
+	unselectPreviousFeatures();                
+	map.forEachFeatureAtPixel(event.pixel, 
+		function(feature) {
+			if(feature.get("result") != undefined){
+				feature.setStyle([
+						selected_style	        
+				]);
+				console.log(feature.get("result"))
+				console.log(feature.get("uuid"))
+				$("#" + feature.get("uuid")).attr("style", "color:rgba(255, 128, 0, 1.0)");
+				$("#observations").scrollTop($("#observations").scrollTop() + $("#" + feature.get("uuid")).position().top);				
+				selectedFeatures.push(feature);
+			}
+		});
+});
+
+
+
+map.on('moveend', function(evt) {
+	totalCount = getObservationsCount();
+	getObservations(totalCount);
+});
+
+
+
+
+/*
 // Layer de sélection
 var selectionFeature = new ol.Feature({
 // geometry : undefined
@@ -256,6 +353,7 @@ var dragBox = new ol.interaction.DragBox({
 		})
 	})
 });
+
 
 map.addInteraction(dragBox);
 
@@ -299,7 +397,11 @@ map.on('click', function(e) {
 
 });
 
-map.on('moveend', function(evt) {
-	getObservationsCount();
-	getObservations();
-});
+*/
+
+
+
+
+
+
+

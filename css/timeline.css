@@ -23,7 +23,8 @@
 }
 
 .area {
-  fill: rgba(255, 140, 0, 0.45); // DarkOrange
+  /*fill: rgba(255, 140, 0, 0.45); // DarkOrange*/
+  fill: rgba(154, 205, 50, 1.0); // Fluorescente green
 }
 
 .areaAll {
