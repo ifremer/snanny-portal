@@ -862,6 +862,39 @@ var Rappid = Backbone.Router.extend({
         		
         		}
         	
+        	for (var i in model.cells)
+        	{
+        		
+            	console.log(model.cells[i])
+        		if( model.cells[i].type=="basic.Sensor" || model.cells[i].type=="basic.Platform"   )
+        			{
+        			
+        		var elem = model.cells[i].id;
+        		if(this.graph.getCell(elem).attr('text').text=='' ) 
+        			{
+        		this.graph.getCell(elem).attr('text').text="UNNAMEDElement"+i;
+        		model.cells[i].attrs.text.text="UNNAMEDElement"+i;
+        		//console.log("namme"+model.cells[i].attrs.text.text);
+        		
+        			}
+        		for (var j in model.cells[i].ref)
+    			{
+        			var ref = model.cells[i].ref[j];
+        			
+        			if(this.graph.getCell(ref)!=null)
+        			model.cells[i].ref[j]=this.graph.getCell(ref).attr('text').text;
+        			//console.log("ref"+model.cells[i].ref[j]);
+    		
+    			}
+        		
+        		
+        		
+        		
+        			}
+        				 			
+        			
+        	}
+        	
         	model = JSON.stringify(model);
         	
         	 var callback= function (dataURL){  
