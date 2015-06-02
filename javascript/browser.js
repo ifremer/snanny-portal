@@ -52,7 +52,7 @@ function showObservations(observations) {
 		});
     
     // Display header with observation's count
-		observationsContainerHeader.append(jQuery("<h4>" + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h4>"));
+		observationsContainerHeader.append(jQuery("<h4>" + $('#individualObsPointCount').text() + " points from " + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h4>"));
     
     if (timelineSelection != null && !timelineSelection.empty()) {
       observationsContainerHeader.append(jQuery("<p>from " 
@@ -175,12 +175,12 @@ function getObservationsCount() {
 		timerange = [ (+timelineSelection.extent()[0]), (+timelineSelection.extent()[1]) ];
 	}
 //	loadObservationsCount(SNANNY_API + "/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), SNANNY_API + "/observations/synthetic/timeline?bbox=" + bbox.join(",") + "&time=" + timerange.join(","));
-	totalCount = loadObservationsCount(SNANNY_API + "/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), SNANNY_API + "/observations/synthetic/timeline?bbox=" + bbox.join(","));
+	loadObservationsCount(SNANNY_API + "/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), SNANNY_API + "/observations/synthetic/timeline?bbox=" + bbox.join(","));
 
-	return totalCount;
+
 }
 
-function getObservations(totalCount) {
+function getObservations() {
 	var extent = map.getView().calculateExtent(map.getSize());
 	var bottomLeft = ol.extent.getBottomLeft(extent);
 	var topRight = ol.extent.getTopRight(extent);
@@ -198,9 +198,10 @@ function getObservations(totalCount) {
 	observationsContainer.html("");
 	observationsContainerHeader.html("");
 	observationsContainerHeader.append("<h4>loading...</h4>");
-	observationsContainerHeader.append("<p/>");
+	observationsContainerHeader.append("<p>&nbsp;</p>");
 
 	d3.json(SNANNY_API + "/observations?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), function(err, data) {
+		$('#individualObsPointLoading').text("1");
 		observationsSource.clear(true);
 	
 		if (data && data.status == "success" && data.features && data.features.length > 0 ){
@@ -219,19 +220,20 @@ function getObservations(totalCount) {
 			showObservations(observationsSource.getFeatures());
 			
 		}else if (data && (data.status == "timeOut" || data.status == "tooMany")) {
+			while($('#syntheticMapLoading').text() == 1){1;}
 			observationsContainerHeader.html("");
-			observationsContainerHeader.append("<h4>" + totalCount + " observation points selected, </h4> \
+			observationsContainerHeader.append("<h4>" + $('#individualObsPointCount').text() + " points selected </h4> \
 						      <p>refine your request to see individual observations...");
 
 		}else if (data && data.status == "empty") {
 			observationsContainerHeader.html("");
-			observationsContainerHeader.append("<h4>no observation</h4> \
+			observationsContainerHeader.append("<h4>no point</h4> \
 						      <p>please relax you request...</p>");
 			observationsCountSource.clear();
 
 		}
 
-
+		$('#individualObsPointLoading').text("0");
    		//console.log(err);
                 //console.log(data);
 		
@@ -260,6 +262,7 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 	
 	if (mapZoomURL) {
 		d3.json(mapZoomURL, function(err, data) {
+			$('#syntheticMapLoading').text("1");
 			var vectorSource = new ol.source.GeoJSON({
 				projection : 'EPSG:4326',
 				object : data
@@ -267,14 +270,17 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 			
 			observationsCountSource.clear();
 			observationsCountSource.addFeatures(vectorSource.getFeatures());			
-			totalCount = data['totalCount'];
+			$('#individualObsPointCount').text(data['totalCount']);
 
 			// FIXME: 
 			//selectionFeature.setGeometry(undefined);
 			
 			if (--loadingCount == 0) {
-				stopLoading();
+				stopLoading();				
 			}
+			$('#syntheticMapLoading').text("0");
+			
+
 		});
 		if (!timelineInitialized) {
 			loadingCount++;
@@ -283,6 +289,7 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 
 	if (timelineZoomURL) {
 		d3.json(timelineZoomURL, function(err, data) {
+			$('#timelineLoading').text("1");
 			if (!timelineInitialized) {
 				initializeTimeline(data);
 				timelineInitialized = true;
@@ -293,6 +300,7 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 			if (--loadingCount == 0) {
 				stopLoading();
 			}
+			$('#timelineLoading').text("0");
 		});
 		if (!timelineInitialized) {
 			loadingCount++;
@@ -303,7 +311,7 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 		startLoading();
 	}
 
-	return totalCount;
+
 }
 
 function loadObservations(observationsURL) {

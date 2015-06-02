@@ -38,12 +38,15 @@ for (var z = 0; z < 14; ++z) {
 // controls : ol.control.defaults().extend([ new ol.control.ScaleLine() ])
 // });
 
+var interactions = ol.interaction.defaults({altShiftDragRotate:false, pinchRotate:false});
+var controls = ol.control.defaults({rotate: false});
 var map = new ol.Map({
 
 	// controls : ol.control.defaults().extend([ new ol.control.ScaleLine({
 	// units : 'degrees'
 	// }) ]),
-
+	interactions: interactions,
+	controls: controls,
 	layers : [ new ol.layer.Tile({
 		source : new ol.source.TileWMS({
 			url : 'http://demo.boundlessgeo.com/geoserver/wms',
@@ -310,8 +313,8 @@ map.on('pointermove', function(event) {
 
 
 map.on('moveend', function(evt) {
-	totalCount = getObservationsCount();
-	getObservations(totalCount);
+	getObservationsCount();
+	getObservations();
 });
 
 
