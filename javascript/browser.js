@@ -222,7 +222,7 @@ function getObservations() {
 		}else if (data && (data.status == "timeOut" || data.status == "tooMany")) {
 			while($('#syntheticMapLoading').text() == 1){1;}
 			observationsContainerHeader.html("");
-			observationsContainerHeader.append("<h4>" + $('#individualObsPointCount').text() + " points selected </h4> \
+			observationsContainerHeader.append("<h4>" + $('#individualObsPointCount').text() + " points available </h4> \
 						      <p>refine your request to see individual observations...");
 
 		}else if (data && data.status == "empty") {
