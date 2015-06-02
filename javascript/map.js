@@ -67,7 +67,7 @@ var observation_style = new ol.style.Style({
 	image: new ol.style.Circle({
 		radius: 3,
 		fill: new ol.style.Fill({
-			color : 'rgba(255, 255, 255, 0.7)'
+			color : 'rgba(255, 255, 255, 1.0)'
 		})
 	}),
 	zIndex: 1
