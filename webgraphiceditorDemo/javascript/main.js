@@ -845,37 +845,54 @@ var Rappid = Backbone.Router.extend({
         $('#btn-print').on('click', _.bind(this.paper.print, this.paper));
         $('#btn-exportJSON').on('click', _.bind(this.toJSON, this));
         $('li.odt').on('click', _.bind(function() { 
-        	/*window.location.hash="#ODT";
+        	var model = this.graph.toJSON();
+        	console.log(model.cells);
+        	for ( var i=0; i<model.cells.length;i++)
+        		{
+        		if(model.cells[i].type=='link')
+        			{
+        			console.log(model.cells[i]);
+        			model.cells.splice(i,1);
+        			
+        			console.log(i);
+        			i--;
+        			}
+        		
         	
-        	if(window.location.hash=="#ODT")
-        	{
         		
+        		}
+        	
+        	model = JSON.stringify(model);
+        	
+        	 var callback= function (dataURL){  
+        		 
+        		 var overallImage =dataURL.split(",");
         		
-        		 var pom = document.createElement('a');
-        	        pom.setAttribute('href', 'data:application/json;charset=utf-8,' +JSON.stringify(this.graph.toJSON()));
-        	        pom.setAttribute('download', "moe.json");
-
-        	        pom.style.display = 'none';
-        	        document.body.appendChild(pom);
-
-        	        pom.click();
-
-        	        document.body.removeChild(pom);
-        	        
-        		
-        		
-        	}*/
+        		 
+        			var form = $('<form  action= http://localhost:8080/birt/frameset?__report=new_report_3.rptdesign target="_blank" method=post >' 
+             			   +  '<input type="text" name="json" id="json" value='+model+'  />'+  '<input type="text" name="projectName" id="projectName" value='+$("#fileName").val()+'  />'+  '<input type="text" name="overallImage" id="overallImage" value="'+overallImage[1]+'"  />'+'</form>');
+             				
+             				
+             				$('body').append(form);
+             				
+             				$("#json").val(model);
+             				$("#projectName").val($("#fileName").val());
+             				$("#overallImage").val(overallImage[1]);
+             				
+             				form.submit();             				
+             				form=undefined;
+             				
+        	 
+        	 }
         	
         	
+        	 this.paper.toPNG(callback) ;
+        	  
        
-        		var win=window.open("http://visi-common-tomcat2:8088/birt/frameset?__report=new_report_3.rptdesign"); 		win.focus();
         
-     
+        				
         
-        
-        
-        
-        
+        	
         
         }, this));
         $("li.toowncloud").on('click', _.bind(function() {
@@ -932,7 +949,7 @@ var Rappid = Backbone.Router.extend({
           	    		}
           	        	
           	        	$.ajax({
-          	        	    url: owncloudserverLink+'remote.php/webdav/'+".sensorNannyDraw",
+          	        	    url: owncloudserverLink+'/remote.php/webdav/'+".sensorNannyDraw",
           	        	    type: 'PUT',
           	        	    data: userPreferences, // or $('#myform').serializeArray()
           	        	    success: function() { }
