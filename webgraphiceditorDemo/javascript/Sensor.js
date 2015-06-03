@@ -16,30 +16,13 @@ joint.shapes.basic.Sensor = joint.shapes.basic.Generic.extend({
         ref :[]  ,
         "custom":{  
             "identifier":[  
-               {  
-                  "name":"Name1",
-                  "URI":"Value1",
-                  "Ref":"SensorType"
-               },
-               {  
-                   "name":"Name4",
-                   "URI":"Value4",
-                   "Ref":"SensorType"
-                }
+              
             ],
             "classifier":[  
-               {  
-                  "name":"Name2",
-                  "URI":"Value2",
-                  "Ref":"SensorType"
-               }
+              
             ],
             "output":[  
-               {  
-                  "name":"Name3",
-                  "URI":"Value3",
-                  "Ref":"SensorType"
-               }
+              
             ]
            
          },

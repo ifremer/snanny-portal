@@ -903,7 +903,7 @@ var Rappid = Backbone.Router.extend({
         		
         		 
         			var form = $('<form  action= http://localhost:8080/birt/frameset?__report=new_report_3.rptdesign target="_blank" method=post >' 
-             			   +  '<input type="text" name="json" id="json" value='+model+'  />'+  '<input type="text" name="projectName" id="projectName" value='+$("#fileName").val()+'  />'+  '<input type="text" name="overallImage" id="overallImage" value="'+overallImage[1]+'"  />'+'</form>');
+             			   +  '<input type="textarea" name="json" id="json" value='+model+'  />'+  '<input type="text" name="projectName" id="projectName" value='+$("#fileName").val()+'  />'+  '<input type="text" name="overallImage" id="overallImage" value="'+overallImage[1]+'"  />'+'</form>');
              				
              				
              				$('body').append(form);
@@ -914,6 +914,8 @@ var Rappid = Backbone.Router.extend({
              				
              				form.submit();             				
              				form=undefined;
+             				
+             			
              				
         	 
         	 }

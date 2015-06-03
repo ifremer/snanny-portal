@@ -14,25 +14,13 @@ joint.shapes.basic.Platform = joint.shapes.basic.Generic.extend({
         },
         "custom":{  
             "identifier":[  
-               {  
-                  "name":"Name1",
-                  "URI":"Value1",
-                  "Ref":"PlatformType"
-               }
+             
             ],
             "classifier":[  
-               {  
-                  "name":"Name2",
-                  "URI":"Value2",
-                  "Ref":"PlatformType"
-               }
+              
             ],
             "output":[  
-               {  
-                  "name":"Name3",
-                  "URI":"Value3",
-                  "Ref":"PlatformType"
-               }
+               
             ]
            
          },

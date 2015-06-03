@@ -35304,33 +35304,42 @@ joint.ui.FreeTransform = Backbone.View.extend({
     		var resultId = $.grep(this.options.cell.get('custom').identifier, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType") });
     		var resultOut = $.grep(this.options.cell.get('custom').output, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType")});
     		var resultClass = $.grep(this.options.cell.get('custom').classifier, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType")});
-    		for( var i in resultId)
+    		console.log(resultId.length);
+    		if(resultId.length>0)
     			{
-    			
-    			$( "input[value="+resultId[i].name+"]" ).prop('disabled', true);
-				$( "input[value="+resultId[i].name+"]" ).css({'background-color' : '#D4D0C8'});
+    		for( var i in resultId);
+    			{
+    			console.log("here here");
+    			$( 'input[value="' + resultId[i].name+ '"]' ).prop('disabled', true);
+				$( 'input[value="'+resultId[i].name+'"]' ).css({'background-color' : '#D4D0C8'});
 
-    			$( "input[value="+resultId[i].URI+"]" ).prop('disabled', true);
-    			$( "input[value="+resultId[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
+    			$( 'input[value="'+resultId[i].URI+'"]' ).prop('disabled', true);
+    			$( 'input[value="'+resultId[i].URI+'"]' ).css({'background-color' : '#D4D0C8'});
     			}
+    			}
+    		if(resultOut.length>0)
+			{
     		for( var i in resultOut)
 			{
-    			$( "input[value="+resultOut[i].name+"]" ).prop('disabled', true);
-				$( "input[value="+resultOut[i].name+"]" ).css({'background-color' : '#D4D0C8'});
+    			$( 'input[value="'+resultOut[i].name+'"]' ).prop('disabled', true);
+				$( 'input[value="'+resultOut[i].name+'"]' ).css({'background-color' : '#D4D0C8'});
 
-    			$( "input[value="+resultOut[i].URI+"]" ).prop('disabled', true);
-    			$( "input[value="+resultOut[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
+    			$( 'input[value="'+resultOut[i].URI+'"]' ).prop('disabled', true);
+    			$( 'input[value="'+resultOut[i].URI+'"]' ).css({'background-color' : '#D4D0C8'});
 			}
-    		
+			}
+    		if(resultClass.length>0)
+			{
     		for( var i in resultClass)
 			{
-    			$( "input[value="+resultClass[i].name+"]" ).prop('disabled', true);
-				$( "input[value="+resultClass[i].name+"]" ).css({'background-color' : '#D4D0C8'});
+    			$( 'input[value="'+resultClass[i].name+'"]' ).prop('disabled', true);
+				$( 'input[value="'+resultClass[i].name+'"]' ).css({'background-color' : '#D4D0C8'});
 
-    			$( "input[value="+resultClass[i].URI+"]" ).prop('disabled', true);
-    			$( "input[value="+resultClass[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
+    			$( 'input[value="'+resultClass[i].URI+'"]' ).prop('disabled', true);
+    			$( 'input[value="'+resultClass[i].URI+'"]' ).css({'background-color' : '#D4D0C8'});
 			
 			
+			}
 			}
     		}
     
