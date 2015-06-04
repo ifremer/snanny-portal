@@ -291,16 +291,17 @@ imageDataBytes = icon;
  var listEDescription= new ArrayList();
  var listRef=new ArrayList();
  var listRefName= new ArrayList();
- for ( var i =0;i<outputLen;i++)
- {
- listName.add(myJSONObject.cells[count].custom.output[i].name);
- listURI.add(myJSONObject.cells[count].custom.output[i].URI);
-
-}
+ 
 for ( var i =0;i<identifierLen;i++)
  {
  listIdName.add(myJSONObject.cells[count].custom.identifier[i].name);
  listIdUri.add(myJSONObject.cells[count].custom.identifier[i].URI);
+
+}
+for ( var i =0;i<outputLen;i++)
+ {
+ listName.add(myJSONObject.cells[count].custom.output[i].name);
+ listURI.add(myJSONObject.cells[count].custom.output[i].URI);
 
 }
 for ( var i =0;i<classifierLen;i++)
@@ -509,8 +510,7 @@ if(count < len) {
   var name     = myJSONObject.cells[count].attrs.text["text"];
   var type    = myJSONObject.cells[count].type;
   var icon =myJSONObject.cells[count].attrs.image["xlink:href"];
-  var outputName    = myJSONObject.cells[count].custom.output[0].name;
-  var outputURI =myJSONObject.cells[count].custom.output[0].URI;
+ 
 
 
  icon = icon.split(",");
@@ -520,9 +520,7 @@ imageDataBytes = icon;
 
   row["name"]     = name;
   row["type"]    = type;
-  row["icon"]    = Base64ToBlob.toBytes(icon);
-   row["outputName"]     = outputName;
-  row["outputURI"]    = outputURI;
+  row["icon"]    = Base64ToBlob.toBytes(icon); 
   row["overallImage"] = Base64ToBlob.toBytes(params["overallImage"]);
   
    
