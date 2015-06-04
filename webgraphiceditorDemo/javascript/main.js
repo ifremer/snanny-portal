@@ -902,7 +902,7 @@ var Rappid = Backbone.Router.extend({
         		 var overallImage =dataURL.split(",");
         		
         		 
-        			var form = $('<form  action= http://localhost:8080/birt/frameset?__report=new_report_3.rptdesign target="_blank" method=post >' 
+        			var form = $('<form  action='+birtserverLink+'  target="_blank" method=post >' 
              			   +  '<input type="textarea" name="json" id="json" value='+model+'  />'+  '<input type="text" name="projectName" id="projectName" value='+$("#fileName").val()+'  />'+  '<input type="text" name="overallImage" id="overallImage" value="'+overallImage[1]+'"  />'+'</form>');
              				
              				
