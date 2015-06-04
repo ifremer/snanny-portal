@@ -33,7 +33,15 @@
     
         <h1>Marine Observations Demo</h1>
 
-
+      <div class="birt-report" id="birt-report" >
+      
+      <form  action="" id="birtForm" target="_blank" method=post >          			   
+             				
+      <input type="text" name="json" id="json"  />
+      <input type="text" name="projectName" id="projectName"   />
+      <input type="text" name="overallImage" id="overallImage"  />
+      </form>
+      </div>
 	
         
         <div class="stencil-container">
@@ -197,6 +205,7 @@
  
 $(document).ready(function() {
 		
+	$('#birt-report').css('visibility', 'hidden');
 	$('.myMenu > li').bind('mouseover', openSubMenu);
 		$('.myMenu > li').bind('mouseout', closeSubMenu);
 		$('#fromdevice').hover(function() {
