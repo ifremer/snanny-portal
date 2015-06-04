@@ -34377,73 +34377,7 @@ joint.ui.Inspector = Backbone.View.extend({
     	
     //set UUID in UUID cell in the inspector
     	
-    	
-    	
-        /*
-       
-        
-        var $attribute =  $('button.btn-list-add').closest('[data-attribute]');
-         var path = 'custom/output';
-        var options = this.getOptions($attribute);
-        console.log("a************************************************************************************************");
-        console.log($('button.btn-list-add'));
-        console.log($attribute);
-        console.log(path);
-        console.log(options);
-        //btn list add
-        // Take the index of the last list item and increase it by one.
-        var $lastListItem = $attribute.children('.list-items').children('.list-item').last();
-        
-        var lastIndex = $lastListItem.length === 0 ? -1 : parseInt($lastListItem.attr('data-index'), 10);
-        var index = lastIndex + 1;
-        
-        var $listItem = $(joint.templates.inspector['list-item.html']({ index: index }));
-        console.log("b************************************************************************************************");
-        console.log($lastListItem);
-        console.log(lastIndex);
-        console.log(index);
-        console.log($listItem);
-            
-        this.renderTemplate($listItem, options.item, path + '/' + index);
-
-        $('button.btn-list-add').parent().children('.list-items').append($listItem);
-        console.log("c************************************************************************************************");
-        console.log($('button.btn-list-add').parent().children('.list-items'));
-        
-        /*   
-        console.log("e**********************************************************************************");
-        console.log( $('btn-list-add'));*/
-    	/* var link = this.command.data.attributes || this.graph.getCell(command.data.id).toJSON();
-         
-         console.log(link.type);
-         if(link.type=='link')
-      	  {
-      	   
-         var sourceId = link.source.id
-           , targetId = link.target.id;
-
-         // source and target are both cells
-         if (sourceId && targetId) {
-
-     	// deny loops if settings don't allow them
-     	if (!loops && sourceId === targetId) {
-     	    return next('Loop are not allowed');
-     	}
-     	
-     	//find source and target type attribute (parameter "type" in settings)
-     	var sourceType =  this.graph.getCell(sourceId).get(type), targetType =  this.graph.getCell(targetId).get(type);
-     	if(sourceType=='basic.Sensor' && targetType=='basic.Platform')
-     		{
-     		var sensorsRef = [];
-     		console.log(this.graph.getCell(targetId).get('id'));
-     		sensorsRef.push(this.graph.getCell(targetId).get('id'));
-     	 console.log(this.graph.getCell(targetId).set('sensorsRef',sensorsRef));
-     	 
-     	
-     	   
-     		}
-         }
-      	  }*/
+    
         var cell = this.getModel();
         
         var byPath = {};
@@ -34480,6 +34414,31 @@ joint.ui.Inspector = Backbone.View.extend({
         	     	
             
         }
+        	if(attrPath=="custom/event/0/date")
+            {
+            		$attr.on('focus', _.bind(function() { 
+            			
+            			
+        	          $attr.datetimepicker({
+        	        	
+        	        	  timepicker:true,
+        	        	  format:'d-m-Y H:i'
+        	        		
+        	        	}); 
+              		
+        	        console.log("datepicker"); 	
+    		}, this));
+            		$attr.on('focusout', _.bind(function() { 
+            		
+            		
+            		
+                this.updateCell($attr, attrPath);
+            		
+            		
+            		}, this));
+            	     	
+                
+            }
         	byPath[attrPath] = $attr;
         } else {
             // No parameters given. We are updating all attributes
@@ -34673,7 +34632,31 @@ joint.ui.Inspector = Backbone.View.extend({
         	
         	
         	}
-        
+       
+       if(path=='custom/event')
+   	{
+   	var path='custom/event/'+index+'/date';
+     var $auto = this._byPath['custom/event/'+index+'/date'];
+      
+ 	
+  $auto.datetimepicker(
+		  
+  {
+	 
+	  
+	  timepicker:true,
+	  format:'d-m-Y H:i'
+	  
+  }
+  ); 
+	
+
+this.updateCell($auto,path);
+     
+
+   	
+   	
+   	}
         if (this.options.live) {
         	this.updateCell();
         }
