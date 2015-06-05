@@ -966,6 +966,9 @@ var Rappid = Backbone.Router.extend({
           	        	    success: function() { }
           	        	});
           	        	for (var i in toImport) { 
+          	        		if(userPreferences==="")
+          	        		userPreferences=toImport[i].attrs.text.text+".moe";
+          	        		else
           	        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
           	        		console.log(userPreferences);
           	        		$.ajax({
@@ -1105,6 +1108,9 @@ var Rappid = Backbone.Router.extend({
 		        	    success: function() { }
 		        	});
 		        	for (var i in toImport) { 
+		        		if(userPreferences==="")
+		        		userPreferences=toImport[i].attrs.text.text+".moe";
+		        		else
 		        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
 		        		console.log(userPreferences);
 		        		$.ajax({
@@ -1324,7 +1330,6 @@ var Rappid = Backbone.Router.extend({
     		{
     	
     	var importedData = []; 
-    	var sensorType;
     	var req1= $.ajax({
     	    url:    owncloudserverLink+'/remote.php/webdav/.sensorNannyDraw' 
     	    
@@ -1336,7 +1341,7 @@ var Rappid = Backbone.Router.extend({
     	       },
     	       
     	       error: function(){
-    	    	 
+    	    	   $(".se-pre-con").fadeOut("fast");
     	    	   }
     	    
     	});
@@ -1349,34 +1354,78 @@ var Rappid = Backbone.Router.extend({
     	$.when(req1).done(function(){
     		
     		console.log(1);
+    		if(userPreferences==="")
+    			{
+    			$(".se-pre-con").fadeOut("fast");
+    			}
+    		else
+    			{
     		var arr = userPreferences.split(';');
     		
     		for (var i in arr) { 
-    			
+    			if(arr[i]!=="")
+    				{
     			  req[i]= $.ajax({
     			    	    url: owncloudserverLink+'/remote.php/webdav/'+arr[i],
     			    	    
     			    	   
     			    	    success: function(a) {
+    			    	    	
     			    	    	importedData.push($.parseJSON(a));
+    			    	    	
     			    	    	    			    	    	
     			    	    },
+    			    	    error: function (){
+    			    	    	
+    			    	    	importedData.push("fail");
+    			    	    }
     			    	    
     			    	 
     			    	});
+    				}
+    			else
+    				{
+    				
+    				 req[i]= $.ajax({
+ 			    	    url: owncloudserverLink+'/remote.php/webdav/fail',
+ 			    	    
+ 			    	   
+ 			    	    success: function(a) {
+ 			    	    	
+ 			    	    	importedData.push($.parseJSON(a));
+ 			    	    	
+ 			    	    	    			    	    	
+ 			    	    },
+ 			    	    error: function (){
+ 			    	    	
+ 			    	    	importedData.push("fail");
+ 			    	    }
+ 			    	    
+ 			    	 
+ 			    	});
+    				
+    				
+    				
+    				
+    				
+    				
+    				
+    				}
     			  	}
     		
     		
 
 
     		$.when.apply($, req).done(function(){
-
-    			console.log(arr.length-1);
-    			for (var i in arr) { 
-    		
-    				 console.log(importedData[i].cells[0].custom.imported=false);
+    			
+    			console.log(arr.length);
+    			for (var i in arr) {
+    				
+    			
+    				 importedData[i].cells[0].custom.imported=false;
     			}
     			for (var i in arr) { 
+    				
     				Stencil.shapes.erd.push(new joint.shapes.basic.Platform(importedData[i].cells[0]));
     				
     				}
@@ -1385,6 +1434,20 @@ var Rappid = Backbone.Router.extend({
     		      
     		   		$(".se-pre-con").fadeOut("fast");
     		});
+    		
+    		$.when.apply($, req).fail(function(){
+    			
+    			
+    		
+    		      
+    		   		$(".se-pre-con").fadeOut("fast");
+    			
+    		});
+    		
+    		
+    		
+    		
+    			}
     		
     		
     	    

@@ -14,12 +14,14 @@ var CommonInspectorInputs = {
 
 var CommonInspectorGroups = {
 
-    text: { label: 'Text', index: 6 },
-    presentation: { label: 'Presentation', index: 5 },
-    geometry: { label: 'Geometry', index: 4 },
+    text: { label: 'Text', index: 8 },
+    presentation: { label: 'Presentation', index: 7 },
+    geometry: { label: 'Geometry', index: 6 },
     data: { label: 'System description', index: 1 },
     identifier: { label: 'identifier', index: 2 },
     classifier: { label : 'other tags', index: 3},
+    contact: { label : 'Contact', index: 4},
+    position: { label : 'Position', index: 5},
     event: { label : 'event', index: 2}
    
     
@@ -77,6 +79,22 @@ var SensorType = {
                         
                     }
                 },  group: 'classifier', index: 1, label: 'Other tags', attrs: { label: { 'data-tooltip': 'classifier' } }} ,
+                contact : { type :'list',item: {
+                    type: 'object',
+                    properties: {
+                        role: { type: 'text', label: 'role', index: 1, attrs: { label: { 'data-tooltip': 'role' } } },                                   
+                        email: { type: 'text', inlined: true, label: 'email', index: 2, attrs: { label: { 'data-tooltip': 'email' } } },
+                        URI: { type: 'text', inlined: true, label: 'URI', index: 2, attrs: { label: { 'data-tooltip': 'URI' } } }
+                            
+                        
+                    }
+                },  group: 'contact', index: 1, label: 'Contact', attrs: { label: { 'data-tooltip': 'contact' } }} ,
+               
+                
+                    latitude: { type: 'text', label: 'latitude', index: 1,group: 'position', attrs: { label: { 'data-tooltip': 'role' } } },                                   
+                    longitude: { type: 'text', inlined: true, label: 'longitude',group: 'position', index: 2, attrs: { label: { 'data-tooltip': 'email' } } }                           
+                        
+                  
                
                 
                 
@@ -198,6 +216,24 @@ var PlatformType = {
                     
                 }
             },  group: 'classifier', index: 1, label: 'Other tags', attrs: { label: { 'data-tooltip': 'classifier' } }} ,
+            
+            contact : { type :'list',item: {
+                type: 'object',
+                properties: {
+                    role: { type: 'text', label: 'role', index: 1, attrs: { label: { 'data-tooltip': 'role' } } },                                   
+                    email: { type: 'text', inlined: true, label: 'email', index: 2, attrs: { label: { 'data-tooltip': 'email' } } },
+                    URI: { type: 'text', inlined: true, label: 'URI', index: 2, attrs: { label: { 'data-tooltip': 'URI' } } }
+                        
+                    
+                }
+            },  group: 'contact', index: 1, label: 'Contact', attrs: { label: { 'data-tooltip': 'contact' } }} ,
+           
+            
+                latitude: { type: 'text', label: 'latitude', index: 1,group: 'position', attrs: { label: { 'data-tooltip': 'role' } } }  ,                               
+                longitude: { type: 'text', inlined: true, label: 'longitude', index: 2,group: 'position', attrs: { label: { 'data-tooltip': 'email' } } }
+                        
+                    
+                
             
                            
 				    	

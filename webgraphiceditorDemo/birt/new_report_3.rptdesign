@@ -124,6 +124,31 @@
                     <property name="name">refNameForInner</property>
                     <property name="dataType">javaObject</property>
                 </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">cEmailForInner</property>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">cRoleForInner</property>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">cUriForInner</property>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">latitudeForInner</property>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">longitudeForInner</property>
+                    <property name="dataType">javaObject</property>
+                </structure>
             </list-property>
             <list-property name="columnHints">
                 <structure>
@@ -167,6 +192,21 @@
                 </structure>
                 <structure>
                     <property name="columnName">refNameForInner</property>
+                </structure>
+                <structure>
+                    <property name="columnName">cEmailForInner</property>
+                </structure>
+                <structure>
+                    <property name="columnName">cRoleForInner</property>
+                </structure>
+                <structure>
+                    <property name="columnName">cUriForInner</property>
+                </structure>
+                <structure>
+                    <property name="columnName">latitudeForInner</property>
+                </structure>
+                <structure>
+                    <property name="columnName">longitudeForInner</property>
                 </structure>
             </list-property>
             <structure name="cachedMetaData">
@@ -241,6 +281,31 @@
                         <property name="name">refNameForInner</property>
                         <property name="dataType">javaObject</property>
                     </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">cEmailForInner</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">cRoleForInner</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">cUriForInner</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">latitudeForInner</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">longitudeForInner</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
                 </list-property>
             </structure>
             <property name="dataSource">Scripted Data Source</property>
@@ -276,6 +341,7 @@ var outputLen =  myJSONObject.cells[count].custom.output.length;
 var identifierLen =  myJSONObject.cells[count].custom.identifier.length;
 var classifierLen =  myJSONObject.cells[count].custom.classifier.length;
 var eventLen =  myJSONObject.cells[count].custom.event.length;
+var contactLen = myJSONObject.cells[count].custom.contact.length;
  var refLen =  myJSONObject.cells[count].ref.length;
  var name     = myJSONObject.cells[count].attrs.text["text"];
   icon = icon.split(","); 
@@ -291,6 +357,11 @@ imageDataBytes = icon;
  var listEDescription= new ArrayList();
  var listRef=new ArrayList();
  var listRefName= new ArrayList();
+ var listcEmail= new ArrayList();
+ var listcRole= new ArrayList();
+ var listcUri= new ArrayList();
+ var listLatitude = new ArrayList();
+ var listLongitude = new ArrayList();
  
 for ( var i =0;i<identifierLen;i++)
  {
@@ -322,6 +393,16 @@ for ( var i =0;i<refLen;i++)
  listRefName.add(myJSONObject.cells[count].ref[i]);
 
 }
+for ( var i =0;i<contactLen;i++)
+ {
+ listcEmail.add(myJSONObject.cells[count].custom.contact[i].email);
+ listcRole.add(myJSONObject.cells[count].custom.contact[i].role);
+ listcUri.add(myJSONObject.cells[count].custom.contact[i].URI);
+
+}
+listLatitude.add(myJSONObject.cells[count].custom.latitude);
+listLongitude.add(myJSONObject.cells[count].custom.longitude);
+
  row["icon"]    = Base64ToBlob.toBytes(icon);
  row["urisForInner" ]=listURI;
  row["valuesForInner"] = listName;
@@ -335,6 +416,11 @@ for ( var i =0;i<refLen;i++)
   row["refNameForInner"]=listRefName;
   row["key"]= name;
   row["description"]=description;
+  row["cEmailForInner"]=listcEmail;
+  row["cRoleForInner"]=listcRole;
+  row["cUriForInner"]=listcUri;
+  row["latitudeForInner"]=listLatitude;
+  row["longitudeForInner"]=listLongitude;
   count++;
   row["chapNumber"]=count;
    return true;
@@ -521,8 +607,9 @@ imageDataBytes = icon;
   row["name"]     = name;
   row["type"]    = type;
   row["icon"]    = Base64ToBlob.toBytes(icon); 
+   
   row["overallImage"] = Base64ToBlob.toBytes(params["overallImage"]);
-  
+ 
    
    
   
@@ -799,6 +886,163 @@ refName= inputParams["refNameFromOuter"].iterator();]]></method>
  
 row["ref"] = ref.next();
 row["refName"]=refName.next();
+
+
+ 
+return true;]]></method>
+        </script-data-set>
+        <script-data-set name="Contact Data Set" id="415">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">0</property>
+                    <property name="name">email</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">role</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">URI</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">email</property>
+                </structure>
+                <structure>
+                    <property name="columnName">role</property>
+                </structure>
+                <structure>
+                    <property name="columnName">URI</property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">cEmailFromOuter</property>
+                    <property name="dataType">string</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">noval</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">cRoleFromOuter</property>
+                    <property name="dataType">string</property>
+                    <property name="position">2</property>
+                    <expression name="defaultValue" type="javascript">noval</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">cUriFromOuter</property>
+                    <property name="dataType">string</property>
+                    <property name="position">3</property>
+                    <expression name="defaultValue" type="javascript">noval</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">email</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">role</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">URI</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[cEmails= inputParams["cEmailFromOuter"].iterator();
+cRoles= inputParams["cRoleFromOuter"].iterator();
+cUris= inputParams["cUriFromOuter"].iterator();]]></method>
+            <method name="fetch"><![CDATA[if (!cEmails.hasNext() ) {
+        return false;
+}
+ 
+row["email"] = cEmails.next();
+row["role"]=cRoles.next();
+row["URI"]=cUris.next();
+
+ 
+return true;]]></method>
+        </script-data-set>
+        <script-data-set name="Position Data Set" id="416">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">latitude</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">longitude</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">latitude</property>
+                </structure>
+                <structure>
+                    <property name="columnName">longitude</property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">latitudeFromOuter</property>
+                    <property name="dataType">string</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">noval</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+                <structure>
+                    <property name="name">longitudeFromOuter</property>
+                    <property name="dataType">string</property>
+                    <property name="position">2</property>
+                    <expression name="defaultValue" type="javascript">noval</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">latitude</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">longitude</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Scripted Data Source</property>
+            <method name="open"><![CDATA[latitudes= inputParams["latitudeFromOuter"].iterator();
+longitudes= inputParams["longitudeFromOuter"].iterator();
+]]></method>
+            <method name="fetch"><![CDATA[if (!latitudes.hasNext() ) {
+        return false;
+}
+ 
+row["latitude"] = latitudes.next();
+row["longitude"]=longitudes.next();
 
 
  
@@ -1134,6 +1378,36 @@ return true;]]></method>
                     <property name="dataType">javaObject</property>
                     <property name="allowExport">true</property>
                 </structure>
+                <structure>
+                    <property name="name">cEmailForInner</property>
+                    <expression name="expression" type="javascript">dataSetRow["cEmailForInner"]</expression>
+                    <property name="dataType">javaObject</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">cRoleForInner</property>
+                    <expression name="expression" type="javascript">dataSetRow["cRoleForInner"]</expression>
+                    <property name="dataType">javaObject</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">cUriForInner</property>
+                    <expression name="expression" type="javascript">dataSetRow["cUriForInner"]</expression>
+                    <property name="dataType">javaObject</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">latitudeForInner</property>
+                    <expression name="expression" type="javascript">dataSetRow["latitudeForInner"]</expression>
+                    <property name="dataType">javaObject</property>
+                    <property name="allowExport">true</property>
+                </structure>
+                <structure>
+                    <property name="name">longitudeForInner</property>
+                    <expression name="expression" type="javascript">dataSetRow["longitudeForInner"]</expression>
+                    <property name="dataType">javaObject</property>
+                    <property name="allowExport">true</property>
+                </structure>
             </list-property>
             <property name="repeatHeader">false</property>
             <property name="pageBreakInterval">0</property>
@@ -1152,14 +1426,14 @@ return true;]]></method>
             </header>
             <detail>
                 <grid id="11">
-                    <property name="height">6.583333333333333in</property>
+                    <property name="height">8.34375in</property>
                     <property name="width">7.822916666666667in</property>
                     <structure name="toc"/>
                     <column id="12">
                         <property name="width">7.822916666666667in</property>
                     </column>
                     <row id="14">
-                        <property name="height">6.583333333333333in</property>
+                        <property name="height">8.34375in</property>
                         <cell id="15">
                             <text-data id="150">
                                 <property name="fontWeight">bold</property>
@@ -1704,6 +1978,231 @@ return true;]]></method>
                                             <data id="359">
                                                 <property name="textAlign">center</property>
                                                 <property name="resultSetColumn">ref</property>
+                                            </data>
+                                        </cell>
+                                    </row>
+                                </detail>
+                            </table>
+                            <label id="376">
+                                <property name="fontWeight">bold</property>
+                                <text-property name="text">Contacts :</text-property>
+                            </label>
+                            <table id="417">
+                                <property name="borderBottomColor">#000080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#000080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#000080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#000080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="dataSet">Contact Data Set</property>
+                                <list-property name="paramBindings">
+                                    <structure>
+                                        <property name="paramName">cEmailFromOuter</property>
+                                        <simple-property-list name="expression">
+                                            <value type="javascript">row["cEmailForInner"]</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="paramName">cRoleFromOuter</property>
+                                        <simple-property-list name="expression">
+                                            <value type="javascript">row["cRoleForInner"]</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="paramName">cUriFromOuter</property>
+                                        <simple-property-list name="expression">
+                                            <value type="javascript">row["cUriForInner"]</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
+                                <list-property name="boundDataColumns">
+                                    <structure>
+                                        <property name="name">email</property>
+                                        <text-property name="displayName">email</text-property>
+                                        <expression name="expression" type="javascript">dataSetRow["email"]</expression>
+                                        <property name="dataType">string</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">role</property>
+                                        <text-property name="displayName">role</text-property>
+                                        <expression name="expression" type="javascript">dataSetRow["role"]</expression>
+                                        <property name="dataType">string</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">URI</property>
+                                        <text-property name="displayName">URI</text-property>
+                                        <expression name="expression" type="javascript">dataSetRow["URI"]</expression>
+                                        <property name="dataType">string</property>
+                                    </structure>
+                                </list-property>
+                                <column id="430"/>
+                                <column id="431"/>
+                                <column id="432"/>
+                                <header>
+                                    <row id="418">
+                                        <cell id="419">
+                                            <property name="borderBottomColor">#000080</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">1px</property>
+                                            <property name="borderRightColor">#000080</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <label id="439">
+                                                <property name="backgroundColor">#023A69</property>
+                                                <property name="color">white</property>
+                                                <text-property name="text">Email</text-property>
+                                            </label>
+                                        </cell>
+                                        <cell id="420">
+                                            <property name="borderBottomColor">#000080</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderRightColor">#000080</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">thin</property>
+                                            <label id="434">
+                                                <property name="backgroundColor">#023A69</property>
+                                                <property name="color">white</property>
+                                                <text-property name="text">Role</text-property>
+                                            </label>
+                                        </cell>
+                                        <cell id="421">
+                                            <property name="borderBottomColor">#000080</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <label id="436">
+                                                <property name="backgroundColor">#023A69</property>
+                                                <property name="color">white</property>
+                                                <text-property name="text">URI</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </header>
+                                <detail>
+                                    <row id="422">
+                                        <cell id="423">
+                                            <property name="borderRightColor">#000080</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <data id="440">
+                                                <property name="textAlign">center</property>
+                                                <property name="resultSetColumn">email</property>
+                                            </data>
+                                        </cell>
+                                        <cell id="424">
+                                            <property name="borderRightColor">#000080</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <data id="435">
+                                                <property name="textAlign">center</property>
+                                                <property name="resultSetColumn">role</property>
+                                            </data>
+                                        </cell>
+                                        <cell id="425">
+                                            <data id="437">
+                                                <property name="textAlign">center</property>
+                                                <property name="resultSetColumn">URI</property>
+                                            </data>
+                                        </cell>
+                                    </row>
+                                </detail>
+                            </table>
+                            <label id="402">
+                                <property name="fontWeight">bold</property>
+                                <text-property name="text">Position :</text-property>
+                            </label>
+                            <table id="403">
+                                <property name="borderBottomColor">#000080</property>
+                                <property name="borderBottomStyle">solid</property>
+                                <property name="borderBottomWidth">thin</property>
+                                <property name="borderLeftColor">#000080</property>
+                                <property name="borderLeftStyle">solid</property>
+                                <property name="borderLeftWidth">thin</property>
+                                <property name="borderRightColor">#000080</property>
+                                <property name="borderRightStyle">solid</property>
+                                <property name="borderRightWidth">thin</property>
+                                <property name="borderTopColor">#000080</property>
+                                <property name="borderTopStyle">solid</property>
+                                <property name="borderTopWidth">thin</property>
+                                <property name="dataSet">Position Data Set</property>
+                                <list-property name="paramBindings">
+                                    <structure>
+                                        <property name="paramName">latitudeFromOuter</property>
+                                        <simple-property-list name="expression">
+                                            <value type="javascript">row["latitudeForInner"]</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="paramName">longitudeFromOuter</property>
+                                        <simple-property-list name="expression">
+                                            <value type="javascript">row["longitudeForInner"]</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
+                                <list-property name="boundDataColumns">
+                                    <structure>
+                                        <property name="name">latitude</property>
+                                        <text-property name="displayName">latitude</text-property>
+                                        <expression name="expression" type="javascript">dataSetRow["latitude"]</expression>
+                                        <property name="dataType">string</property>
+                                    </structure>
+                                    <structure>
+                                        <property name="name">longitude</property>
+                                        <text-property name="displayName">longitude</text-property>
+                                        <expression name="expression" type="javascript">dataSetRow["longitude"]</expression>
+                                        <property name="dataType">string</property>
+                                    </structure>
+                                </list-property>
+                                <column id="413"/>
+                                <column id="414"/>
+                                <header>
+                                    <row id="404">
+                                        <cell id="405">
+                                            <property name="borderBottomColor">#000080</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <property name="borderRightColor">#000080</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">thin</property>
+                                            <label id="441">
+                                                <property name="backgroundColor">#023A69</property>
+                                                <property name="color">white</property>
+                                                <text-property name="text">Latitude</text-property>
+                                            </label>
+                                        </cell>
+                                        <cell id="406">
+                                            <property name="borderBottomColor">#000080</property>
+                                            <property name="borderBottomStyle">solid</property>
+                                            <property name="borderBottomWidth">thin</property>
+                                            <label id="443">
+                                                <property name="backgroundColor">#023A69</property>
+                                                <property name="color">white</property>
+                                                <text-property name="text">Longitude</text-property>
+                                            </label>
+                                        </cell>
+                                    </row>
+                                </header>
+                                <detail>
+                                    <row id="407">
+                                        <cell id="408">
+                                            <property name="borderRightColor">#000080</property>
+                                            <property name="borderRightStyle">solid</property>
+                                            <property name="borderRightWidth">1px</property>
+                                            <data id="442">
+                                                <property name="textAlign">center</property>
+                                                <property name="resultSetColumn">latitude</property>
+                                            </data>
+                                        </cell>
+                                        <cell id="409">
+                                            <data id="444">
+                                                <property name="textAlign">center</property>
+                                                <property name="resultSetColumn">longitude</property>
                                             </data>
                                         </cell>
                                     </row>

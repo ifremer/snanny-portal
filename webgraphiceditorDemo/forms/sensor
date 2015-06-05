@@ -57,7 +57,37 @@
             {{#custom}} {{#if classifier}} 
         </sml:ClassifierList>
     </sml:classification>
-    {{/if}}{{/custom}}   
+    {{/if}}{{/custom}}  
+    
+    <!-- Contacts -->
+    {{#custom}} {{#if contact}}  
+     <sml:contacts>
+        <sml:ContactList>
+      {{/if}}{{/custom}} 
+      {{#custom}} {{#contact}}
+           <sml:contact>
+                <gmd:CI_ResponsibleParty uuid="{{URI}}">
+                    
+                    <gmd:organisationName><gco:CharacterString>IFREMER</gco:CharacterString></gmd:organisationName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:address>
+                                <gmd:CI_Address>
+                                    <gmd:electronicMailAddress>                                        
+                                       <gco:CharacterString>{{email}}</gco:CharacterString>
+                                     </gmd:electronicMailAddress>
+                                </gmd:CI_Address>
+                            </gmd:address>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role><gmd:CI_RoleCode codeList="http://www.ifremer.fr/tematres/vocab/index.php?tema=67" codeListValue="{{role}}"></gmd:CI_RoleCode></gmd:role>
+                </gmd:CI_ResponsibleParty>
+            </sml:contact>
+        {{/contact}} {{/custom}}                
+      {{#custom}}{{#if contact}} 
+       </sml:ContactList>
+    </sml:contacts>
+     {{/if}}{{/custom}} 
    
     <!-- history -->
     
@@ -99,7 +129,15 @@
         </sml:OutputList>
     </sml:outputs>
    {{/if}}  {{/custom}} 
-     
+   
+   <!-- position -->
+    {{#custom}} 
+    <sml:position>        
+        <gml:Point gml:id="stationLocation" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:coordinates>{{latitude}} {{longitude}}</gml:coordinates>
+        </gml:Point>        
+    </sml:position>
+      {{/custom}} 
     <!-- components list --> 
       {{#if ref}}
     <sml:components>
