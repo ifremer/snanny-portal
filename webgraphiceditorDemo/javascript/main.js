@@ -948,15 +948,19 @@ var Rappid = Backbone.Router.extend({
           	var graphicData=JSON.stringify(this.graph.toJSON());
           	var pathChoosen="";
           	var typedName="";
-          
+          	$("#dialog-box").dialog({
+          	    autoOpen: false,
+          	    modal: true,
+          	    height: 200,
+          	    width: 600,
           	    	
-          	      
-          	       
+          	      buttons: {
+          	        Save: function() {
           	        	
-          	pathChoosen=owncloudserverLink+'/remote.php/webdav';
-          	        	typedName=$('#fileName').val();
+          	        	pathChoosen=  owncloudserverLink+"/remote.php/webdav";
+          	        	typedName=$('#filenameTyped').val();
           	        	$.ajax({
-          	        	    url: owncloudserverLink+'/remote.php/webdav/'+typedName+'.moe',
+          	        	    url: pathChoosen+'/'+typedName,
           	        	    type: 'PUT',
           	        	    data: graphicData, // or $('#myform').serializeArray()
           	        	    success: function() { }
@@ -985,167 +989,192 @@ var Rappid = Backbone.Router.extend({
           	        	    	
           	        	    }
           	        	});
+          	    		
+          	          $( this ).dialog( "close" );
+          	          
+          	        }
+          	      },
+          	    open: function(ev, ui){
+          	             $('#myIframe').attr('src',owncloudserverLink+'/remote.php/webdav');
+          	          }
+          	});
+
+
+          	    $('#dialog-box').dialog('open');
         },this));
         
         
         
         $("li.save").on('click', _.bind(function() {
         	
-        	  if(choice==-1) 
-       	   {
-       	   
-       	   
-       	   
-           	    $( "#dialog-choice" ).dialog({
-           	      modal: true,
-           	      buttons: {
-           	        Device: function() {
-           	        	choice=0;
-           	        	 
-           	          $( this ).dialog( "close" );
-           	          $( "li.save" ).trigger( "click" );
-           	        },
-           	        Owncloud :function() {
-           	        	choice=1;
-           	        	$( this ).dialog( "close" );
-           	        	$( "li.save" ).trigger( "click" );
-           	        	
-           	        }
-           	      }
-           	    });
-           	 
-       	   }
-           	
-           	
-           	var model =this.graph.toJSON();
-     
-     var toImport = []; 
-     
-     
-     $.each(model.cells, function(i, v) {
-   	 if(v.type!="link")
-   		 {
-   	   if(v.custom.imported)
-   		   {
-   		  
-   	  toImport.push(v);
-   		   } }
-   	    
-   	});
+        	if(choice==-1) 
+     	   {
+     	   
+     	   
+     	   
+         	    $( "#dialog-choice" ).dialog({
+         	      modal: true,
+         	      buttons: {
+         	        Device: function() {
+         	        	choice=0;
+         	        	 
+         	          $( this ).dialog( "close" );
+         	          $( "li.save" ).trigger( "click" );
+         	        },
+         	        Owncloud :function() {
+         	        	choice=1;
+         	        	$( this ).dialog( "close" );
+         	        	$( "li.save" ).trigger( "click" );
+         	        	
+         	        }
+         	      }
+         	    });
+         	 
+     	   }
+         	
+         	
+         	var model =this.graph.toJSON();
+   
+   var toImport = []; 
+   
+   
+   $.each(model.cells, function(i, v) {
+ 	 if(v.type!="link")
+ 		 {
+ 	   if(v.custom.imported)
+ 		   {
+ 		  
+ 	  toImport.push(v);
+ 		   } }
+ 	    
+ 	});
+ 	
    	
+    
+ 	
+ 	if(choice==0)
+ 		{
+ 		var zip = new JSZip();
+     	var name = document.getElementById('fileName').value;
+     	zip.file(name+".moe", JSON.stringify(this.graph.toJSON()));
+     	for (var i in toImport) { 
+     		
+     			zip.file(toImport[i].attrs.text.text+".moe",JSON.stringify({"cells":[toImport[i]]}));
+     			
+     		}
+     		
      	
-      
-   	
-   	if(choice==0)
-   		{
-   		var zip = new JSZip();
-       	var name = document.getElementById('fileName').value;
-       	zip.file(name+".moe", JSON.stringify(this.graph.toJSON()));
-       	for (var i in toImport) { 
-       		
-       			zip.file(toImport[i].attrs.text.text+".moe",JSON.stringify({"cells":[toImport[i]]}));
-       			
-       		}
-       		
-       	
-       	var content = zip.generate({type:"blob"});
-       	saveAs(content, name+".zip"); 
-   		
-   		
-   		}
-   	
-   	if(choice==1)
-   		{
-   	
-   	var graphicData=JSON.stringify(this.graph.toJSON());
-   	
-   	
+     	var content = zip.generate({type:"blob"});
+     	saveAs(content, name+".zip"); 
+ 		
+ 		
+ 		}
+ 	
+ 	if(choice==1)
+ 		{
+ 	
+ 	var graphicData=JSON.stringify(this.graph.toJSON());
+ 	
+ 	
 
-   	// Convert the String to a JSON object
-   	var myJSONObject = eval( '(' +  graphicData + ' )' );
-   	
-   	console.log(myJSONObject)
+ 	// Convert the String to a JSON object
+ 	var myJSONObject = eval( '(' +  graphicData + ' )' );
+ 	
+ 	console.log(myJSONObject)
 
-   	
-   	if( pathChoosen==="" && typedName ==="")
-   		{
-   		
-   		
-   		        	
-   		        	pathChoosen=owncloudserverLink+'/remote.php/webdav';
-   		        	typedName=$('#fileName').val();
-   		        	$.ajax({
-   		        	    url: owncloudserverLink+'/remote.php/webdav/'+typedName+'.moe',
-   		        	    type: 'PUT',
-   		        	    data: graphicData, // or $('#myform').serializeArray()
-   		        	    success: function() { }
-   		        	});
-   		        	for (var i in toImport) { 
-   		        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
-   		        		console.log(userPreferences);
-   		        		$.ajax({
-   		        			
-   			        	    url: owncloudserverLink+'/remote.php/webdav/'+toImport[i].attrs.text.text+".moe",
-   			        	    type: 'PUT',
-   			        	    data: JSON.stringify({"cells":[toImport[i]]}), // or $('#myform').serializeArray()
-   			        	    success: function() { }
-   			        	});
-   		        		
-   		    			
-   		    		}
-   		        	
-   		        	$.ajax({
-   		        	    url: owncloudserverLink+'/remote.php/webdav/'+".sensorNannyDraw",
-   		        	    type: 'PUT',
-   		        	    data: userPreferences, // or $('#myform').serializeArray()
-   		        	    success: function() { }
-   		        	});
-   		    	
-   		        }
-   		      
-   		
-   		
+ 	
+ 	if( pathChoosen==="" && typedName ==="")
+ 		{
+ 		
+ 		$("#dialog-box").dialog({
+ 		    autoOpen: false,
+ 		    modal: true,
+ 		    height: 200,
+ 		    width: 600,
+ 		    	
+ 		      buttons: {
+ 		        Save: function() {
+ 		        	
+ 		        	pathChoosen= pathChoosen=  owncloudserverLink+"/remote.php/webdav" ;
+ 		        	typedName=$('#filenameTyped').val();
+ 		        	$.ajax({
+ 		        	    url: pathChoosen+'/'+typedName,
+ 		        	    type: 'PUT',
+ 		        	    data: graphicData, // or $('#myform').serializeArray()
+ 		        	    success: function() { }
+ 		        	});
+ 		        	for (var i in toImport) { 
+ 		        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
+ 		        		console.log(userPreferences);
+ 		        		$.ajax({
+ 		        			
+ 			        	    url: owncloudserverLink+'/remote.php/webdav/'+toImport[i].attrs.text.text+".moe",
+ 			        	    type: 'PUT',
+ 			        	    data: JSON.stringify({"cells":[toImport[i]]}), // or $('#myform').serializeArray()
+ 			        	    success: function() { }
+ 			        	});
+ 		        		
+ 		    			
+ 		    		}
+ 		        	
+ 		        	$.ajax({
+ 		        	    url: owncloudserverLink+'/remote.php/webdav/'+".sensorNannyDraw",
+ 		        	    type: 'PUT',
+ 		        	    data: userPreferences, // or $('#myform').serializeArray()
+ 		        	    success: function() { }
+ 		        	});
+ 		    		
+ 		          $( this ).dialog( "close" );
+ 		          
+ 		        }
+ 		      },
+ 		    open: function(ev, ui){
+ 		             $('#myIframe').attr('src',owncloudserverLink+'/remote.php/webdav');
+ 		          }
+ 		});
 
 
-   		
-   		
-   	else
-   		{
-   		
-   		
-       	$.ajax({
-       	    url: owncloudserverLink+'/remote.php/webdav'+'/'+typedName+'.moe',
-       	    type: 'PUT',
-       	    data: graphicData, // or $('#myform').serializeArray()
-       	    success: function() { }
-       	});
-       	for (var i in toImport) { 
-       		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
-       		console.log(userPreferences);
-       		$.ajax({
-       			
-           	    url: owncloudserverLink+'/remote.php/webdav/'+toImport[i].attrs.text.text+".moe",
-           	    type: 'PUT',
-           	    data: JSON.stringify({"cells":[toImport[i]]}), // or $('#myform').serializeArray()
-           	    success: function() { }
-           	});
-       		
-   			
-   		}
-       	
-       	$.ajax({
-       	    url: owncloudserverLink+'/remote.php/webdav/'+".sensorNannyDraw",
-       	    type: 'PUT',
-       	    data: userPreferences, // or $('#myform').serializeArray()
-       	    success: function() { }
-       	});
-   		
-   		
-   		
-   		
-   		
-   		}
-   		}
+ 		    $('#dialog-box').dialog('open');
+ 		
+ 		}
+ 	else
+ 		{
+ 		
+ 		
+     	$.ajax({
+     	    url: pathChoosen+'/'+typedName,
+     	    type: 'PUT',
+     	    data: graphicData, // or $('#myform').serializeArray()
+     	    success: function() { }
+     	});
+     	for (var i in toImport) { 
+     		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
+     		console.log(userPreferences);
+     		$.ajax({
+     			
+         	    url: owncloudserverLink+'/remote.php/webdav/'+toImport[i].attrs.text.text+".moe",
+         	    type: 'PUT',
+         	    data: JSON.stringify({"cells":[toImport[i]]}), // or $('#myform').serializeArray()
+         	    success: function() { }
+         	});
+     		
+ 			
+ 		}
+     	
+     	$.ajax({
+     	    url: owncloudserverLink+'/remote.php/webdav/'+".sensorNannyDraw",
+     	    type: 'PUT',
+     	    data: userPreferences, // or $('#myform').serializeArray()
+     	    success: function() { }
+     	});
+ 		
+ 		
+ 		
+ 		
+ 		
+ 		}
+ 	
+ 		} 
    	
    		
            

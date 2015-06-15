@@ -5,7 +5,7 @@
         <meta charset="utf8"/>
 <!--        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/> -->
 
-        <title>Sensor Nanny Draw</title>
+        <title>Marine Observations Graphic Editor Demo</title>
 
         <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet" type="text/css" />
 
@@ -145,7 +145,11 @@
         
         
         </div>
-       
+        <div id="dialog-box" title="Owncloud file saver">
+         
+        FileName: <input type="text" id="filenameTyped" value=".moe" /> 
+        
+        </div>
         <div id="dialog-choice" title="Save Data to">
                 
         </div>
@@ -202,7 +206,7 @@
             //var app = new Rappid({ channelUrl: 'ws://localhost:4141' });
  
 $(document).ready(function() {
-		
+	$('#filenameTyped').val($('#fileName').val()+".moe");
 	$('#birt-report').css('visibility', 'hidden');
 	$('.myMenu > li').bind('mouseover', openSubMenu);
 		$('.myMenu > li').bind('mouseout', closeSubMenu);
