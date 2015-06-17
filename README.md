@@ -21,18 +21,22 @@ Draw, save and export in sensorML
 Done with Rappid (http://jointjs.com/about-rappid)
 
 Go to:
+
     http://localhost/snanny-portal/webgraphiceditorDemo/webgraphiceditor/
+    
 
 # deployment
-   In the directory pubilshed with Apache:
+In the directory pubilshed with Apache:
+
+    git clone https://github.com/ifremer/snanny-portal.git
    
-   git clone https://github.com/ifremer/snanny-portal.git
+Update configuration in following files:
+The link on the SNANNY REST FULL API (snanny-api) server:
+
+    js/configuration.js
    
-   Update configuration in following files:
-   The link on the SNANNY REST FULL API (snanny-api) server:
-   js/configuration.js
-   
-   The link to owncloud service (for record storage), and birt (for report generation):
-   webgraphiceditorDemo/javascript/configuration.js
+The link to owncloud service (for record storage), and birt (for report generation):
+
+    webgraphiceditorDemo/javascript/configuration.js
 
 
