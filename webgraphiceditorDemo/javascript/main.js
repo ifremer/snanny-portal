@@ -2,7 +2,7 @@ var choice=-1;
 var pathChoosen="";
 var typedName="";
 
-var userPreferences;
+var userPreferences="";
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -970,7 +970,10 @@ if (content==="")
           	        	    success: function() { }
           	        	});
           	        	for (var i in toImport) { 
+          	        		if(userPreferences!=="")
           	        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
+          	        		else
+          	        		userPreferences=toImport[i].attrs.text.text+".moe";
           	        		console.log(userPreferences);
           	        		$.ajax({
           	        			
@@ -1108,7 +1111,10 @@ if (content==="")
  		        	    success: function() { }
  		        	});
  		        	for (var i in toImport) { 
- 		        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
+ 		        		if(userPreferences!=="")
+          	        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
+          	        	else
+          	        		userPreferences=toImport[i].attrs.text.text+".moe";
  		        		console.log(userPreferences);
  		        		$.ajax({
  		        			
@@ -1152,7 +1158,10 @@ if (content==="")
      	    success: function() { }
      	});
      	for (var i in toImport) { 
-     		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
+     		if(userPreferences!=="")
+	        		userPreferences=userPreferences+";"+toImport[i].attrs.text.text+".moe";
+	        		else
+	        		userPreferences=toImport[i].attrs.text.text+".moe";
      		console.log(userPreferences);
      		$.ajax({
      			
@@ -1341,7 +1350,7 @@ if (content==="")
                     		
                                     
                        var filename =this.href.split("/");
-                       console.log(filename)
+                      
                       filename=filename[filename.length-1];
                        if(filename.substring(0,1)!=='?')
                       modelNames.push(filename);
@@ -1364,11 +1373,11 @@ if (content==="")
     			    	    
     			    	   
     			    	    success: function(a) {
-			    	    		 if(a.substring(0, 4) =='{"at')                     
-										Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));
+			    	    		/* if(a.substring(0, 4) =='{"at')                     
+										Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));*/
 
-    			    	    	/*if(typeof a =='object')
-    			    	    		Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));*/
+    			    	    	if(typeof a =='object')
+    			    	    		Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));
     			    	    	
     			    	    
     			    	    	
@@ -1449,7 +1458,7 @@ if (content==="")
     		else
     			{
     		var arr = userPreferences.split(';');
-    		
+    		console.log(arr);
     		for (var i in arr) { 
     			if(arr[i]!=="")
     				{
@@ -1478,12 +1487,7 @@ if (content==="")
  			    	    url: owncloudserverLink+'/remote.php/webdav/fail',
  			    	    
  			    	   
- 			    	    success: function(a) {
- 			    	    	
- 			    	    	importedData.push($.parseJSON(a));
- 			    	    	
- 			    	    	    			    	    	
- 			    	    },
+ 			    	    
  			    	    error: function (){
  			    	    	
  			    	    	importedData.push("fail");
@@ -1505,7 +1509,7 @@ if (content==="")
 
 
     		$.when.apply($, req).done(function(){
-    			
+    			console.log("success");
     			console.log(arr.length);
     			for (var i in arr) {
     				
@@ -1525,8 +1529,8 @@ if (content==="")
     		});
     		
     		$.when.apply($, req).fail(function(){
-    			
-    			
+    			console.log("fail");
+    		
     		
     		      
     		   		$(".se-pre-con").fadeOut("fast");
