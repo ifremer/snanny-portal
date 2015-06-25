@@ -1167,6 +1167,7 @@ unmatched elements opaque instead of completely invisible which is the default.
 }
 
 .tooltip {
+   white-space: pre-line;
    position: fixed;
    z-index: 100;
    border-radius: 5px;

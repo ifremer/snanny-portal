@@ -34,9 +34,23 @@ function showStatus(message, type) {
     });
 };
 
-var ajaxTemplateSensor;
-var ajaxTemplatePlatform;
-var ajaxTemplateBoat;
+var ajaxTemplate;
+
+function convertImgToBase64URL(url, callback, outputFormat){
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(){
+        var canvas = document.createElement('CANVAS'),
+        ctx = canvas.getContext('2d'), dataURL;
+        canvas.height = this.height;
+        canvas.width = this.width;
+        ctx.drawImage(this, 0, 0);
+        dataURL = canvas.toDataURL(outputFormat);
+        callback(dataURL);
+        canvas = null; 
+    };
+    img.src = url;
+}
 
 
 
@@ -87,18 +101,13 @@ var Rappid = Backbone.Router.extend({
     // Create a graph, paper and wrap the paper in a PaperScroller.
     initializePaper: function() {
     	
-   	$.get( "./forms/sensor", function( data ) {
-    		  ajaxTemplateSensor=data;
+    	
+   	$.get( "./forms/model", function( data ) {
+    		  ajaxTemplate=data;
     		 
     		});
-    	$.get( "./forms/boat", function( data ) {
-    		 ajaxTemplateBoat=data;
-    		 
-    		});
-    	$.get( "./forms/platform", function( data ) {
-    		 ajaxTemplatePlatform=data;
-    		 
-    		});
+    
+    
 			
     	
  
@@ -255,10 +264,15 @@ var Rappid = Backbone.Router.extend({
         _.each(this.stencil.graphs, function(graph) {
 
             graph.get('cells').each(function(cell) {
+            	var content="";
+            	if(cell.get('custom').classifier[1])
+            		content =cell.get('attrs').text.name+"\n"+cell.get('custom').classifier[1].URI;
 
+if (content==="")
+	content=cell.get('type')
                 new joint.ui.Tooltip({
                     target: '.stencil [model-id="' + cell.id + '"]',
-                    content: cell.get('type').split('.').join(' '),
+                    content: content,
                     left: '.stencil',
                     direction: 'left'
                 });
@@ -560,34 +574,19 @@ var Rappid = Backbone.Router.extend({
         	
         	
         	
-        	 
+            	  
            var link = command.data.attributes || this.graph.getCell(command.data.id).toJSON();
-        	 console.log("lol",link.custom)
-        	 if(link.type=='basic.Sensor' ||link.type=='basic.Platform')
-     		{
+        	 console.log(link)
+        	 if(link.type!='link' && link.type!='basic.Sensor' && link.type!='basic.Platform' )
+     		{ 
+        		 
+        		 
+        		 joint.dia.Cell.prototype.prop.call(this.graph.getCell(link.id),"attrs/text/text", link.custom.classifier[0].URI, undefined);
      		
      		
-     		var resultId = $.grep(link.custom.identifier, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType") });
-     		var resultOut = $.grep(link.custom.output, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType")});
-     		var resultClass = $.grep(link.custom.classifier, function(e){return (e.Ref=="SensorType") || (e.Ref=="PlatformType")});
-     		for( var i in resultId)
-     			{
-     			
-     			$( "input[value="+resultId[i].name+"]" ).prop('disabled', true);
- 				$( "input[value="+resultId[i].name+"]" ).css({'background-color' : '#D4D0C8'});
-
-     			$( "input[value="+resultId[i].URI+"]" ).prop('disabled', true);
-     			$( "input[value="+resultId[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
-     			}
-     		for( var i in resultOut)
- 			{
-     			$( "input[value="+resultOut[i].name+"]" ).prop('disabled', true);
- 				$( "input[value="+resultOut[i].name+"]" ).css({'background-color' : '#D4D0C8'});
-
-     			$( "input[value="+resultOut[i].URI+"]" ).prop('disabled', true);
-     			$( "input[value="+resultOut[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
- 			}
      		
+     		/*var resultClass = $.grep(link.custom.classifier, function(e){return (e.Ref=="modelData") });
+     	
      		for( var i in resultClass)
  			{
      			$( "input[value="+resultClass[i].name+"]" ).prop('disabled', true);
@@ -597,14 +596,15 @@ var Rappid = Backbone.Router.extend({
      			$( "input[value="+resultClass[i].URI+"]" ).css({'background-color' : '#D4D0C8'});
  			
  			
- 			}
+ 			}*/
+ 			  
      		}
      
-         
-        	   
-        	  
+       
+        	// this.graph.getCell(link).attr("text").fill="#000000"
+        	 
            
-        	 console.log( this.graph.getCell(link));
+        	 console.log( this.graph.getCell(link).attr("text"));
         	 if(link.type !='link')
      		{
      		 
@@ -705,7 +705,8 @@ var Rappid = Backbone.Router.extend({
         $( "li.sensorml" ).on('click', _.bind(function() {
         	
         	
-        	
+        
+        		console.log(InspectorDefs)
         	var zip = new JSZip();
         	var name = document.getElementById('fileName').value;
         	
@@ -716,7 +717,7 @@ var Rappid = Backbone.Router.extend({
         	{
         		
             	console.log(model.cells[i])
-        		if( model.cells[i].type=="basic.Sensor" || model.cells[i].type=="basic.Platform"   )
+        		if( model.cells[i].type!="link"   )
         			{
         			
         		var elem = model.cells[i].id;
@@ -747,18 +748,21 @@ var Rappid = Backbone.Router.extend({
         	
         	for (var i in model.cells) { 
         		
-        		if( model.cells[i].type=="basic.Platform")
+        		if( model.cells[i].type!="link")
         		{	
+        			
+        			model.cells[i].modelType="plop";
+        			if( model.cells[i].modelType=model.cells[i].custom.classifier[0] && model.cells[i].custom.classifier[0].name==="model")
+            		
+        					model.cells[i].modelType=model.cells[i].custom.classifier[0].URI;
+        			
         		
-        		model.cells[i].custom.output = model.cells[i].custom.output.filter(function (el) {
-                         return el.Ref !== "PlatformType";
-                        });
-        		model.cells[i].custom.classifier = model.cells[i].custom.output.filter(function (el) {
-                    return el.Ref !== "PlatformType";
+        		model.cells[i].custom.classifier = model.cells[i].custom.classifier.filter(function (el) {
+                    return el.Ref !== "modelData";
                    });
         		
-        		console.log( model.cells[i].custom.output)
-        			var template = Handlebars.compile(ajaxTemplatePlatform);
+        		
+        			var template = Handlebars.compile(ajaxTemplate);
         			var generated = template(model.cells[i]);
         			
         			        			//console.log(generated); 
@@ -767,26 +771,7 @@ var Rappid = Backbone.Router.extend({
                 	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
         			
         		}
-        		if( model.cells[i].type=="basic.Sensor")
-        		{	
-        		
-        		model.cells[i].custom.output = model.cells[i].custom.output.filter(function (el) {
-                         return el.Ref !== "SensorType";
-                        });
-        		model.cells[i].custom.classifier = model.cells[i].custom.output.filter(function (el) {
-                    return el.Ref !== "SensorType";
-                   });
-        		
-        		console.log( model.cells[i].custom.output)
-        			var template = Handlebars.compile(ajaxTemplateSensor);
-        			var generated = template(model.cells[i]);
-        			
-        			        			//console.log(generated); 
-        			var generatedDecode = $('<textarea />').html(generated).text();
-                	
-                	zip.file(model.cells[i].attrs.text.text+".xml", generatedDecode);
-        			
-        		}
+        	
         	}
         	
 
@@ -864,11 +849,29 @@ var Rappid = Backbone.Router.extend({
         		
         		}
         	
+        	for ( var i=0; i<model.cells.length;i++)
+    		{
+        		console.log(model.cells[i].attrs.image["xlink:href"])
+    		var imageExtension=model.cells[i].attrs.image["xlink:href"];
+    		imageExtension=imageExtension.split(".");
+    	if( imageExtension[1]==="png")
+    		{
+    		
+    		convertImgToBase64URL(model.cells[i].attrs.image["xlink:href"], function(base64Img){
+    		    // Base64DataURL
+    			console.log(base64Img)
+    		});
+    		
+    		}
+    		
+    		}
+        	
+        	
         	for (var i in model.cells)
         	{
         		
             	console.log(model.cells[i])
-        		if( model.cells[i].type=="basic.Sensor" || model.cells[i].type=="basic.Platform"   )
+        		if( model.cells[i].type!="link"   )
         			{
         			
         		var elem = model.cells[i].id;
@@ -959,6 +962,7 @@ var Rappid = Backbone.Router.extend({
           	        	
           	        	pathChoosen=  owncloudserverLink+"/remote.php/webdav";
           	        	typedName=$('#filenameTyped').val();
+          	 
           	        	$.ajax({
           	        	    url: pathChoosen+'/'+typedName,
           	        	    type: 'PUT',
@@ -1321,6 +1325,95 @@ var Rappid = Backbone.Router.extend({
         
 
     	var rappid=this;
+    	var modelNames = []; 
+    	var reqModels=[];
+    	
+       
+       var reqModel=   $.ajax({
+
+             //This will retrieve the contents of the folder if the folder is configured as 'browsable'
+                url: "models",
+                success: function (data) {
+
+                  //Lsit all png file names in the page
+                
+                    $(data).find("a").each(function (index) {
+                    		
+                                    
+                       var filename =this.href.split("/");
+                       console.log(filename)
+                      filename=filename[filename.length-1];
+                       if(filename.substring(0,1)!=='?')
+                      modelNames.push(filename);
+                    
+                  	var modelNamesSplitted = filename.split("_");
+                  
+                  	var type=[];
+                  	for( var i=1;i<modelNamesSplitted.length-1;i++)
+                  		{
+                  		
+                  		type.push(modelNamesSplitted[i]);
+                  		
+                  		}
+                  	var typeName=type.join("_");
+                  	 if(filename.substring(0,10)!=='index.html')
+                  		 {
+                 
+                  	reqModels[index]= $.ajax({
+    			    	    url: 'models/'+filename,
+    			    	    
+    			    	   
+    			    	    success: function(a) {
+			    	    		 if(a.substring(0, 4) =='{"at')                     
+										Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));
+
+    			    	    	/*if(typeof a =='object')
+    			    	    		Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));*/
+    			    	    	
+    			    	    
+    			    	    	
+    			    	     			    	    	
+    			    	    },
+    			    	    error: function (){
+    			    	    	
+    			    	    	console.log("faailed");
+    			    	    }
+    			    	    
+    			    	 
+    			    	});
+                  	
+                  		 }
+
+
+	
+                    
+                    });
+
+                }
+
+            });
+          
+       $.when(reqModel).done(function(){ 
+    		
+    		
+          $.when.apply($, reqModels).done(function(){
+  			
+  		
+  			
+  			
+  			rappid.initializeStencil();
+  		      
+  		});
+          $.when.apply($, reqModels).fail(function(){
+    			
+        	 		
+        			
+        			rappid.initializeStencil();
+        		      
+        		});
+    	
+       });
+       
     	if(location.search!="")
     		{
     	
@@ -1419,9 +1512,10 @@ var Rappid = Backbone.Router.extend({
     			
     				 importedData[i].cells[0].custom.imported=false;
     			}
-    			for (var i in arr) { 
+    			for (var i in arr) {
     				
-    				Stencil.shapes.erd.push(new joint.shapes.basic.Platform(importedData[i].cells[0]));
+    				
+    				Stencil.shapes.Imported.push(new joint.shapes.basic.Platform(importedData[i].cells[0]));
     				
     				}
     			

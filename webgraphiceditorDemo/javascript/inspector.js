@@ -27,7 +27,7 @@ var CommonInspectorGroups = {
     
 };
 
-var SensorType = {
+var dataType = {
 		
 		 
 		 description: { type: 'textarea', group: 'data',  label: 'Description', index: 1, attrs: { label: { 'data-tooltip': 'Description of the element' } } },  
@@ -109,138 +109,9 @@ var SensorType = {
 		
 };
 
-var BoatType = {
-		
-		description: { type: 'textarea', group: 'data',  label: 'Description', index: 1, attrs: { label: { 'data-tooltip': 'Description of the element' } } },  
-		
-	
-		custom: { 
-			
-			
-			 imported : { type : 'toggle', label :'Export' ,group :'data', index: 1 },
-			 
-		 	output : { type :'list',item: {
-                type: 'object',
-                properties: {
-                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the output channel' } } },                                   
-                    URI: { type: 'text', inlined: true, label: 'URI', index: 2, attrs: { label: { 'data-tooltip': 'identifier' } } }
-                        
-                    
-                }
-            },  group: 'data', index: 1, label: 'Output'} ,
-            
-            identifier : { type :'list',item: {
-                type: 'object',
-                properties: {
-                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the unique identifier key' } } },                                   
-                    URI: { type: 'text',  label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
-                        
-                    
-                }
-            },  group: 'identifier', index: 1, label: 'Identifier'} ,
-            event : { type :'list',item: {
-                type: 'object',
-                properties: {
-                    date: { type: 'text', label: 'Date', index: 1, attrs: { label: { 'data-tooltip': 'Date' } } },                                   
-                    description: { type: 'text',  label: 'Description', index: 2, attrs: { label: { 'data-tooltip': 'Event description' } } }
-                        
-                    
-                }
-            },  group: 'event', index: 1, label: 'Event', attrs: { label: { 'data-tooltip': 'Events' } }} ,
-            
-            classifier : { type :'list',item: {
-                type: 'object',
-                properties: {
-                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the proprety' } } },                                   
-                    URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
-                        
-                    
-                }
-            },  group: 'classifier', index: 1, label: 'Other tags', attrs: { label: { 'data-tooltip': 'classifier' } }} ,
-            
-                           
-				    	
-	    }	
-		
-		
-		
-		
-};
 
-var PlatformType = {
-		
-		description: { type: 'textarea', group: 'data',  label: 'Description', index: 1, attrs: { label: { 'data-tooltip': 'Description of the element' } } },  
-		
-		
-		custom: { 
-			
-			 
-			 imported : { type : 'toggle', label :'Export' ,group :'data', index: 1 },
-		 	
-		 	output : { type :'list',item: {
-                type: 'object',
-                properties: {
-                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the output channel' } } },                                   
-                    URI: { type: 'text', inlined: true, label: 'URI', index: 2, attrs: { label: { 'data-tooltip': 'identifier' } } }
-                        
-                    
-                }
-            },  group: 'data', index: 1, label: 'Output'} ,
-           
-            
-            identifier : { type :'list',item: {
-                type: 'object',
-                properties: {
-                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the unique identifier key' } } },                                   
-                    URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
-                        
-                    
-                }
-            },  group: 'identifier', index: 1, label: 'Identifier'} ,
-            event : { type :'list',item: {
-                type: 'object',
-                properties: {
-                    date: { type: 'text', label: 'Date', index: 1, attrs: { label: { 'data-tooltip': 'Date' } } },                                   
-                    description: { type: 'text',  label: 'Description', index: 2, attrs: { label: { 'data-tooltip': 'Event description' } } }
-                        
-                    
-                }
-            },  group: 'event', index: 1, label: 'Event', attrs: { label: { 'data-tooltip': 'Events' } }} ,
-            
-            classifier : { type :'list',item: {
-                type: 'object',
-                properties: {
-                    name: { type: 'text', label: 'name', index: 1, attrs: { label: { 'data-tooltip': 'label of the proprety' } } },                                   
-                    URI: { type: 'text', inlined: true, label: 'value', index: 2, attrs: { label: { 'data-tooltip': 'value' } } }
-                        
-                    
-                }
-            },  group: 'classifier', index: 1, label: 'Other tags', attrs: { label: { 'data-tooltip': 'classifier' } }} ,
-            
-            contact : { type :'list',item: {
-                type: 'object',
-                properties: {
-                    role: { type: 'text', label: 'role', index: 1, attrs: { label: { 'data-tooltip': 'role' } } },                                   
-                    email: { type: 'text', inlined: true, label: 'email', index: 2, attrs: { label: { 'data-tooltip': 'email' } } },
-                    URI: { type: 'text', inlined: true, label: 'URI', index: 2, attrs: { label: { 'data-tooltip': 'URI' } } }
-                        
-                    
-                }
-            },  group: 'contact', index: 1, label: 'Contact', attrs: { label: { 'data-tooltip': 'contact' } }} ,
-           
-            
-                latitude: { type: 'text', label: 'latitude', index: 1,group: 'position', attrs: { label: { 'data-tooltip': 'role' } } }  ,                               
-                longitude: { type: 'text', inlined: true, label: 'longitude', index: 2,group: 'position', attrs: { label: { 'data-tooltip': 'email' } } }
-                        
-                    
-                
-            
-                           
-				    	
-	    }	
-		
-		
-};
+
+
 
 var CommonInspectorTextInputs = {
     'text': { type: 'textarea', group: 'text', index: 1 },
@@ -318,76 +189,7 @@ var InspectorDefs = {
     },
 
    
-    'basic.Sensor': {
-
-        inputs: _.extend({
-            attrs: {
-                text : inp({
-                    text: { group: 'data', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-dy': { group: 'text', index: 9 }
-                }),
-                image: inp({
-                    'xlink:href': { group: 'presentation', index: 1 }
-                })
-            },
-           
-        }, CommonInspectorInputs,SensorType),
-        groups: CommonInspectorGroups
-    
-    },
-    
-    'basic.Boat': {
-
-        inputs: _.extend({
-            attrs: {
-                text: inp({
-                    text: { group: 'data', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-dy': { group: 'text', index: 9 }
-                }),
-                image: inp({
-                    'xlink:href': { group: 'presentation', index: 1 }
-                })
-                
-            }
-        }, CommonInspectorInputs,BoatType),
-        groups: CommonInspectorGroups
-       
-    },
-    
-    'basic.Platform': {
-
-        inputs: _.extend({
-            attrs: {
-                text: inp({
-                    text: { group: 'data', index: 1 },
-                    'font-size': { group: 'text', index: 2 },
-                    'font-family': { group: 'text', index: 3 },
-                    'font-weight': { group: 'text', index: 4 },
-                    fill: { group: 'text', index: 5 },
-                    stroke: { group: 'text', index: 6 },
-                    'stroke-width': { group: 'text', index: 7 },
-                    'ref-x': { group: 'text', index: 8 },
-                    'ref-dy': { group: 'text', index: 9 }
-                }),
-                image: inp({
-                    'xlink:href': { group: 'presentation', index: 1 }
-                })
-            }
-        }, CommonInspectorInputs,PlatformType),
-        groups: CommonInspectorGroups
-    },
+   
 };
+
+

@@ -56,7 +56,8 @@
 }
 
 .stencil .group {
-   max-height: 700px;
+   max-height: 5000px;
+  
 }
 
 .stencil .group .elements {

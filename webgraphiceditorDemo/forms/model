@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sml:PhysicalSystem xmlns:sml="http://www.opengis.net/sensorml/2.0" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="top" xsi:schemaLocation="http://www.opengis.net/sensorml/2.0 http://schemas.opengis.net/sensorML/2.0/sensorML.xsd">
+    <!-- Description --> 
+    <gml:description> {{description}}   </gml:description>
+    <!-- Name --> 
+    <gml:name > {{#attrs}} {{#text}} {{text}} {{/text}} {{/attrs}} </gml:name>  
+    <!-- keywords--> 
+    <sml:keywords>
+        <sml:KeywordList>
+            <sml:keyword>Oceanography</sml:keyword>
+            <sml:keyword>Meteorology</sml:keyword>
+            <sml:keyword>Observatory</sml:keyword>
+            <sml:keyword>Wind speed</sml:keyword>
+            <sml:keyword>Currents</sml:keyword>
+        </sml:KeywordList>
+    </sml:keywords>
+    
+    <!-- Identification--> 
+       <sml:identification>
+        <sml:IdentifierList>
+    <sml:identifier>
+        
+        <sml:Term definition="http://www.ifremer.fr/tematres/vocab/index.php?tema=66">
+            <sml:label>UUID</sml:label>
+            <sml:value>{{id}}</sml:value>
+        </sml:Term>
+    </sml:identifier>
+    {{#custom}} {{#identifier}}
+    {{^Ref}} 
+    <sml:identifier>
+        <sml:Term definition="http://www.ifremer.fr/tematres/vocab/index.php?tema=66">
+            <sml:label>{{name}}</sml:label>
+            <sml:value>{{URI}}</sml:value>
+        </sml:Term>
+    </sml:identifier>
+    {{/Ref}} 
+    {{/identifier}}  {{/custom}}
+    </sml:IdentifierList>
+    </sml:identification>
+    
+    <!-- Classification -->
+       {{#custom}} {{#if classifier}}  
+    <sml:classification>
+        <sml:ClassifierList>
+      {{/if}}{{/custom}}    
+            {{#custom}} {{#classifier}}  {{^Ref}} 
+            <sml:classifier>
+              
+                <sml:Term definition="http://www.ifremer.fr/tematres/vocab/index.php?tema=129">
+                    <sml:label>{{name}}</sml:label>
+                    <sml:codeSpace xlink:href="http://vocab.nerc.ac.uk/collection/L11/current/D08" />
+                    <sml:value>{{URI}}</sml:value>
+                </sml:Term>
+              
+            </sml:classifier>
+            {{/Ref}}  {{/classifier}} {{/custom}}
+            {{#custom}} {{#if classifier}} 
+        </sml:ClassifierList>
+    </sml:classification>
+    {{/if}}{{/custom}}  
+    
+    <!-- Contacts -->
+    {{#custom}} {{#if contact}}  
+     <sml:contacts>
+        <sml:ContactList>
+      {{/if}}{{/custom}} 
+      {{#custom}} {{#contact}}
+           <sml:contact>
+                <gmd:CI_ResponsibleParty uuid="{{URI}}">
+                    
+                    <gmd:organisationName><gco:CharacterString>IFREMER</gco:CharacterString></gmd:organisationName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:address>
+                                <gmd:CI_Address>
+                                    <gmd:electronicMailAddress>                                        
+                                       <gco:CharacterString>{{email}}</gco:CharacterString>
+                                     </gmd:electronicMailAddress>
+                                </gmd:CI_Address>
+                            </gmd:address>
+                        </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role><gmd:CI_RoleCode codeList="http://www.ifremer.fr/tematres/vocab/index.php?tema=67" codeListValue="{{role}}"></gmd:CI_RoleCode></gmd:role>
+                </gmd:CI_ResponsibleParty>
+            </sml:contact>
+        {{/contact}} {{/custom}}                
+      {{#custom}}{{#if contact}} 
+       </sml:ContactList>
+    </sml:contacts>
+     {{/if}}{{/custom}} 
+   
+    <!-- history -->
+    
+     {{#custom}} {{#if event}}  
+    <sml:history>
+        <sml:EventList>
+      {{/if}} {{/custom}}         
+            {{#custom}}    {{#each event}}
+            <sml:event>
+                <sml:Event definition="http://www.ifremer.fr/tematres/vocab/index.php?tema=90">
+                    <swe:description>{{description}}</swe:description>
+                    <sml:time>
+                        <gml:TimeInstant gml:id="Call{{@index}}">
+                            <gml:timePosition>{{date}}</gml:timePosition>
+                        </gml:TimeInstant>
+                    </sml:time>                
+                </sml:Event>
+            </sml:event>
+            {{/each}}{{/custom}}
+            
+              {{#custom}} {{#if event}}
+        </sml:EventList>        
+    </sml:history>
+    {{/if}} {{/custom}}
+    <!-- type OF -->
+    {{#if modelType}}
+    <sml:typeOf xlink:href="{{modelType}}.xml"/>
+    {{else}}
+    <sml:typeOf xlink:href="{{type}}.xml"/>
+    {{/if}}
+   
+    <!-- output -->
+     {{#custom}} {{#if output}} 
+    <sml:outputs>
+        <sml:OutputList>
+      {{/if}}  {{/custom}}   
+            {{#custom}} {{#output}}
+            {{^Ref}} 
+            <sml:output name="{{name}}" xlink:href="{{URI}}" />
+            {{/Ref}} {{/output}} {{/custom}}
+           {{#custom}} {{#if output}} 
+        </sml:OutputList>
+    </sml:outputs>
+   {{/if}}  {{/custom}} 
+   
+   <!-- position -->
+    {{#custom}} 
+    <sml:position>        
+        <gml:Point gml:id="stationLocation" srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+            <gml:coordinates>{{latitude}} {{longitude}}</gml:coordinates>
+        </gml:Point>        
+    </sml:position>
+      {{/custom}} 
+    <!-- components list --> 
+      {{#if ref}}
+    <sml:components>
+        <sml:ComponentList>
+        {{/if}} 
+            {{#ref}}
+            <sml:component name="{{.}}" xlink:href="{{.}}.xml" />
+            {{/ref}}
+           {{#if ref}}
+           
+        </sml:ComponentList>
+    </sml:components>
+   {{/if}}
+   
+
+    
+</sml:PhysicalSystem>

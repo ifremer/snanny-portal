@@ -34188,8 +34188,7 @@ joint.ui.Inspector = Backbone.View.extend({
                 var $listItem = $(joint.templates.inspector['list-item.html']({
                     index: idx
                 }));
-                console.log("a************************************************************************************************");
-                console.log($listItem);
+               
 
                 this.renderTemplate($listItem, options.item, path + '/' + idx);
 
@@ -34528,11 +34527,11 @@ joint.ui.Inspector = Backbone.View.extend({
     },
 
     setProperty: function(path, value, opt) {
-
+    	
         opt = opt || {};
         opt.inspector = this.cid;
         opt['inspector_' + this.cid] = true; // kept for backwards compatibility
-
+        
         // the model doesn't have to be a JointJS cell necessary. It could be
         // an ordinary Backbone.Model and such would have no method 'prop'.
         joint.dia.Cell.prototype.prop.call(this.getModel(), path, value, opt);
@@ -34572,12 +34571,7 @@ joint.ui.Inspector = Backbone.View.extend({
         var $attribute = $target.closest('[data-attribute]');
         var path = $attribute.attr('data-attribute');
         var options = this.getOptions($attribute);
-      //  console.log("a************************************************************************************************");
-       // console.log($target);
-       /* console.log($attribute);
-        console.log(path);
-        
-        console.log(options);*/
+     
         //btn list add
         // Take the index of the last list item and increase it by one.
         var $lastListItem = $attribute.children('.list-items').children('.list-item').last();
@@ -34586,17 +34580,13 @@ joint.ui.Inspector = Backbone.View.extend({
         var index = lastIndex + 1;
         
         var $listItem = $(joint.templates.inspector['list-item.html']({ index: index }));
-     //   console.log("b************************************************************************************************");
-       // console.log("AAAAAAAAA"+$lastListItem);
-        // console.log("BBBBBBBBB"+lastIndex);
-        // console.log("CCCCCCCCCCC"+index);
-        // console.log("DDDDDDDDD"+$listItem);
+ 
         
         this.renderTemplate($listItem, options.item, path + '/' + index);
 
         $target.parent().children('.list-items').append($listItem);
-        console.log("c************************************************************************************************");
-        console.log($target.parent().children('.list-items'));
+        
+       
         
         $listItem.find('input:first').focus();
 
@@ -34619,16 +34609,12 @@ joint.ui.Inspector = Backbone.View.extend({
        $auto.autocomplete({
                           	source: availableTags}); 
 		
-     console.log("azazazazazazutocomplete"+$auto); 
+    
      this.updateCell($auto,path);
           
       
         
-         console.log("2");
-        	
-        	 
-        	
-  //  console.log("AddlistIteeeem"+$auto);
+       
         	
         	
         	}
@@ -35277,8 +35263,8 @@ joint.ui.FreeTransform = Backbone.View.extend({
     },
 
     update: function() {
-   
-  
+    	this.options.cell.get('type')
+  /*
     	
     	if( this.options.cell.get('type')=='basic.Sensor' || this.options.cell.get('type')=='basic.Platform')
     		{
@@ -35324,7 +35310,7 @@ joint.ui.FreeTransform = Backbone.View.extend({
 			
 			}
 			}
-    		}
+    		}*/
     
     	
      	   
