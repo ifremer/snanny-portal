@@ -16,12 +16,14 @@ Web graphic editor demo for marine observations based on JointJS and Rappid tool
 ## Update Stencil from EMSO Yellow Pages Database:
 - Move Models.JSON generated with Snanny-Yellow-Pages/MysqlToJSON.Java in /WebgraphiceditorDemo/models
 
-- Move Types.JS generated with Snanny-Yellow-Pages/JSTypeGeneration in /WebgraphiceditorDemo/Types
+- Move Types.JS generated with Snanny-Yellow-Pages/JSTypeGeneration.Java in /WebgraphiceditorDemo/Types
 
    - Copy the content of StencilGroups.txt which contains all emso yellow pages groups in
 /webgraphiceditorDemo/javascript/stencil.js Stencil.groups = {}
 
    - Copy the content of StencilShapes.txt which contains array definition of all emso yellow pages types in /webgraphiceditorDemo/javascript/stencil.js Stencil.shapes={}
+   
+- Move Images (*.png) of Models renamed with snanny-Yellow-pages/RenameImages.Java in /WebgraphiceditorDemo/images/Models
 
 
 
