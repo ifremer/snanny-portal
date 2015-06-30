@@ -11,7 +11,7 @@ Web graphic editor demo for marine observations based on JointJS and Rappid tool
 
   - {Type}: Valid Types are listed in JavaScript/types
     
-  - param: Parametre need to be a valid JSON object for Rappid-JointJS.
+  - param: Parameter need to be a valid JSON object for Rappid-JointJS.
 
 ## Update Stencil from EMSO Yellow Pages Database:
 - Move Models.JSON generated with Snanny-Yellow-Pages/MysqlToJSON.Java in /WebgraphiceditorDemo/models
