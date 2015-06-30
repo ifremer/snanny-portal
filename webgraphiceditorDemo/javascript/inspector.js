@@ -126,7 +126,7 @@ var CommonInspectorTextInputs = {
 };
 
 var InputDefs = {
-    text: { type: 'textarea', label: 'Text' },
+    text: { type: 'textarea', label: 'Name' },
     'font-size': { type: 'range', min: 5, max: 80, unit: 'px', label: 'Font size' },
     'font-family': { type: 'select', options: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Georgia', 'Garamond', 'Tahoma', 'Lucida Console', 'Comic Sans MS'], label: 'Font family' },
     'font-weight': { type: 'range', min: 100, max: 900, step: 100, defaultValue: 400, label: 'Font weight' },

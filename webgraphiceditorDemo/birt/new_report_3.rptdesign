@@ -10,7 +10,6 @@
         </structure>
     </list-property>
     <property name="units">in</property>
-    <method name="initialize"><![CDATA[ reportContext.getDesignHandle().getElementByID(145).setHeight(180);]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
     <property name="imageDPI">96</property>
@@ -318,6 +317,8 @@ importPackage(Packages.javax.imageio);
 importPackage(Packages.java.net);
 importPackage(Packages.base64ToBlob64);
 
+
+
 // Grab the JSON file and place it in a string
 
 
@@ -345,9 +346,7 @@ var eventLen =  myJSONObject.cells[count].custom.event.length;
 var contactLen = myJSONObject.cells[count].custom.contact.length;
  var refLen =  myJSONObject.cells[count].ref.length;
  var name     = myJSONObject.cells[count].attrs.text["text"];
-  icon = icon.split(","); 
- icon= icon[1];
-imageDataBytes = icon;
+  
  var listName = new ArrayList();
  var listURI = new ArrayList();
  var listIdName=new ArrayList();
@@ -403,8 +402,15 @@ for ( var i =0;i<contactLen;i++)
 }
 listLatitude.add(myJSONObject.cells[count].custom.latitude);
 listLongitude.add(myJSONObject.cells[count].custom.longitude);
+//Image at url
 
- row["icon"]    = Base64ToBlob.toBytes(icon);
+var myurl = new Packages.java.net.URL(vars["imageHost"]+icon);
+
+var img = ImageIO.read(myurl);
+bas = new ByteArrayOutputStream();
+ImageIO.write(img, "png", bas);
+
+ row["icon"]    =  bas.toByteArray();
  row["urisForInner" ]=listURI;
  row["valuesForInner"] = listName;
  row["idUrisForInner" ]=listIdUri;
@@ -600,14 +606,19 @@ if(count < len) {
  
 
 
- icon = icon.split(",");
  
- icon= icon[1];
-imageDataBytes = icon;
+var myurl = new Packages.java.net.URL(vars["imageHost"]+icon);
+
+var img = ImageIO.read(myurl);
+bas = new ByteArrayOutputStream();
+ImageIO.write(img, "png", bas);
+
+ 
 
   row["name"]     = name;
   row["type"]    = type;
-  row["icon"]    = Base64ToBlob.toBytes(icon); 
+  row["icon"]    =  bas.toByteArray();
+  
    
   row["overallImage"] = Base64ToBlob.toBytes(params["overallImage"]);
  
@@ -1289,9 +1300,9 @@ return true;]]></method>
             </detail>
         </table>
         <list name="OuterList" id="10">
-            <property name="pageBreakAfter">avoid</property>
-            <property name="pageBreakBefore">avoid</property>
-            <property name="pageBreakInside">avoid</property>
+            <property name="pageBreakAfter">auto</property>
+            <property name="pageBreakBefore">auto</property>
+            <property name="pageBreakInside">auto</property>
             <property name="dataSet">Outer Data Set</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1480,8 +1491,8 @@ return true;]]></method>
                                 <property name="borderTopWidth">1px</property>
                                 <property name="marginTop">auto</property>
                                 <property name="marginBottom">auto</property>
-                                <property name="pageBreakAfter">avoid</property>
-                                <property name="pageBreakBefore">avoid</property>
+                                <property name="pageBreakAfter">auto</property>
+                                <property name="pageBreakBefore">auto</property>
                                 <property name="dataSet">Inner Data Set</property>
                                 <list-property name="paramBindings">
                                     <structure>
@@ -1585,8 +1596,8 @@ return true;]]></method>
                                 <property name="borderTopWidth">1px</property>
                                 <property name="marginTop">auto</property>
                                 <property name="marginBottom">auto</property>
-                                <property name="pageBreakAfter">avoid</property>
-                                <property name="pageBreakBefore">avoid</property>
+                                <property name="pageBreakAfter">auto</property>
+                                <property name="pageBreakBefore">auto</property>
                                 <property name="dataSet">Id Data Set</property>
                                 <list-property name="paramBindings">
                                     <structure>
@@ -1690,8 +1701,8 @@ return true;]]></method>
                                 <property name="borderTopWidth">1px</property>
                                 <property name="marginTop">auto</property>
                                 <property name="marginBottom">auto</property>
-                                <property name="pageBreakAfter">avoid</property>
-                                <property name="pageBreakBefore">avoid</property>
+                                <property name="pageBreakAfter">auto</property>
+                                <property name="pageBreakBefore">auto</property>
                                 <property name="dataSet">classifier Data Set</property>
                                 <list-property name="paramBindings">
                                     <structure>
@@ -1796,8 +1807,8 @@ return true;]]></method>
                                 <property name="borderTopWidth">1px</property>
                                 <property name="marginTop">auto</property>
                                 <property name="marginBottom">auto</property>
-                                <property name="pageBreakAfter">avoid</property>
-                                <property name="pageBreakBefore">avoid</property>
+                                <property name="pageBreakAfter">auto</property>
+                                <property name="pageBreakBefore">auto</property>
                                 <property name="dataSet">event Data Set</property>
                                 <list-property name="paramBindings">
                                     <structure>
@@ -2215,4 +2226,10 @@ return true;]]></method>
             </detail>
         </list>
     </body>
+    <property name="pageVariables">
+        <variable-element name="imageHost">
+            <expression name="value" type="javascript">"http://localhost/webgraphiceditorDemo/"</expression>
+            <property name="type">report</property>
+        </variable-element>
+    </property>
 </report>
