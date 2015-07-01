@@ -58,50 +58,69 @@ Stencil.shapes = {
 
 	
 		basicSensors: [
+		               
           
-		           new joint.shapes.basic.Sensor({
+		           new joint.shapes.basic.Sensor(
+		        		   
+		        		   {
+			        		 "documentation":{"link":imageHost+"/sensor.png","name":"sensor.png"},
+
 		                   attrs: {
 		                       image: { width: 50, height: 50, 'xlink:href': 'images/models/sensor.png' },
 		                       text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
 		                   }
 		               }),
            new joint.shapes.basic.Sensor({
+    		   "documentation":{"link":imageHost+"/infrared_sensor.png","name":"infrared_sensor.png"},
+
             attrs: {
                 image: { width: 50, height: 50, 'xlink:href': 'images/models/infrared_sensor.png' },
                 text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
             }
         }),
         new joint.shapes.basic.Sensor({
+ 		   "documentation":{"link":imageHost+"/gps.png","name":"gps.png"},
+
             attrs: {
                 image: { width: 50, height: 50, 'xlink:href': 'images/models/gps.png' },
                 text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
             }
         }),
         new joint.shapes.basic.Sensor({
+ 		   "documentation":{"link":imageHost+"/sensor3.png","name":"sensor3.png"},
+
             attrs: {
                 image: { width: 50, height: 50, 'xlink:href': 'images/models/sensor3.png' },
                 text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
             }
         }),
         new joint.shapes.basic.Sensor({
+ 		   "documentation":{"link":imageHost+"/pressure_sensor.png","name":"pressure_sensor.png"},
+
             attrs: {
                 image: { width: 50, height: 50, 'xlink:href': 'images/models/pressure_sensor.png' },
                 text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
             }
         }),
         new joint.shapes.basic.Sensor({
+ 		   "documentation":{"link":imageHost+"/weather_station.png","name":"weather_station.png"},
+
             attrs: {
                 image: { width: 50, height: 50, 'xlink:href': 'images/models/weather_station.png' },
                 text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
             }
         }),
         new joint.shapes.basic.Sensor({
+ 		   "documentation":{"link":imageHost+"/camera.png","name":"camera.png"},
+
             attrs: {
                 image: { width: 50, height: 50, 'xlink:href': 'images/models/camera.png' },
                 text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
             }
         }),
         new joint.shapes.basic.Sensor({
+ 		   "documentation":{"link":imageHost+"/sensor_seamon_west.png","name":"sensor_seamon_west.png"},
+
             attrs: {
                 image: { width: 50, height: 50, 'xlink:href': 'images/models/sensor_seamon_west.png' },
                 text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
@@ -114,12 +133,16 @@ Stencil.shapes = {
    basicPlatforms: [
         
        new joint.shapes.basic.Platform({
+		   "documentation":{"link":imageHost+"/platform.png","name":"platform.png"},
+
            attrs: {
                image: { width: 50, height: 50, 'xlink:href': 'images/models/platform.png' },
                text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
            }
        }),
        new joint.shapes.basic.Platform({
+		   "documentation":{"link":imageHost+"/buoy.png","name":"buoy.png"},
+
            attrs: {
                image: { width: 50, height: 50, 'xlink:href': 'images/models/buoy.png' },
                text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
@@ -127,6 +150,8 @@ Stencil.shapes = {
        }),
         
        new joint.shapes.basic.Platform({
+		   "documentation":{"link":imageHost+"/platform_seamon.png","name":"platform_seamon.png"},
+
            attrs: {
                image: { width: 50, height: 50, 'xlink:href': 'images/models/platform_seamon.png' },
                text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
@@ -134,6 +159,8 @@ Stencil.shapes = {
        }),
         
        new joint.shapes.basic.Platform({
+		   "documentation":{"link":imageHost+"/deep_sea_platform.png","name":"deep_sea_platform.png"},
+
            attrs: {
                image: { width: 80, height: 80, 'xlink:href': 'images/models/deep_sea_platform.png' },
                text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
@@ -141,12 +168,16 @@ Stencil.shapes = {
        }),
         
        new joint.shapes.basic.Platform({
+		   "documentation":{"link":imageHost+"/ship.png","name":"ship.png"},
+
            attrs: {
                image: { width: 50, height: 50, 'xlink:href': 'images/models/ship.png' },
                text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
            }
        }),
        new joint.shapes.basic.Platform({
+		   "documentation":{"link":imageHost+"/submarine.png","name":"submarine.png"},
+
            attrs: {
                image: { width: 50, height: 30, 'xlink:href': 'images/models/submarine.png' },
                text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }

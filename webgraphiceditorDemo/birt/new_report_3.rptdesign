@@ -337,7 +337,7 @@ len = myJSONObject.cells.length;
 // Counter
 count = 0;]]></method>
             <method name="fetch"><![CDATA[if(count < len) {
- var icon =myJSONObject.cells[count].attrs.image["xlink:href"];
+ var icon =myJSONObject.cells[count].documentation.link;
  var description= myJSONObject.cells[count].description;
 var outputLen =  myJSONObject.cells[count].custom.output.length;
 var identifierLen =  myJSONObject.cells[count].custom.identifier.length;
@@ -404,7 +404,7 @@ listLatitude.add(myJSONObject.cells[count].custom.latitude);
 listLongitude.add(myJSONObject.cells[count].custom.longitude);
 //Image at url
 
-var myurl = new Packages.java.net.URL(vars["imageHost"]+icon);
+var myurl = new Packages.java.net.URL(icon);
 
 var img = ImageIO.read(myurl);
 bas = new ByteArrayOutputStream();
@@ -602,12 +602,12 @@ if(count < len) {
 
   var name     = myJSONObject.cells[count].attrs.text["text"];
   var type    = myJSONObject.cells[count].type;
-  var icon =myJSONObject.cells[count].attrs.image["xlink:href"];
+  var icon =myJSONObject.cells[count].documentation.link;
  
 
 
  
-var myurl = new Packages.java.net.URL(vars["imageHost"]+icon);
+var myurl = new Packages.java.net.URL(icon);
 
 var img = ImageIO.read(myurl);
 bas = new ByteArrayOutputStream();
@@ -1210,6 +1210,7 @@ return true;]]></method>
                     <property name="dataType">blob</property>
                 </structure>
             </list-property>
+            <property name="pageBreakInterval">0</property>
             <column id="65"/>
             <column id="66"/>
             <column id="67"/>
@@ -1429,7 +1430,7 @@ return true;]]></method>
                     <property name="fontWeight">bold</property>
                     <property name="pageBreakAfter">auto</property>
                     <property name="pageBreakBefore">auto</property>
-                    <property name="pageBreakInside">avoid</property>
+                    <property name="pageBreakInside">auto</property>
                     <structure name="toc">
                         <expression name="expressionValue" type="javascript">var a = "2 Components";</expression>
                     </structure>
@@ -1451,8 +1452,8 @@ return true;]]></method>
                                 <property name="fontWeight">bold</property>
                                 <property name="marginTop">auto</property>
                                 <property name="marginBottom">auto</property>
-                                <property name="pageBreakAfter">avoid</property>
-                                <property name="pageBreakBefore">avoid</property>
+                                <property name="pageBreakAfter">auto</property>
+                                <property name="pageBreakBefore">auto</property>
                                 <expression name="valueExpr">"2."+row["chapNumber"]+" Component "+row["key"];</expression>
                                 <property name="contentType">html</property>
                             </text-data>
@@ -1895,8 +1896,8 @@ return true;]]></method>
                                 <property name="fontWeight">bold</property>
                                 <property name="marginTop">5px</property>
                                 <property name="marginBottom">5px</property>
-                                <property name="pageBreakAfter">avoid</property>
-                                <property name="pageBreakBefore">avoid</property>
+                                <property name="pageBreakAfter">auto</property>
+                                <property name="pageBreakBefore">auto</property>
                                 <text-property name="text">Sub-Component list :</text-property>
                             </label>
                             <table id="334">
@@ -1943,6 +1944,7 @@ return true;]]></method>
                                         <property name="dataType">string</property>
                                     </structure>
                                 </list-property>
+                                <property name="pageBreakInterval">0</property>
                                 <column id="345"/>
                                 <column id="346"/>
                                 <header>
@@ -2053,6 +2055,7 @@ return true;]]></method>
                                         <property name="dataType">string</property>
                                     </structure>
                                 </list-property>
+                                <property name="pageBreakInterval">0</property>
                                 <column id="430"/>
                                 <column id="431"/>
                                 <column id="432"/>
@@ -2171,6 +2174,7 @@ return true;]]></method>
                                         <property name="dataType">string</property>
                                     </structure>
                                 </list-property>
+                                <property name="pageBreakInterval">0</property>
                                 <column id="413"/>
                                 <column id="414"/>
                                 <header>
@@ -2226,10 +2230,4 @@ return true;]]></method>
             </detail>
         </list>
     </body>
-    <property name="pageVariables">
-        <variable-element name="imageHost">
-            <expression name="value" type="javascript">"http://localhost/webgraphiceditorDemo/"</expression>
-            <property name="type">report</property>
-        </variable-element>
-    </property>
 </report>

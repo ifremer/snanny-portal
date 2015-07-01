@@ -169,7 +169,7 @@ var Rappid = Backbone.Router.extend({
         this.snapLines = new joint.ui.Snaplines({ paper: this.paper });
         
    
-     
+    
 		
       $.ajax({
          url:    owncloudserverLink+'/index.php/apps/WGEPlugin/ajax/filecontents.php' 
@@ -268,8 +268,7 @@ var Rappid = Backbone.Router.extend({
             	if(cell.get('custom').classifier[1])
             		content =cell.get('attrs').text.name+"\n"+cell.get('custom').classifier[1].URI;
 
-if (content==="")
-	content=cell.get('type')
+
                 new joint.ui.Tooltip({
                     target: '.stencil [model-id="' + cell.id + '"]',
                     content: content,
@@ -1373,11 +1372,11 @@ if (content==="")
     			    	    
     			    	   
     			    	    success: function(a) {
-			    	    		/* if(a.substring(0, 4) =='{"at')                     
-										Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));*/
+			    	    		 if(a.substring(0, 4) =='{"do')                     
+										Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE($.parseJSON(a)));
 
-    			    	    	if(typeof a =='object')
-    			    	    		Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));
+    			    	    	/*if(typeof a =='object')
+    			    	    		Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));*/
     			    	    	
     			    	    
     			    	    	
