@@ -180,6 +180,11 @@ var Rappid = Backbone.Router.extend({
 
                    filecontents=result.data.filecontents;
                   },
+                  
+                  xhrFields: {
+                         withCredentials: true
+                      },
+                      crossDomain: true,
          async:   false
     }); 
       
@@ -965,6 +970,11 @@ var Rappid = Backbone.Router.extend({
           	        	$.ajax({
           	        	    url: pathChoosen+'/'+typedName,
           	        	    type: 'PUT',
+          	        	  
+          	        	xhrFields: {
+          	        	       withCredentials: true
+          	        	    },
+          	        	    crossDomain: true,
           	        	    data: graphicData, // or $('#myform').serializeArray()
           	        	    success: function() { }
           	        	});
@@ -978,6 +988,10 @@ var Rappid = Backbone.Router.extend({
           	        			
           		        	    url: owncloudserverLink+'/remote.php/webdav/'+toImport[i].attrs.text.text+".moe",
           		        	    type: 'PUT',
+          		        	  xhrFields: {
+          		        	       withCredentials: true
+          		        	    },
+          		        	    crossDomain: true,
           		        	    data: JSON.stringify({"cells":[toImport[i]]}), // or $('#myform').serializeArray()
           		        	    success: function() { }
           		        	});
@@ -988,6 +1002,10 @@ var Rappid = Backbone.Router.extend({
           	        	$.ajax({
           	        	    url: owncloudserverLink+'/remote.php/webdav/'+".sensorNannyDraw",
           	        	    type: 'PUT',
+          	        	  xhrFields: {
+          	        	       withCredentials: true
+          	        	    },
+          	        	    crossDomain: true,
           	        	    data: userPreferences, // or $('#myform').serializeArray()
           	        	    success: function() { 
           	        	    	
@@ -1106,6 +1124,10 @@ var Rappid = Backbone.Router.extend({
  		        	$.ajax({
  		        	    url: pathChoosen+'/'+typedName,
  		        	    type: 'PUT',
+ 		        	   xhrFields: {
+ 		        	       withCredentials: true
+ 		        	    },
+ 		        	    crossDomain: true,
  		        	    data: graphicData, // or $('#myform').serializeArray()
  		        	    success: function() { }
  		        	});
@@ -1119,6 +1141,10 @@ var Rappid = Backbone.Router.extend({
  		        			
  			        	    url: owncloudserverLink+'/remote.php/webdav/'+toImport[i].attrs.text.text+".moe",
  			        	    type: 'PUT',
+ 			        	   xhrFields: {
+ 			        	       withCredentials: true
+ 			        	    },
+ 			        	    crossDomain: true,
  			        	    data: JSON.stringify({"cells":[toImport[i]]}), // or $('#myform').serializeArray()
  			        	    success: function() { }
  			        	});
@@ -1129,6 +1155,10 @@ var Rappid = Backbone.Router.extend({
  		        	$.ajax({
  		        	    url: owncloudserverLink+'/remote.php/webdav/'+".sensorNannyDraw",
  		        	    type: 'PUT',
+ 		        	   xhrFields: {
+ 		        	       withCredentials: true
+ 		        	    },
+ 		        	    crossDomain: true,
  		        	    data: userPreferences, // or $('#myform').serializeArray()
  		        	    success: function() { }
  		        	});
@@ -1153,6 +1183,10 @@ var Rappid = Backbone.Router.extend({
      	$.ajax({
      	    url: pathChoosen+'/'+typedName,
      	    type: 'PUT',
+     	   xhrFields: {
+     	       withCredentials: true
+     	    },
+     	    crossDomain: true,
      	    data: graphicData, // or $('#myform').serializeArray()
      	    success: function() { }
      	});
@@ -1166,6 +1200,10 @@ var Rappid = Backbone.Router.extend({
      			
          	    url: owncloudserverLink+'/remote.php/webdav/'+toImport[i].attrs.text.text+".moe",
          	    type: 'PUT',
+         	   xhrFields: {
+         	       withCredentials: true
+         	    },
+         	    crossDomain: true,
          	    data: JSON.stringify({"cells":[toImport[i]]}), // or $('#myform').serializeArray()
          	    success: function() { }
          	});
@@ -1176,6 +1214,10 @@ var Rappid = Backbone.Router.extend({
      	$.ajax({
      	    url: owncloudserverLink+'/remote.php/webdav/'+".sensorNannyDraw",
      	    type: 'PUT',
+     	   xhrFields: {
+     	       withCredentials: true
+     	    },
+     	    crossDomain: true,
      	    data: userPreferences, // or $('#myform').serializeArray()
      	    success: function() { }
      	});
@@ -1341,6 +1383,7 @@ var Rappid = Backbone.Router.extend({
 
              //This will retrieve the contents of the folder if the folder is configured as 'browsable'
                 url: "models",
+                
                 success: function (data) {
 
                   //Lsit all png file names in the page
@@ -1430,6 +1473,9 @@ var Rappid = Backbone.Router.extend({
     	    url:    owncloudserverLink+'/remote.php/webdav/.sensorNannyDraw' 
     	    
     	    ,
+    	    xhrFields: {
+       	       withCredentials: true
+       	    },
     	success: function(result) {
 
     	 userPreferences=result;
@@ -1471,6 +1517,10 @@ var Rappid = Backbone.Router.extend({
     			    	    	
     			    	    	    			    	    	
     			    	    },
+    			    	    xhrFields: {
+    			    	        withCredentials: true
+    			    	     },
+    			    	     crossDomain: true,
     			    	    error: function (){
     			    	    	
     			    	    	importedData.push("fail");
@@ -1485,7 +1535,10 @@ var Rappid = Backbone.Router.extend({
     				 req[i]= $.ajax({
  			    	    url: owncloudserverLink+'/remote.php/webdav/fail',
  			    	    
- 			    	   
+ 			    	   xhrFields: {
+ 			    	       withCredentials: true
+ 			    	    },
+ 			    	    crossDomain: true,
  			    	    
  			    	    error: function (){
  			    	    	

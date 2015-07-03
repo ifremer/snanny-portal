@@ -47,6 +47,7 @@ Stencil.groups = {
     UNDERWATER_BATTERY: { index: 40, label: 'EMSO_UNDERWATER_BATTERY' },
     UNDERWATER_CABLE: { index: 41, label: 'EMSO_UNDERWATER_CABLE' },
     UNDERWATER_SWITCH: { index: 42, label: 'EMSO_UNDERWATER_SWITCH' },
+    IFREMER_RVESSEL: { index: 43, label: 'IFREMER_RV' },
 
    
 };
@@ -125,7 +126,17 @@ Stencil.shapes = {
                 image: { width: 50, height: 50, 'xlink:href': 'images/models/sensor_seamon_west.png' },
                 text: { text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
             }
-        })
+        }),
+   	new joint.shapes.basic.Sensor(
+                        {
+	                   "documentation":{"link":imageHost+"/electronicBoard.png","name":"electronicBoard.png"},
+                            attrs: {
+                                image: { width: 50, height: 50, 'xlink:href': 'images/models/electronicBoard.png' },
+                                text: {   text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
+                                
+                            }                   
+                        }),
+
        
        
     ],
@@ -230,7 +241,32 @@ Stencil.shapes = {
     UNDERWATER_BATTERY: [],
     UNDERWATER_CABLE: [],
     UNDERWATER_SWITCH: [],
-    
+    IFREMER_RVESSEL: [
+     /*   new joint.shapes.basic.IFREMER_RVESSEL(
+                        {
+	                   "documentation":{"link":imageHost+"/ifremer_rv-thalassa.png","name":"ifremer_rv-thalassa.png"},
+                            attrs: {
+                                image: { width: 50, height: 50, 'xlink:href': 'images/models/ifremer_rv-thalassa.png' },
+                                text: {   text: '', 'font-size': 9, display: '', stroke: '#000000', 'stroke-width': 0 }
+                                
+                            },
+                           "custom":{  
+                                "classifier":[  
+                                         {  
+                                    "name":"model",
+                                    "URI":"Thalassa",
+                                    "Ref":"modelData"
+                                 },
+                                {  
+                                    "name":"manufacturer",
+                                    "URI":"GENAVIR",
+                                    "Ref":"modelData",
+                                    "definition":"http://www.ifremer.fr/tematres/vocab/index.php?tema=52",
+                                    "codespace":"http://www.ifremer.fr/tematres/vocab/xml.php?skosTema=40"
+                                 }]}
+                        }),*/
+        ],
+
    
 };
 
