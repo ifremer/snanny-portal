@@ -1415,12 +1415,13 @@ var Rappid = Backbone.Router.extend({
     			    	    
     			    	   
     			    	    success: function(a) {
-			    	    		 if(a.substring(0, 4) =='{"do')                     
-										Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE($.parseJSON(a)));
-
-    			    	    	/*if(typeof a =='object')
-    			    	    		Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));*/
-    			    	    	
+    			    	    	if(typeof a =='object')    			    	    		
+    			    	    		Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE(a));   			    	    	       
+									
+			    	    		 else if(a.substring(0, 4) =='{"do')    
+			    	    			 
+			    	    			 Stencil.shapes[typeName].push(new joint.shapes.basic.ACOUSTIC_RELEASE($.parseJSON(a)));
+			    	    			 
     			    	    
     			    	    	
     			    	     			    	    	
