@@ -242,7 +242,11 @@ Stencil.shapes = {
     UNDERWATER_CABLE: [],
     UNDERWATER_SWITCH: [],
     IFREMER_RVESSEL: [
+<<<<<<< HEAD
      /*   new joint.shapes.basic.IFREMER_RVESSEL(
+=======
+        new joint.shapes.basic.IFREMER_RVESSEL(
+>>>>>>> origin/master
                         {
 	                   "documentation":{"link":imageHost+"/ifremer_rv-thalassa.png","name":"ifremer_rv-thalassa.png"},
                             attrs: {
@@ -264,7 +268,11 @@ Stencil.shapes = {
                                     "definition":"http://www.ifremer.fr/tematres/vocab/index.php?tema=52",
                                     "codespace":"http://www.ifremer.fr/tematres/vocab/xml.php?skosTema=40"
                                  }]}
+<<<<<<< HEAD
                         }),*/
+=======
+                        }),
+>>>>>>> origin/master
         ],
 
    
