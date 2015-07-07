@@ -1382,7 +1382,7 @@ var Rappid = Backbone.Router.extend({
        var reqModel=   $.ajax({
 
              //This will retrieve the contents of the folder if the folder is configured as 'browsable'
-                url: "models",
+                url: "./models/",
                 
                 success: function (data) {
 
