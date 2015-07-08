@@ -181,10 +181,7 @@ var Rappid = Backbone.Router.extend({
                    filecontents=result.data.filecontents;
                   },
                   
-                  xhrFields: {
-                         withCredentials: true
-                      },
-                      crossDomain: true,
+                
          async:   false
     }); 
       
