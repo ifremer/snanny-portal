@@ -18,6 +18,8 @@ Update a platform with id cc4a17de-d614-b03b-5f0b-414e7b0e9483 (beware informati
 ## Demo graphical editor for observtories
 Draw, save and export in sensorML
 
+![alt tag](https://raw.githubusercontent.com/ifremer/snanny-portal/master/doc/snanny-draw.png)
+
 Done with Rappid (http://jointjs.com/about-rappid)
 
 Go to:
