@@ -170,27 +170,40 @@ function getObservationsCount() {
 	var topRight = ol.extent.getTopRight(extent);
 	
 	var bbox = [ parseFloat(bottomLeft[1].toFixed(2)), parseFloat(bottomLeft[0].toFixed(2)), parseFloat(topRight[1].toFixed(2)), parseFloat(topRight[0].toFixed(2)) ];
-	var timerange = [ 0, new Date().getTime() ];
+	
+	var bboxQuery = "?bbox=" + bbox.join(",");
+	var timeQuery = "";
 	if (timelineSelection != null && !timelineSelection.empty()) {
-		timerange = [ (+timelineSelection.extent()[0]), (+timelineSelection.extent()[1]) ];
+		timeQuery = "&time="+(+timelineSelection.extent()[0])+","+(+timelineSelection.extent()[1]);
 	}
-//	loadObservationsCount(SNANNY_API + "/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), SNANNY_API + "/observations/synthetic/timeline?bbox=" + bbox.join(",") + "&time=" + timerange.join(","));
-	loadObservationsCount(SNANNY_API + "/observations/synthetic/map?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), SNANNY_API + "/observations/synthetic/timeline?bbox=" + bbox.join(","));
-
-
+	
+	var kwordsQuery = "";
+	var searchText =  $("#searchInput").val();
+	if(searchText != ""){
+		kwordsQuery = "&kwords="+searchText;
+	}
+	
+	loadObservationsCount(MAP_RESOURCES+bboxQuery+timeQuery+kwordsQuery,TIMELINE_RESOURCES+bboxQuery+kwordsQuery);
 }
 
 function getObservations() {
 	var extent = map.getView().calculateExtent(map.getSize());
 	var bottomLeft = ol.extent.getBottomLeft(extent);
 	var topRight = ol.extent.getTopRight(extent);
-	
-	var bbox = [ parseFloat(bottomLeft[1].toFixed(2)), parseFloat(bottomLeft[0].toFixed(2)), parseFloat(topRight[1].toFixed(2)), parseFloat(topRight[0].toFixed(2)) ];
-	var timerange = [ 0, new Date().getTime() ];
-	if (timelineSelection != null && !timelineSelection.empty()) {
-		timerange = [ (+timelineSelection.extent()[0]), (+timelineSelection.extent()[1]) ];
-	}
 
+	var bbox = [ parseFloat(bottomLeft[1].toFixed(2)), parseFloat(bottomLeft[0].toFixed(2)), parseFloat(topRight[1].toFixed(2)), parseFloat(topRight[0].toFixed(2)) ];
+	
+	var bboxQuery = "?bbox=" + bbox.join(",");
+	var timeQuery = "";
+	if (timelineSelection != null && !timelineSelection.empty()) {
+		timeQuery = "&time="+(+timelineSelection.extent()[0])+","+(+timelineSelection.extent()[1]);
+	}
+	
+	var kwordsQuery = "";
+	var searchText =  $("#searchInput").val();
+	if(searchText != ""){
+		kwordsQuery = "&kwords="+searchText;
+	}
 	
 	var observationsContainerHeader = jQuery('#observationsHeader');
 	var observationsContainer = jQuery('#observations');
@@ -200,7 +213,7 @@ function getObservations() {
 	observationsContainerHeader.append("<h4>loading...</h4>");
 	observationsContainerHeader.append("<p>&nbsp;</p>");
 
-	d3.json(SNANNY_API + "/observations?bbox=" + bbox.join(",") + "&time=" + timerange.join(","), function(err, data) {
+	d3.json(OBSERVATIONS_RESOURCES+bboxQuery+timeQuery+kwordsQuery, function(err, data) {
 		$('#individualObsPointLoading').text("1");
 		observationsSource.clear(true);
 	
@@ -259,7 +272,7 @@ var timelineInitialized = false;
 
 function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 	var loadingCount = 0;
-	
+
 	if (mapZoomURL) {
 		d3.json(mapZoomURL, function(err, data) {
 			$('#syntheticMapLoading').text("1");

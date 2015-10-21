@@ -71,7 +71,7 @@
 				            <li><a href="#">Sign in</a></li>
 				          </ul>
 				          <form class="navbar-form navbar-right">
-				            <input type="text" class="form-control" placeholder="Search...">
+				            <input type="text" class="form-control" placeholder="Search..." id="searchInput">
 				          </form>
 				        </div>
 				      </div>
@@ -115,9 +115,10 @@
 		<script src="js/browser.js" charset="utf-8"></script>
 		<script src="js/geohash.js" charset="utf-8"></script>
 		<script src="js/timehash.js" charset="utf-8"></script>
+		<script src="js/searchbox.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
-			loadObservationsCount(SNANNY_API + "/observations/synthetic/map", SNANNY_API + "/observations/synthetic/timeline");
+			loadObservationsCount(SNANNY_API + "/obs/synthetic/map", SNANNY_API + "/obs/synthetic/timeline");
 		</script>
 		
 		<!-- Latest compiled and minified JavaScript -->
