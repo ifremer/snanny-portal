@@ -1,18 +1,20 @@
 function showObservations(observations) {
 	var observationsContainerHeader = jQuery('#observationsHeader');
 	var observationsContainer = jQuery('#observations');
-
 	// Clear "observations" panel
 	observationsContainerHeader.html("");
-	observationsContainer.html("");
+
 
 	if (observations != undefined && observations.length > 0) {
 
-		var observationsList = jQuery("<ul></ul>");
+	var observationsList = jQuery("<ul></ul>");
     
     var uuids = {};
+    var ancestorUuids = {};
     
     var observationsCount = 0;
+
+	var tree = [];
 
     // Iterate over each observation, to display informations
     observations.forEach(function(observation) {
@@ -21,38 +23,51 @@ function showObservations(observations) {
       
       if (uuids[uuid] == undefined) {
       
-        var resultFilename = (observation.get('result').match(/[^\\/]+\.[^\\/]+$/) || []).pop();
-        
-        observationsList.append(jQuery("<li>" 
-  //					+ "<a href='javascript:showDetail(\"" + observation.get('id') + "\", \"visualisations-" + observation.get('id') + "\", \"" + observation.get('description') + "\");'>" 
-            + "<a id='" + uuid + "' href='" + SNANNY_API + "/observations/" + observation.get('id') + "/results' target='_blank' onmouseover='selectObservationOnMap(\"" + uuid + "\")'>" 
-  //					+ observation.get('id') 
-  //					+ observation.get('name')
-            + resultFilename
-            + " <i>(" + observation.get('author') + ")</i>" 
-            + "</a>" + " " 
-  //					+ observation.get('author') + " " 
-  //					+ observation.get('description')
-  //					+ " from " + new Date(observation.get('time').begin).toLocaleString() + " to "
-  //					+ new Date(observation.get('time').end).toLocaleString() + " " 
-  //					+ observation.get('result') + " " 
-  //					+ observation.get('bbox')
-            + "<div class='visualisation' id='visualisations-" + observation.get('id') + "' style='display: none;'></div>"
-            + "</li>"
-        ));
-        
+      	var ancestors = observation.get('ancestors');
+		var parent = '#';
+		ancestors.forEach(function(ancestor){
+
+			var uuid = ancestor;
+			if(ancestorUuids[uuid] == undefined){
+				tree.push({
+					"id":uuid, 
+					"text":"balise_"+uuid.substring(0,8), 
+					"parent":parent, 
+					"icon":"sensor-ico",
+					"a_attr":{"onMouseOver":"selectObservationsOnMap('"+ancestor+"')"}
+				});
+				ancestorUuids[uuid] = 1;
+			}
+			parent = uuid;
+
+		});
+		//Then add observation in the treeView
+		var uuid = observation.get('uuid');
+		var id = observation.get('id');
+		var author = observation.get('author');
+		var resultFilename = (observation.get('result').match(/[^\\/]+\.[^\\/]+$/) || []).pop();
+		var href = OBSERVATIONS_RESOURCES+ "/" + uuid + "/results";
+		tree.push({
+			"id":uuid, 
+			"parent":parent, 
+			"text":resultFilename+" ("+author+")", 
+			"icon":"observation-ico", 
+			"a_attr":{
+				"href" : href,
+				"target" : "_blank",
+				"onMouseOver" : "selectObservationOnMap('" + uuid + "')"
+		}});
+
         observationsCount++;
-        
         // Simulate a Set collection
         uuids[uuid] = 1;
-      
       }
 
 
-		});
+	});
     
     // Display header with observation's count
-		observationsContainerHeader.append(jQuery("<h4>" + $('#individualObsPointCount').text() + " points from " + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h4>"));
+	observationsContainerHeader.append(jQuery("<h4>" + $('#individualObsPointCount').text() + " points from " + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h4>"));
     
     if (timelineSelection != null && !timelineSelection.empty()) {
       observationsContainerHeader.append(jQuery("<p>from " 
@@ -61,11 +76,24 @@ function showObservations(observations) {
 		+ moment(+timelineSelection.extent()[1]).format('lll') 
 		+ "</p>"
 	));
-    }else observationsContainerHeader.append(jQuery("<p>on full time range</p>"));
-    
-    observationsContainer.append(observationsList);
-
+    }else {
+    	observationsContainerHeader.append(jQuery("<p>on full time range</p>"));
 	}
+	observationsContainer.jstree('destroy');
+    observationsContainer.jstree({"core": {"data" : tree}});
+	}
+}
+
+
+function appendObservation(observation){
+	//
+	var ancestors = observation.get('ancestors');
+	ancestors.forEach(function(ancestor){
+		//append ancestor if exist 
+		var ancestorItem = jQuery("#"+ancestor);
+
+	});
+
 }
 
 function allObservations() {
@@ -154,6 +182,36 @@ function selectObservations(observations) {
 	observations.forEach(function(observation) {
 		selectedFeatures.push(observation);
 	});
+}
+
+function selectFeatureInBrowser(feature){
+	var jstree = $("#observations").jstree();
+	var node = jstree.get_node(feature.get("uuid"));
+	openTreeToRoot(node, jstree);
+	var parent = node.parent
+
+	$("#" + feature.get("uuid")).attr("style", "color:rgba(255, 128, 0, 1.0)");
+	var position = $("#" + parent).position();
+	if(position != undefined){
+		$("#observations").scrollTop($("#observations").scrollTop() + position.top);	
+	}	
+}
+
+function openTreeToRoot(node, jstree){
+	//Open parents 
+	var parents = node.parents;
+	if(parents != undefined){
+		parents.forEach(function(uuid){
+			if(uuid != "#"){
+				var parentNode = jstree.get_node(uuid);
+				if(jstree.is_closed(parentNode)){
+					jstree.open_node(parentNode);
+				}else{
+					return;
+				}
+			}
+		});
+	}
 }
 
 function filterObservations() {

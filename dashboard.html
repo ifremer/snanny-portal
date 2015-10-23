@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="css/timeline.css" type="text/css">
 		<link rel="stylesheet" href="css/nv.d3.min.css" type="text/css">
 		<link rel="stylesheet" href="css/envision.min.css" type="text/css">
+		<link rel="stylesheet" href="css/jstree.min.css" type="text/css">
 		
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -58,12 +59,9 @@
 				          <a class="navbar-brand" href="index.html">Sensor Nanny</a>
 				        </div>
 				        <form class="navbar-form navbar-left">
-				           
 				            <button type="submit" class="btn btn-success">Sign up</button>
-				          </form>
+				        </form>
 				      
-				     
-					
 				        <div id="navbar" class="navbar-collapse collapse">
 				          <ul class="nav navbar-nav navbar-right">
 				            <li><a href="dashboard.html">Explore</a></li>
@@ -92,7 +90,6 @@
 				<div>
 				<div id='observationsHeader' class='col-lg-6 well observations'></div>
 				<div id='observations' class='col-lg-6 well observations'></div>
-				</div>
 			</div>
 			
 <!-- 			<div class="row marketing"> -->
@@ -111,6 +108,7 @@
 
 		<script src="js/configuration.js" charset="utf-8"></script>
 		<script src="js/map.js" charset="utf-8"></script>
+		<script src="js/jstree.min.js" charset="utf-8"></script>
 		<script src="js/timeline.js" charset="utf-8"></script>
 		<script src="js/browser.js" charset="utf-8"></script>
 		<script src="js/geohash.js" charset="utf-8"></script>
@@ -119,6 +117,7 @@
 
 		<script type="text/javascript">
 			loadObservationsCount(SNANNY_API + "/obs/synthetic/map", SNANNY_API + "/obs/synthetic/timeline");
+
 		</script>
 		
 		<!-- Latest compiled and minified JavaScript -->

@@ -292,6 +292,20 @@ function selectObservationOnMap(uuid){
 		});
 }
 
+function selectObservationsOnMap(key){
+	unselectPreviousFeatures();
+	observationsSource.forEachFeature(function(observation) {
+		var ancestors = observation.get("ancestors");
+		ancestors.forEach(function(ancestor){
+			if(ancestor == key){
+				observation.setStyle([selected_style]);
+				selectedFeatures.push(observation);
+			}
+		});
+			
+	});
+}
+
 // Handle pointer
 map.on('pointermove', function(event) {
 	unselectPreviousFeatures();                
@@ -301,10 +315,7 @@ map.on('pointermove', function(event) {
 				feature.setStyle([
 						selected_style	        
 				]);
-				console.log(feature.get("result"))
-				console.log(feature.get("uuid"))
-				$("#" + feature.get("uuid")).attr("style", "color:rgba(255, 128, 0, 1.0)");
-				$("#observations").scrollTop($("#observations").scrollTop() + $("#" + feature.get("uuid")).position().top);				
+				selectFeatureInBrowser(feature);
 				selectedFeatures.push(feature);
 			}
 		});
