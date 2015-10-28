@@ -57,11 +57,18 @@ function initializeTimeline(data) {
 	.domain(valueExtent)
 	;
 
-
+	var changeRequest;
 	timelineSvg = container.append('svg')
 	.attr('width', timelineWidth * timelineScale + margin.left + margin.right)
 	.attr('height', timelineHeight + margin.top + margin.bottom)
-	.call(d3.behavior.zoom().x(timelineX).y(timelineY).scaleExtent([1, timelineWidth]).on("zoom",  timelineZoom))
+	.call(d3.behavior.zoom().x(timelineX).y(timelineY).scaleExtent([1, timelineWidth]).on("zoom",  timelineZoom).on('zoomend', function(){
+		clearTimeout(changeRequest);
+		timelineSelection = timelineX.domain();
+		changeRequest = setTimeout(function(){
+			getObservationsCount();
+			getObservations();
+		}, 500);		
+	}))
 	;
 
 	var context = timelineSvg.append('g')
@@ -75,7 +82,9 @@ function initializeTimeline(data) {
 	.y0(timelineHeight)
 	.y1(function(d) { return  timelineY(d.value); })
 	;
-
+	
+	timelineSelection = timelineX.domain();
+	
 	setTimeline(data);
 
 	timelineSvg
@@ -87,6 +96,8 @@ function initializeTimeline(data) {
 	.attr('height', timelineHeight)
 	;
 
+	
+	
 	timelineSvg
 	.append('g')
 	.attr('class', 'x axis')
@@ -94,32 +105,28 @@ function initializeTimeline(data) {
 	.call(timelineXAxis)
 	;
 
-	function timelineSelectionEnd() {
-		getObservationsCount();
-		getObservations();
-	}
-
 	setTimelineAll(data);
 }
 
 function timelineZoom() {
 
-	var container = d3.select('#timeline');
-	var context   = container.select('svg').select('g');	
+	// recupération de la transformation
 	timelineXTranslate = d3.event.translate[0];	
 	timelineXScale = d3.event.scale;
 	applyZoom();
 }
 
 function applyZoom(){
-
-	var container = d3.select('#timeline');
-	var context   = container.select('svg').select('g').select("path.area");
 	
+	// récupération des données 
+	var container = d3.select('#timeline');
+	var context   = container.select('svg').select('g').select("path.area");	
 	var dataArray = context.data();
 	var data = dataArray[0];
+	// recalcul de la zonr
 	setTimeline(data);
 	setZoom(timelineXTranslate, timelineXScale);
+	
 }
 
 function setZoom(translate, scale){

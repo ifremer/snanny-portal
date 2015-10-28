@@ -86,7 +86,7 @@ function initializeTimeline(data) {
 		.attr('class', 'x timeline')
 		.attr('transform', 'scale(1)')
 		.call(timelineSelection)
-//		.call(d3.behavior.zoom().x(timelineX).y(timelineY).scaleExtent([1, 7]).on("zoom", timelineZoom))
+	//	.call(d3.behavior.zoom().x(timelineX).y(timelineY).scaleExtent([1, 7]).on("zoom", timelineZoom))
 		.selectAll('rect')
 		.attr('y', 21)
 		.attr('height', timelineHeight)

@@ -231,8 +231,9 @@ function getObservationsCount() {
 	
 	var bboxQuery = "?bbox=" + bbox.join(",");
 	var timeQuery = "";
-	if (timelineSelection != null && !timelineSelection.empty()) {
-		timeQuery = "&time="+(+timelineSelection.extent()[0])+","+(+timelineSelection.extent()[1]);
+	
+	if (timelineSelection != null && timelineSelection.length>0) {
+		timeQuery = "&time="+(+timelineSelection[0])+","+(+timelineSelection[1]);
 	}
 	
 	var kwordsQuery = "";
@@ -253,8 +254,10 @@ function getObservations() {
 	
 	var bboxQuery = "?bbox=" + bbox.join(",");
 	var timeQuery = "";
-	if (timelineSelection != null && !timelineSelection.empty()) {
-		timeQuery = "&time="+(+timelineSelection.extent()[0])+","+(+timelineSelection.extent()[1]);
+
+	
+	if (timelineSelection != null && timelineSelection.length>0) {
+		timeQuery = "&time="+(+timelineSelection[0])+","+(+timelineSelection[1]);
 	}
 	
 	var kwordsQuery = "";
@@ -305,12 +308,7 @@ function getObservations() {
 		}
 
 		$('#individualObsPointLoading').text("0");
-   		//console.log(err);
-                //console.log(data);
-		
-		
-		
-		
+  
 	});
 
    
@@ -359,9 +357,11 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 	}
 
 	if (timelineZoomURL) {
+
 		d3.json(timelineZoomURL, function(err, data) {
 			$('#timelineLoading').text("1");
 			if (!timelineInitialized) {
+				
 				initializeTimeline(data);
 				timelineInitialized = true;
 			} else {
@@ -402,7 +402,7 @@ function loadObservations(observationsURL) {
 		observations = filterObservations();
 
 		showObservations(observations);
-		
+
 		initializeTimeline(observations);
 		
 		stopLoading();
