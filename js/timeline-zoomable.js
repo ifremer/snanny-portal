@@ -9,17 +9,16 @@ var timelineArea;
 var timelineXAxis;
 var timelineXTranslate = 0;
 var timelineXScale = 1;
-
-function initializeTimeline(data) {
-
-	var container = d3.select('#timeline');
-	var margin = {
+var 	margin = {
 		top : 20,
 		right : 20,
 		bottom : 30,
 		left : 0
 	};
-	
+
+function initializeTimeline(data) {
+
+	var container = d3.select('#timeline');
 	timelineWidth  = container.node().offsetWidth - margin.left - margin.right;
 	timelineHeight = container.node().offsetHeight - margin.top - margin.bottom - /* scroll */15;
 
@@ -136,12 +135,14 @@ function setTimeline(data) {
 	var context   = container.select('svg').select('g');
 
 	context.selectAll('path.area').remove();
-
+	//context.attr('height',80);
+	//context.select("path.area").attr("transform", "translate(0)scale(0)").attr('height', 80);
 	context
 		.append("path")
 		.datum(data)
 		.attr("class", "area")
 		.attr("d", timelineArea);
+	 //context.select("path.area").attr("transform", "translate(" + timelineXTranslate + ",0)scale(" + timelineXScale + ", 1)");
 
 }
 
