@@ -19,7 +19,9 @@ function initializeTimeline(data) {
 			right : 20,
 			bottom : 30,
 			left : 0
-	};
+	},
+	width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
 	timelineWidth  = container.node().offsetWidth - margin.left - margin.right;
 	timelineHeight = container.node().offsetHeight - margin.top - margin.bottom - /* scroll */15;
@@ -37,16 +39,32 @@ function initializeTimeline(data) {
 			return end;
 		}
 	});
+
 	timelineX = d3.time.scale()
 	.range([ 0, timelineWidth * timelineScale ])
 	.domain(timeExtent)
 	;
+	
+//	var customTimeFormat = d3.time.format.multi([
+//	                                             [".%L", function(d) { return d.getMilliseconds(); }],
+//	                                             [":%S", function(d) { return d.getSeconds(); }],
+//	                                             ["%I:%M", function(d) { return d.getMinutes(); }],
+//	                                             ["%I %p", function(d) { return d.getHours(); }],
+//	                                             ["%a %d", function(d) { return d.getDay() && d.getDate() != 1; }],
+//	                                             ["%b %d", function(d) { return d.getDate() != 1; }],
+//	                                             ["%B", function(d) { console.log(d.getMonth()); return d.getMonth(); }],
+//	                                             ["%Y", function() { return true; }]
+//	                                           ]);
+
+	
 	timelineXAxis = d3.svg.axis()
 	.scale(timelineX)
 	.orient('bottom')
-	.tickPadding(8)
+	.tickPadding(8)	
+//	.tickFormat(customTimeFormat)
 	;
-
+	
+	
 	// Compute Y axis
 	var valueExtent = d3.extent(data, function(d) {
 		return d.value;
@@ -95,15 +113,16 @@ function initializeTimeline(data) {
 	.attr('y', 21)
 	.attr('height', timelineHeight)
 	;
-
-	
 	
 	timelineSvg
 	.append('g')
 	.attr('class', 'x axis')
 	.attr('transform', 'translate(0,' + (timelineHeight + 21) + ')')
 	.call(timelineXAxis)
-	;
+//	.selectAll("text")
+//    .attr("transform", "rotate(90)")
+//    .style("text-anchor", "start")
+    ;
 
 	setTimelineAll(data);
 }
