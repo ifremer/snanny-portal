@@ -22,7 +22,8 @@
 		<script src="js/ol.js" charset="utf-8"></script>
 		
         <script src="js/moment.min.js" charset="utf-8"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<!-- 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script> -->
+		<script src="js/d3.js" charset="utf-8"></script>
 		<script src="js/nv.d3.min.js" charset="utf-8"></script>
 		<script src="js/envision.min.js" charset="utf-8"></script>
 		<!--
@@ -83,7 +84,12 @@
                 
 			<div class="row marketing">
 				<div class="col-lg-6">
-					<div id='timeline' class='ui-timeline'></div>
+					<div id='timeline' class='ui-timeline'>
+					 	<div id='zoomBtn'>
+							<button class="zoomBtn" id="zoomIn" title="Zoom In">+</button>
+							<button class="zoomBtn" id="zoomOut" title="Zoom Out">-</button>
+						</div>
+					</div>
 					<div id="map" class="map"></div>
 				</div>
 				<div>
