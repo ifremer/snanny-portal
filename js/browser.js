@@ -71,8 +71,8 @@ function showObservations(observations) {
 		// Display header with observation's count
 		observationsContainerHeader.append(jQuery("<h4>" + $('#individualObsPointCount').text() + " points from " + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h4>"));
 
-		if (timelineSelection != null && !timelineSelection.empty()) {
-			observationsContainerHeader.append(jQuery("<p>from " + moment(+timelineSelection.extent()[0]).format('lll') + " to " + moment(+timelineSelection.extent()[1]).format('lll') + "</p>"));
+		if (timelineSelection != null && timelineSelection.length>0) {
+			observationsContainerHeader.append(jQuery("<p>from " + moment(+timelineSelection[0]).format('lll') + " to " + moment(+timelineSelection[1]).format('lll') + "</p>"));
 		} else {
 			observationsContainerHeader.append(jQuery("<p>on full time range</p>"));
 		}
@@ -138,7 +138,7 @@ function filterObservationsByTime() {
 
 	var filter;
 
-	if (timelineSelection == null || timelineSelection.empty()) {
+	if (timelineSelection == null ||  timelineSelection.length==0) {
 		filter = function() {
 			return true;
 		};
@@ -146,8 +146,8 @@ function filterObservationsByTime() {
 		filter = function(observation) {
 			var observationResultTimestamp = observation.get('resulttimestamp') * 1000;
 
-			var selectionStart = (+timelineSelection.extent()[0]);
-			var selectionEnd = (+timelineSelection.extent()[1]);
+			var selectionStart = (+timelineSelection[0]);
+			var selectionEnd = (+timelineSelection[1]);
 
 			return selectionStart <= observationResultTimestamp && observationResultTimestamp <= selectionEnd;
 		};
