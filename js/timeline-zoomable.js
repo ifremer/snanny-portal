@@ -9,20 +9,16 @@ var timelineArea;
 var timelineXAxis;
 var timelineXTranslate = 0;
 var timelineXScale = 1;
-var margin;
+var 	margin = {
+		top : 20,
+		right : 20,
+		bottom : 30,
+		left : 0
+	};
 
 function initializeTimeline(data) {
 
 	var container = d3.select('#timeline');
-	margin = {
-			top : 20,
-			right : 20,
-			bottom : 30,
-			left : 0
-	},
-	width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
-
 	timelineWidth  = container.node().offsetWidth - margin.left - margin.right;
 	timelineHeight = container.node().offsetHeight - margin.top - margin.bottom - /* scroll */15;
 
@@ -129,7 +125,7 @@ function initializeTimeline(data) {
 
 function timelineZoom() {
 
-	// recupÃ©ration de la transformation
+	// recupération de la transformation
 	timelineXTranslate = d3.event.translate[0];	
 	timelineXScale = d3.event.scale;
 	applyZoom();
@@ -137,7 +133,7 @@ function timelineZoom() {
 
 function applyZoom(){
 	
-	// rÃ©cupÃ©ration des donnÃ©es 
+	// récupération des données 
 	var container = d3.select('#timeline');
 	var context   = container.select('svg').select('g').select("path.area");	
 	var dataArray = context.data();
@@ -181,6 +177,7 @@ function setTimeline(data) {
 	.attr("d", timelineArea);
 	
 }
+	 //context.select("path.area").attr("transform", "translate(" + timelineXTranslate + ",0)scale(" + timelineXScale + ", 1)");
 
 function setTimeLineArea(data){
 	var valueExtent = d3.extent(data, function(d) {

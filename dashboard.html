@@ -67,7 +67,7 @@
 				            <li><a href="#">About</a></li>
 				            <li><a href="#">Sign in</a></li>
 				          </ul>
-				          <form class="navbar-form navbar-right">
+				          <form class="navbar-form navbar-right" action="javascript:void(0);">
 				            <input type="text" class="form-control" placeholder="Search..." id="searchInput">
 				          </form>
 				        </div>
@@ -88,7 +88,15 @@
 				</div>
 				<div>
 				<div id='observationsHeader' class='col-lg-6 well observations'></div>
-				<div id='observations' class='col-lg-6 well observations'></div>
+	
+				<div id='observationsBrowser' class='col-lg-6 well observations'>
+				<div id='browserActions'>
+					<button class="btnTree" onclick="$('#observations').jstree('open_all');" title="Expand All">+</button>
+					<button class="btnTree" onclick="$('#observations').jstree('close_all');" title="Close All">-</button>
+				</div>
+				<div id='observations'></div>
+				</div>
+
 			</div>
 			
 <!-- 			<div class="row marketing"> -->
@@ -108,7 +116,7 @@
 		<script src="js/configuration.js" charset="utf-8"></script>
 		<script src="js/map.js" charset="utf-8"></script>
 		<script src="js/jstree.min.js" charset="utf-8"></script>
-		<script src="js/timeline-zoomable.js" charset="utf-8"></script>
+		<script src="js/timeline.js" charset="utf-8"></script>
 		<script src="js/browser.js" charset="utf-8"></script>
 		<script src="js/geohash.js" charset="utf-8"></script>
 		<script src="js/timehash.js" charset="utf-8"></script>

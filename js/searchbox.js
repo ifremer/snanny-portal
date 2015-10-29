@@ -1,9 +1,15 @@
 var changeRequest;
-$("#searchInput").keyup(function(){
+$("#searchInput").keyup(function(e){
 	clearTimeout(changeRequest);
-	changeRequest = setTimeout(function(){
-		getObservationsCount();
+	if (e.keyCode == '13') {
+        e.preventDefault();
+        getObservationsCount();
 		getObservations();
-	}, 500);
+    }else{
+		changeRequest = setTimeout(function(){
+			getObservationsCount();
+			getObservations();
+		}, 500);
+	}
 
 });
