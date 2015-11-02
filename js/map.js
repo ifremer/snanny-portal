@@ -4,6 +4,7 @@ var projectionExtent = projection.getExtent();
 var size = ol.extent.getWidth(projectionExtent) / 256;
 var resolutions = new Array(14);
 var matrixIds = new Array(14);
+var changeMapRequest = null;
 for (var z = 0; z < 14; ++z) {
 	// generate resolutions and matrixIds arrays for this WMTS
 	resolutions[z] = size / Math.pow(2, z);
@@ -242,6 +243,10 @@ map.on('pointermove', function(event) {
 
 
 map.on('moveend', function(evt) {
-	getObservationsCount();
-	getObservations();
+	clearTimeout(changeMapRequest);
+	changeMapRequest = setTimeout(function() {
+		getObservationsCount();
+		getObservations();
+	}, 500);
+
 });
