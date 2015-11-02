@@ -1,3 +1,4 @@
+
 function showObservations(observations) {
 	var observationsContainerHeader = jQuery('#observationsHeader');
 	var observationsContainer = jQuery('#observations');
@@ -71,8 +72,8 @@ function showObservations(observations) {
 		// Display header with observation's count
 		observationsContainerHeader.append(jQuery("<h4>" + $('#individualObsPointCount').text() + " points from " + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h4>"));
 
-		if (timelineSelection != null && !timelineSelection.empty()) {
-			observationsContainerHeader.append(jQuery("<p>from " + moment(+timelineSelection.extent()[0]).format('lll') + " to " + moment(+timelineSelection.extent()[1]).format('lll') + "</p>"));
+		if (timelineSelection != null && timelineSelection.length>0) {
+			observationsContainerHeader.append(jQuery("<p>from " + moment(+timelineSelection[0]).format('lll') + " to " + moment(+timelineSelection[1]).format('lll') + "</p>"));
 		} else {
 			observationsContainerHeader.append(jQuery("<p>on full time range</p>"));
 		}
@@ -138,7 +139,7 @@ function filterObservationsByTime() {
 
 	var filter;
 
-	if (timelineSelection == null || timelineSelection.empty()) {
+	if (timelineSelection == null ||  timelineSelection.length==0) {
 		filter = function() {
 			return true;
 		};
@@ -146,8 +147,8 @@ function filterObservationsByTime() {
 		filter = function(observation) {
 			var observationResultTimestamp = observation.get('resulttimestamp') * 1000;
 
-			var selectionStart = (+timelineSelection.extent()[0]);
-			var selectionEnd = (+timelineSelection.extent()[1]);
+			var selectionStart = (+timelineSelection[0]);
+			var selectionEnd = (+timelineSelection[1]);
 
 			return selectionStart <= observationResultTimestamp && observationResultTimestamp <= selectionEnd;
 		};
@@ -203,45 +204,50 @@ function filterObservations() {
 }
 
 function getObservationsCount() {
-	var extent = map.getView().calculateExtent(map.getSize());
-	var bottomLeft = ol.extent.getBottomLeft(extent);
-	var topRight = ol.extent.getTopRight(extent);
-
-	var bbox = [parseFloat(bottomLeft[1].toFixed(2)), parseFloat(bottomLeft[0].toFixed(2)), parseFloat(topRight[1].toFixed(2)), parseFloat(topRight[0].toFixed(2))];
-
-	var bboxQuery = "?bbox=" + bbox.join(",");
-	var timeQuery = "";
-	if (timelineSelection != null && !timelineSelection.empty()) {
-		timeQuery = "&time=" + (+timelineSelection.extent()[0]) + "," + (+timelineSelection.extent()[1]);
-	}
-
-	var kwordsQuery = "";
-	var searchText = $("#searchInput").val();
-	if (searchText != "") {
-		kwordsQuery = "&kwords=" + searchText;
-	}
+	var bboxQuery = getBboxQuery();
+	var timeQuery = getTimeQuery();
+	var kwordsQuery = getKeywordsQuery();
 
 	loadObservationsCount(MAP_RESOURCES + bboxQuery + timeQuery + kwordsQuery, TIMELINE_RESOURCES + bboxQuery + kwordsQuery);
 }
 
-function getObservations() {
-	var extent = map.getView().calculateExtent(map.getSize());
+function getBboxQuery(){
+var extent = map.getView().calculateExtent(map.getSize());
 	var bottomLeft = ol.extent.getBottomLeft(extent);
 	var topRight = ol.extent.getTopRight(extent);
 
 	var bbox = [parseFloat(bottomLeft[1].toFixed(2)), parseFloat(bottomLeft[0].toFixed(2)), parseFloat(topRight[1].toFixed(2)), parseFloat(topRight[0].toFixed(2))];
 
 	var bboxQuery = "?bbox=" + bbox.join(",");
-	var timeQuery = "";
-	if (timelineSelection != null && !timelineSelection.empty()) {
-		timeQuery = "&time=" + (+timelineSelection.extent()[0]) + "," + (+timelineSelection.extent()[1]);
-	}
+	return bboxQuery;
+}
 
+function getTimeQuery(){
+	var timeQuery = "";
+
+	
+	if (timelineSelection != null && timelineSelection.length>0) {
+		timeQuery = "&time="+(+timelineSelection[0])+","+(+timelineSelection[1]);
+	}
+	return timeQuery;
+
+}
+
+function getKeywordsQuery(){
 	var kwordsQuery = "";
 	var searchText = $("#searchInput").val();
 	if (searchText != "") {
 		kwordsQuery = "&kwords=" + searchText;
 	}
+	return kwordsQuery;
+}
+
+function getObservations() {
+
+	var bboxQuery = getBboxQuery();
+	var timeQuery = getTimeQuery();
+	var kwordsQuery = getKeywordsQuery();
+
 
 	var observationsContainerHeader = jQuery('#observationsHeader');
 	var observationsContainer = jQuery('#observations');
@@ -286,6 +292,7 @@ function getObservations() {
 		}
 
 		$('#individualObsPointLoading').text("0");
+  
 	});
 
 
@@ -312,17 +319,18 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 				projection: 'EPSG:4326',
 				object: data
 			});
-
-			observationsCountSource.clear();
-			observationsCountSource.addFeatures(vectorSource.getFeatures());
-			$('#individualObsPointCount').text(data['totalCount']);
-
-			if (--loadingCount == 0) {
-				stopLoading();
+			if (data != undefined) {
+				$('#individualObsPointCount').text(data['totalCount']);
+				//Display count only if observations details will not be displayed
+				observationsCountSource.clear();
+				if (data['status'] != undefined && data['status'] == "tooMany") {
+					observationsCountSource.addFeatures(vectorSource.getFeatures());
+					if (--loadingCount == 0) {
+						stopLoading();
+					}
+				}
 			}
 			$('#syntheticMapLoading').text("0");
-
-
 		});
 		if (!timelineInitialized) {
 			loadingCount++;
@@ -330,9 +338,11 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 	}
 
 	if (timelineZoomURL) {
+
 		d3.json(timelineZoomURL, function(err, data) {
 			$('#timelineLoading').text("1");
 			if (!timelineInitialized) {
+				
 				initializeTimeline(data);
 				timelineInitialized = true;
 			} else {
