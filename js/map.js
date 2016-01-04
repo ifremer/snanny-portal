@@ -5,6 +5,8 @@ var size = ol.extent.getWidth(projectionExtent) / 256;
 var resolutions = new Array(14);
 var matrixIds = new Array(14);
 var changeMapRequest = null;
+var countTooltipElement;
+var countTooltip;
 for (var z = 0; z < 14; ++z) {
 	// generate resolutions and matrixIds arrays for this WMTS
 	resolutions[z] = size / Math.pow(2, z);
@@ -35,7 +37,9 @@ var map = new ol.Map({
 	view: new ol.View({
 		projection: 'EPSG:4326',
 		center: [0, 0],
-		zoom: 2
+		zoom: 2.5,
+		minZoom: 2.1,
+		maxZoom: 11
 	})
 });
 
@@ -73,31 +77,12 @@ var getObservationCountText = function(feature, resolution) {
 };
 
 
-var createTextStyle = function(feature, resolution) {
-
-	return new ol.style.Text({
-		textAlign: "left",
-		textBaseline: "top",
-		text: getObservationCountText(feature, resolution),
-		size: '10px',
-		fill: new ol.style.Fill({
-			color: 'rgba(0, 0, 0, 0, 0.25)'
-		}),
-		stroke: new ol.style.Stroke({
-			color: 'rgba(0, 0, 0, 0, 0.25)'
-		}),
-		offsetX: 0,
-		offsetY: 0,
-		rotation: 0
-	});
-};
 
 
 var getObservationCountText = function(feature, resolution) {
-	var maxResolution = 0.05;
 	var text = feature.get('count');
 
-	if (map.getView().getResolution() > maxResolution) {
+	if (map.getView().getResolution() > 0.05) {
 		text = '';
 	}
 	return text;
@@ -105,24 +90,6 @@ var getObservationCountText = function(feature, resolution) {
 };
 
 
-var createTextStyle = function(feature, resolution) {
-
-	return new ol.style.Text({
-		textAlign: "left",
-		textBaseline: "top",
-		text: getObservationCountText(feature, resolution),
-		size: '10px',
-		fill: new ol.style.Fill({
-			color: 'rgba(0, 0, 0, 0, 0.25)'
-		}),
-		stroke: new ol.style.Stroke({
-			color: 'rgba(0, 0, 0, 0, 0.25)'
-		}),
-		offsetX: 0,
-		offsetY: 0,
-		rotation: 0
-	});
-};
 
 var observation_count_style = (function() {
 	var color = function(red, green, blue, alpha) {
@@ -131,10 +98,9 @@ var observation_count_style = (function() {
 	return function(feature, resolution) {
 		return [new ol.style.Style({
 			fill: new ol.style.Fill({
-				color: color(154, 205, 50, Math.floor(10.0 * Math.log(feature.get('ratio') + 1) / Math.log(100.0)) / 10.0),
+				color: color(154, 205, 50, 0.4+Math.floor(10.0 * Math.log(feature.get('ratio') + 1) / Math.log(100.0)) / 10.0),
 			}),
-			zIndex: 0,
-			text: createTextStyle(feature, resolution)
+			zIndex: 0
 		})];
 	};
 })();
@@ -200,7 +166,7 @@ function unselectPreviousFeatures() {
 	var i;
 	for (i = 0; i < selectedFeatures.length; i++) {
 		selectedFeatures[i].setStyle(null);
-		$("#" + selectedFeatures[i].get("uuid")).attr("style", null);
+		$("#" + selectedFeatures[i].get("snanny-uuid")).attr("style", null);
 	}
 	selectedFeatures = [];
 }
@@ -210,13 +176,13 @@ function unselectPreviousFeatures() {
 function selectObservationOnMap(uuid) {
 	unselectPreviousFeatures();
 	observationsSource.forEachFeature(function(observation) {
-		var ancestors = observation.get("ancestors");
-		if (observation.get("uuid") == uuid) {
+		var ancestors = observation.get("snanny-ancestors");
+		if (observation.get("snanny-uuid") == uuid) {
 			observation.setStyle([selected_style]);
 			selectedFeatures.push(observation);
 		} else {
 			ancestors.forEach(function(ancestor) {
-				if (ancestor == uuid) {
+				if (ancestor['snanny-ancestor-uuid'] == uuid) {
 					observation.setStyle([selected_style]);
 					selectedFeatures.push(observation);
 				}
@@ -228,15 +194,21 @@ function selectObservationOnMap(uuid) {
 // Handle pointer
 map.on('pointermove', function(event) {
 	unselectPreviousFeatures();
+	countTooltip.setPosition(undefined);
 	map.forEachFeatureAtPixel(event.pixel,
 		function(feature) {
-			if (feature.get("result") != undefined) {
+			if (feature.get("snanny-uuid") != undefined) {
 				feature.setStyle([
 					selected_style
 				]);
 				selectFeatureInBrowser(feature);
 				selectedFeatures.push(feature);
-			}
+			}else if(feature.get("count") != undefined){
+				var tooltipCoord = event.coordinate;
+				//Affichage UUID
+				countTooltipElement.innerHTML = feature.get("count")+" observations";
+				countTooltip.setPosition(event.coordinate);
+			}	
 		});
 });
 
@@ -250,3 +222,23 @@ map.on('moveend', function(evt) {
 	}, 500);
 
 });
+
+
+/**
+ * Creates a new help tooltip
+ */
+function createCountTooltip() {
+  if (countTooltipElement) {
+    countTooltipElement.parentNode.removeChild(countTooltipElement);
+  }
+  countTooltipElement = document.createElement('div');
+  countTooltipElement.className = 'tooltip';
+  countTooltip = new ol.Overlay({
+    element: countTooltipElement,
+    offset: [15, 0],
+    positioning: 'center-left'
+  });
+  map.addOverlay(countTooltip);
+}
+
+createCountTooltip();

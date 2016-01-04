@@ -19,23 +19,23 @@ function showObservations(observations) {
 		// Iterate over each observation, to display informations
 		observations.forEach(function(observation) {
 
-			var uuid = observation.get('uuid');
+			var uuid = observation.get('snanny-uuid');
 
 			if (uuids[uuid] == undefined) {
 
-				var ancestors = observation.get('ancestors');
+				var ancestors = observation.get('snanny-ancestors');
 				var parent = '#';
 				ancestors.forEach(function(ancestor) {
 
-					var uuid = ancestor;
+					var uuid = ancestor['snanny-ancestor-uuid'];
 					if (ancestorUuids[uuid] == undefined) {
 						tree.push({
 							"id": uuid,
-							"text": "balise_" + uuid.substring(0, 8),
+							"text": ancestor['snanny-ancestor-name'],
 							"parent": parent,
 							"icon": "sensor-ico",
 							"a_attr": {
-								"onMouseOver": "selectObservationOnMap('" + ancestor + "')"
+								"onMouseOver": "selectObservationOnMap('" + uuid + "')"
 							}
 						});
 						ancestorUuids[uuid] = 1;
@@ -44,15 +44,17 @@ function showObservations(observations) {
 
 				});
 				//Then add observation in the treeView
-				var uuid = observation.get('uuid');
-				var id = observation.get('id');
-				var author = observation.get('author');
-				var resultFilename = (observation.get('result').match(/[^\\/]+\.[^\\/]+$/) || []).pop();
+				var uuid = observation.get('snanny-uuid');
+				var id = observation.get('snanny-id');
+				var author = observation.get('snanny-author');
+				//var resultFilename = (observation.get('snanny-result').match(/[^\\/]+\.[^\\/]+$/) || []).pop();
+				var resultFilename = observation.get('snanny-result');
+				var name = observation.get('snanny-name');
 				var href = OBSERVATIONS_RESOURCES + "/" + uuid + "/results";
 				tree.push({
 					"id": uuid,
 					"parent": parent,
-					"text": resultFilename + " (" + author + ")",
+					"text": name,
 					"icon": "observation-ico",
 					"a_attr": {
 						"href": href,
@@ -170,11 +172,12 @@ function selectObservations(observations) {
 
 function selectFeatureInBrowser(feature) {
 	var jstree = $("#observations").jstree();
-	var node = jstree.get_node(feature.get("uuid"));
+	var uuid = feature.get("snanny-uuid");
+	var node = jstree.get_node(uuid);
 	openTreeToRoot(node, jstree);
 	var parent = node.parent
 
-	$("#" + feature.get("uuid")).attr("style", "color:rgba(255, 128, 0, 1.0)");
+	$("#" + uuid).attr("style", "color:rgba(255, 128, 0, 1.0)");
 	var position = $("#" + parent).position();
 	if (position != undefined) {
 		$("#observations").scrollTop($("#observations").scrollTop() - 55 + position.top);
@@ -262,7 +265,6 @@ function getObservations() {
 		observationsSource.clear(true);
 
 		if (data && data.status == "success" && data.features && data.features.length > 0) {
-
 			var vectorSource = new ol.source.GeoJSON({
 				projection: 'EPSG:4326',
 				object: data
@@ -271,7 +273,7 @@ function getObservations() {
 			observationsCountSource.clear();
 
 			observationsSource.addFeatures(vectorSource.getFeatures());
-			filterObservations();
+			//filterObservations();
 			showObservations(observationsSource.getFeatures());
 
 		} else if (data && (data.status == "timeOut" || data.status == "tooMany")) {
@@ -370,6 +372,7 @@ function loadObservations(observationsURL) {
 	startLoading();
 
 	d3.json(observationsURL, function(err, data) {
+		debugger;
 		var vectorSource = new ol.source.GeoJSON({
 			projection: 'EPSG:4326',
 			object: data

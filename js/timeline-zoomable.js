@@ -15,7 +15,7 @@ var lastQuery = null;
 var zoom
 var margin = {
 	top: 20,
-	right: 20,
+	right: 5,
 	bottom: 30,
 	left: 0
 };
