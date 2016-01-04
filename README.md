@@ -3,7 +3,6 @@
 
 Explore and edit systems and observations
 
-
 # deployment
 In the directory pubilshed with Apache:
 
@@ -13,5 +12,3 @@ Update configuration in following files:
 The link on the SNANNY REST FULL API (snanny-api) server:
 
     js/configuration.js
-
-
