@@ -250,26 +250,22 @@ function setTimelineAll(data) {
 		.datum(data)
 		.attr("class", "areaAll")
 		.attr("d", timelineArea);
-}
 
-function setTimeline(data) {
-	var container = d3.select('#timeline');
-	var context = container.select('svg').select('g');
-	context.selectAll('path.area').remove();
-	setTimeLineArea(data);
-	context
-		.append("path")
-		.datum(data)
-		.attr("class", "area")
-		.attr("d", timelineArea);
-}
-
-
-function setTimeLineArea(data) {
 	var valueExtent = d3.extent(data, function(d) {
 		return d.value;
 	});
 	timelineY = d3.scale.linear()
 		.range([timelineHeight, 0])
 		.domain(valueExtent);
+}
+
+function setTimeline(data) {
+	var container = d3.select('#timeline');
+	var context = container.select('svg').select('g');
+	context.selectAll('path.area').remove();
+	context
+		.append("path")
+		.datum(data)
+		.attr("class", "area")
+		.attr("d", timelineArea);
 }
