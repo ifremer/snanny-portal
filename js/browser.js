@@ -50,7 +50,7 @@ function showObservations(observations) {
 				//var resultFilename = (observation.get('snanny-result').match(/[^\\/]+\.[^\\/]+$/) || []).pop();
 				var resultFilename = observation.get('snanny-result');
 				var name = observation.get('snanny-name');
-				var href = OBSERVATIONS_RESOURCES + "/" + uuid + "/results";
+				var href = DATA_ACCESS_URI + "data/" + uuid + "/download";
 				tree.push({
 					"id": uuid,
 					"parent": parent,
