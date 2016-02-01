@@ -47,7 +47,6 @@ function showObservations(observations) {
 				var uuid = observation.get('snanny-uuid');
 				var id = observation.get('snanny-id');
 				var author = observation.get('snanny-author');
-				//var resultFilename = (observation.get('snanny-result').match(/[^\\/]+\.[^\\/]+$/) || []).pop();
 				var resultFilename = observation.get('snanny-result');
 				var name = observation.get('snanny-name');
 				var href = DATA_ACCESS_URI + "data/" + uuid + "/download";

@@ -31,6 +31,61 @@ body {
   border-top: 1px solid #e5e5e5;
 }
 
+.logInfo{
+  color:#9d9d9d;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-right: 10px;
+  cursor: pointer;
+}
+
+.logInfo:hover{
+ color:white;
+}
+
+.logInfo span{
+    padding: 10px 15px;
+    line-height: 20px;
+}
+
+#expanddiv{
+    min-width: 150px;
+    position: absolute;
+    right: 5px;
+    top: 45px;
+    z-index: 2000;
+    background-color: #333;
+    box-shadow: 0 1px 10px rgba(50, 50, 50, .7);
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#expanddiv>ul>li{k
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: -25px;
+    margin-bottom: 0;
+    list-style: none;
+    text-align: left;
+}
+
+#expanddiv>ul>li img{
+  padding-right: 5px;
+}
+
+#expanddiv>ul>li>a{
+ color:#9d9d9d;
+ cursor: pointer;
+}
+
+#expanddiv>ul>li>a:hover{
+ color:white;
+ text-decoration: none;
+}
+
 /* Customize container */
 @media (min-width: 768px) {
   .container {

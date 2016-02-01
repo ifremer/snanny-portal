@@ -33,10 +33,10 @@
 		
 		<div id="loading"><!-- Div loading--></div> 
 		<!-- status -->
-		<div id="timelineLoading" hidden>1</div>
-		<div id="syntheticMapLoading" hidden>1</div>
-		<div id="individualObsPointLoading" hidden>1</div>
-		<div id="individualObsPointCount" hidden>1</div>
+		<div id="timelineLoading" class="hidden">1</div>
+		<div id="syntheticMapLoading" class="hidden">1</div>
+		<div id="individualObsPointLoading" class="hidden">1</div>
+		<div id="individualObsPointCount" class="hidden">1</div>
 
 		<div class="container-full">
 		
@@ -52,16 +52,24 @@
 				            <span class="icon-bar"></span>
 				          </button>
 				          <a class="navbar-brand" href="index.html">Sensor Nanny</a>
-				        </div>
-				        <form class="navbar-form navbar-left">
-				            <button type="submit" class="btn btn-success">Sign up</button>
-				        </form>
-				      
+				        </div>				      
 				        <div id="navbar" class="navbar-collapse collapse">
 				          <ul class="nav navbar-nav navbar-right">
 				            <li><a href="dashboard.html">Explore</a></li>
 				            <li><a href="#">About</a></li>
-				            <li><a href="#">Sign in</a></li>
+				            <li class="logInfo hidden" id="signedUserContainer">
+					            <span id="signedUser"></span>
+								<img class="svg" src="images/caret.svg"/>
+								<div id="expanddiv" class="logoutMenu hidden">
+									<ul>
+										<li><a id="logoutBtn">
+											<img class="svg" src="images/logout.svg"/>
+											Log out
+										</a></li>
+									</ul>
+								</div> 
+				            </li>
+				            <li><a href="#" id="loginBtn">Sign in</a></li>
 				          </ul>
 
 				               <form class="navbar-form"  action="javascript:void(0);">
@@ -104,7 +112,8 @@
 				<p>&copy; Ifremer 2015</p>
 			</div>
 		
-		</div> <!-- /container -->
+		</div> 
+		</div><!-- /container -->
 
 		<script src="js/configuration.js" charset="utf-8"></script>
 		<script src="js/map.js" charset="utf-8"></script>
@@ -114,10 +123,10 @@
 		<script src="js/geohash.js" charset="utf-8"></script>
 		<script src="js/timehash.js" charset="utf-8"></script>
 		<script src="js/searchbox.js" charset="utf-8"></script>
+		<script src="js/cas.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
 			loadObservationsCount(SNANNY_API + "/obs/synthetic/map", SNANNY_API + "/obs/synthetic/timeline");
-
 		</script>
 		
 		<!-- Latest compiled and minified JavaScript -->
