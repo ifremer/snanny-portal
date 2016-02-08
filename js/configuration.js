@@ -14,5 +14,5 @@ var MAP_RESOURCES = SNANNY_API+"/obs/synthetic/map";
 var TIMELINE_RESOURCES = SNANNY_API+"/obs/synthetic/timeline";
 var OBSERVATIONS_RESOURCES = SNANNY_API+"/obs";
 
-var DATA_ACCESS_URI = "http://localhost.ifremer.fr:8888/owncloud/index.php/apps/snannyowncloudapi/";
+var DATA_ACCESS_URI = "http://localhost:8888/owncloud/index.php/apps/snannyowncloudapi/";
 var CAS_URI = "https://auth.ifremer.fr/";

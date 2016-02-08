@@ -54,11 +54,12 @@ function showObservations(observations) {
 					"id": uuid,
 					"parent": parent,
 					"text": name,
-					"icon": "observation-ico",
+					"icon": "download-ico",
 					"a_attr": {
 						"href": href,
 						"target": "_blank",
-						"onMouseOver": "selectObservationOnMap('" + uuid + "')"
+						"onMouseOver": "selectObservationOnMap('" + uuid + "')",
+						"onClick": "downloadData('"+uuid+"')"
 					}
 				});
 
@@ -93,6 +94,10 @@ function showObservations(observations) {
 	}
 }
 
+function downloadData(uuid){
+	var downloadURL = DATA_ACCESS_URI + "data/" + uuid + "/download";
+	window.open(downloadURL, '_blank');
+}
 
 function appendObservation(observation) {
 	//

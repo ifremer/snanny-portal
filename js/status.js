@@ -25,17 +25,16 @@
 		* Retrieve log status 
 		*/
 		getStatus: function(){
-			var _this = this;
 			$.ajax({
 				type: 'GET',
 				url: SNANNY_API+"/info",
 				dataType: 'json',
 				success: function(response) {
 					if(response.status === 'failure'){
-						_this.showError();
+						StatusManager._showError();
 					}
 				},
-				error:_this._showError
+				error:StatusManager._showError
 			});		
 		},
 
