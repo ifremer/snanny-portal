@@ -1,3 +1,6 @@
+var mapRequest;
+var timelineRequest;
+var observationRequest;
 
 function showObservations(observations) {
 	var observationsContainerHeader = jQuery('#observationsHeader');
@@ -264,7 +267,11 @@ function getObservations() {
 	observationsContainerHeader.append("<h4>loading...</h4>");
 	observationsContainerHeader.append("<p>&nbsp;</p>");
 
-	d3.json(OBSERVATIONS_RESOURCES + bboxQuery + timeQuery + kwordsQuery, function(err, data) {
+	if(observationRequest != null){
+		observationRequest.abort();
+	}
+
+	observationRequest = d3.json(OBSERVATIONS_RESOURCES + bboxQuery + timeQuery + kwordsQuery, function(err, data) {
 		$('#individualObsPointLoading').text("1");
 		observationsSource.clear(true);
 
@@ -319,7 +326,12 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 	var loadingCount = 0;
 
 	if (mapZoomURL) {
-		d3.json(mapZoomURL, function(err, data) {
+		
+	if(mapRequest != null){
+		mapRequest.abort();
+	}
+
+	mapRequest = d3.json(mapZoomURL, function(err, data) {
 			$('#syntheticMapLoading').text("1");
 			var vectorSource = new ol.source.GeoJSON({
 				projection: 'EPSG:4326',
@@ -345,7 +357,11 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
 
 	if (timelineZoomURL) {
 
-		d3.json(timelineZoomURL, function(err, data) {
+		if(timelineRequest != null){
+			timelineRequest.abort();
+		}
+
+		timelineRequest = d3.json(timelineZoomURL, function(err, data) {
 			$('#timelineLoading').text("1");
 			if (!timelineInitialized) {
 				
@@ -423,13 +439,7 @@ function showDetailDygraph(observationID, container, title) {
 
 	document.getElementById(container).style.cssText = '';
 	graphs.push(new Dygraph(container, SNANNY_API + '/observations/' + observationID + '/results', {
-		legend: 'always',
-		//      errorBars: true,
-		//	  title: title,
-		//	  showRoller: true,
-		//	  rollPeriod: 14,
-		//	  customBars: true,
-		//	  ylabel: 'Temperature (F)', // FIXME: find right unit
+		legend: 'always'
 	}));
 
 	if (graphsSync != null) {
@@ -470,13 +480,11 @@ function showDetailNVD3(observationID, container, title) {
 					});
 
 				chart.yAxis
-					.axisLabel(each.key) // FIXME: find unit
-					.tickFormat(d3.format(',.1f')) // FIXME: find unit
+					.axisLabel(each.key)
+					.tickFormat(d3.format(',.1f'))
 				;
 
-				chart.y2Axis
-					//					.axisLabel(each.key)				// FIXME: find unit
-					.tickFormat(d3.format(',.1f')) // FIXME: find unit
+				chart.y2Axis.tickFormat(d3.format(',.1f'))
 				;
 
 				if (data == null || data.length == 0) {
