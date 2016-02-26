@@ -27,9 +27,9 @@ var map = new ol.Map({
 	controls: controls,
 	layers: [new ol.layer.Tile({
 		source: new ol.source.TileWMS({
-			url: 'http://demo.boundlessgeo.com/geoserver/wms',
+			url: 'http://www.ifremer.fr/services/wms1',
 			params: {
-				'LAYERS': 'ne:NE1_HR_LC_SR_W_DR'
+				'LAYERS': 'continent,ETOPO1_BATHY_R'
 			}
 		})
 	})],
