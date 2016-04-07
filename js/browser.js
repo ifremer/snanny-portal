@@ -38,7 +38,8 @@ function showObservations(observations) {
 							"parent": parent,
 							"icon": "sensor-ico",
 							"a_attr": {
-								"onMouseOver": "selectObservationOnMap('" + uuid + "')"
+								"onMouseOver": "selectObservationOnMap('" + uuid +"')",	
+								"onclick":"showSystem('" + uuid + "')"
 							}
 						});
 						ancestorUuids[uuid] = 1;
@@ -83,15 +84,23 @@ function showObservations(observations) {
 			observationsContainerHeader.append(jQuery("<p>on full time range</p>"));
 		}
 		observationsContainer.jstree('destroy');
+		//$.jstree.defaults.core.themes.variant = "large";
 		observationsContainer.jstree({
 			"core": {
-				"data": tree
+				//'themes': {
+			        //        'name': 'default-dark',
+			               // 'responsive': true
+			        //},
+				"data": tree,
+				"plugins" : [ "wholerow" ]
 			}
 		})
-		$("#observations").on("select_node.jstree", function(e, data) {
-			$("#observations").jstree().toggle_node(data.node);
-			selectObservationOnMap(data.node.id);
-		});
+
+		// apparently not useful as mouseover event is configured in jstree nodes
+		//$("#observations").on("select_node.jstree", function(e, data) {
+		//	$("#observations").jstree().toggle_node(data.node);
+		//	selectObservationOnMap(data.node.id);
+		//});
 	}else{
 		jQuery('#browserActions').hide('slow');
 	}
@@ -182,8 +191,7 @@ function selectFeatureInBrowser(feature) {
 	var uuid = feature.get("snanny-uuid");
 	var node = jstree.get_node(uuid);
 	openTreeToRoot(node, jstree);
-	var parent = node.parent
-
+	var parent = node.parent	
 	$("#" + uuid).attr("style", "color:rgba(255, 128, 0, 1.0)");
 	var position = $("#" + parent).position();
 	if (position != undefined) {
@@ -504,3 +512,5 @@ function showDetailNVD3(observationID, container, title) {
 		});
 	});
 }
+
+

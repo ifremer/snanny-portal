@@ -9,13 +9,17 @@
 		<link rel="stylesheet" href="css/timeline.css" type="text/css">
 		<link rel="stylesheet" href="css/nv.d3.min.css" type="text/css">
 		<link rel="stylesheet" href="css/envision.min.css" type="text/css">
-		<link rel="stylesheet" href="css/jstree.min.css" type="text/css">
+		<!--link rel="stylesheet" href="css/jstree.min.css" type="text/css"-->
+
+		
 		
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="js/jstree/themes/default/style.css" type="text/css">
+		<!--link rel="stylesheet" href="css/jstree-proton-style.min.css" type="text/css"-->
 		
 		<script src="js/jquery.min.js"></script>
 		
@@ -38,6 +42,117 @@
 		<div id="individualObsPointLoading" class="hidden">1</div>
 		<div id="individualObsPointCount" class="hidden">1</div>
 
+		<!-- Modal system description -->	
+  		<div class="modal fade" id="systemDescriptionModal" role="dialog">
+
+		    <div class="modal-dialog modal-lg">			
+			      <div class="modal-content">
+				        <div class="modal-header">
+				          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+          				  	<h4 class="modal-title">System {name}</h4>
+					</div>
+
+			        	<div class="modal-body"> 						
+						<div class="row">
+							<div id="systemDescriptionModalleftcolumn" class="col-xs-6">
+								<div id="description" style="height: 130px;">
+									<div class="row"><div class="col-md-6">
+										<!-- img from documentation where function = quicklook, otherwise default image -->
+										<img src="images/grey_seal.png" style="height:120px;width:120px"></img>
+									</div>
+									<div class="col-md-6">
+										<p>{description}</p>
+									</div></div>
+								</div>
+
+								<div id="identifiers">
+								<p>identifiers:</p>
+								<table class="table table-striped">
+									<!-- loop on identifiers -->
+									<tr><td><a href="href="{identifier definition url}">{identifier name}</a></td><td>{identifier value}</td></tr>
+									<tr><td><a href="href="{identifier definition url}">{identifier name}</a></td><td>{identifier value}</td></tr>
+								</table>
+								</div>
+								<div id="classifiers">
+								<p>other properties:</p>
+								<table class="table table-striped">
+									<!-- loop on classifiers -->
+									<tr><td><a href="href="{classifiers definition url}">{classifiers name}</a></td><td>{classifiers value}</td></tr>
+									<tr><td><a href="href="{classifiers definition url}">{classifiers name}</a></td><td>{classifiers value}</td></tr>
+								</table>
+								</div>
+								<div id="ouputs">
+								<p>outputs:
+									<!-- loop on outputs -->
+									<a href="href="{output definition url}">{output name}</a>,
+									<a href="href="{output definition url}">{output name}</a>,
+								</p>						
+								</div>
+								<div id="documents">
+								<p>documents:
+									<!-- loop on documentation -->
+									<a href="href="{document url}">{document name}</a>,
+									<a href="href="{document url}">{document name}</a>,
+								</p>						
+								</div>
+
+
+							</div>
+							<div id="systemDescriptionModalrightcolumn" class="col-xs-6">
+								<div style="height: 130px;">
+									<div class="col-md-6">
+										<p>latitude: {latitude}<br/>
+										longitude: {longitude}</p>
+									</div>
+									<div class="col-md-6">
+										<div id="systemlocationmap"  style="height: 130px; width: 130px;" class="pull-right"></div>
+									</div>
+								</div>
+								<div id="contacts">
+								<p>contacts:</p>
+								<table class="table table-striped">
+									<!-- loop on contacts -->
+									<tr><td><a href="href="{contacts role definition url}">{contact role}</a></td><td>{contact name,email...}</td></tr>
+									<tr><td><a href="href="{contacts role definition url}">{contact role}</a></td><td>{contact name,email...}</td></tr>
+
+								</table>
+								</div>
+								<div id="events">
+								<p>events:</p>
+								<table class="table table-striped">
+									<!-- loop on events -->
+									<tr><td>{event date/time}</td><td><a href="{event definition}">{event type}</a></td><td>{event desctiption}</td></tr>
+									<tr><td>{event date/time}</td><td><a href="{event definition}">{event type}</a></td><td>{event desctiption}</td></tr>
+								</table>
+								</div>
+								<div id="references">
+								<p>model: <a href="href="{typeOf url}">{typeOf name}</a></p>
+								<p>sub-components:
+									<!-- loop on components -->
+									<a href="href="{sub-components url}">{sub-component name}</a>,
+									<a href="href="{sub-components url}">{sub-component name}</a>,
+								</p>
+								</div>
+							</div>
+						</div>									      
+					</div>
+        	    			<div class="modal-footer">					  
+						<div class="row">
+							<div  class="col-xs-6">
+								<p class="text-muted" style="font-size:80%">
+									<i>component {uuid} description valid from {valid start} to {valid stop}</i>
+								</p>
+							</div>
+							<div  class="col-xs-6">
+          		    					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							</div>
+						</div>					  
+        	    			</div>
+	      		    </div>
+      		    </div>
+      		</div>
+
+
 		<div class="container-full">
 		
 			<div class="header">
@@ -56,6 +171,7 @@
 				        <div id="navbar" class="navbar-collapse collapse">
 				          <ul class="nav navbar-nav navbar-right">
 				            <li><a href="dashboard.html">Explore</a></li>
+				            <li><a id="owncloud">My observations</a></li>
 				            <li><a href="#">About</a></li>
 				            <li class="logInfo hidden" id="signedUserContainer">
 					            <span id="signedUser"></span>
@@ -116,14 +232,16 @@
 		</div><!-- /container -->
 
 		<script src="js/configuration.js" charset="utf-8"></script>
+		<script src="js/menu.js" charset="utf-8"></script>
 		<script src="js/map.js" charset="utf-8"></script>
-		<script src="js/jstree.min.js" charset="utf-8"></script>
+		<script src="js/jstree/jstree.min.js" charset="utf-8"></script>
 		<script src="js/timeline-zoomable.js" charset="utf-8"></script>
+		<script src="js/modal.js" charset="utf-8"></script>
 		<script src="js/browser.js" charset="utf-8"></script>
 		<script src="js/geohash.js" charset="utf-8"></script>
 		<script src="js/timehash.js" charset="utf-8"></script>
 		<script src="js/searchbox.js" charset="utf-8"></script>
-		<script src="js/cas.js" charset="utf-8"></script>
+		<script src="js/cas.js" charset="utf-8"></script>		
 		<script src="js/status.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
