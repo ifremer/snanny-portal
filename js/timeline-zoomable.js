@@ -25,6 +25,10 @@ function initializeTimeline(data) {
 	var container = d3.select('#timeline');
 	timelineWidth = container.node().offsetWidth - margin.left - margin.right;
 	timelineHeight = container.node().offsetHeight - margin.top - margin.bottom - /* scroll */ 15;
+	window.onresize = function(event) {
+		container.node().innerHTML = '';
+		initializeTimeline(data);
+	};
 
 	// Compute X axis
 	var current_first_time = Number.MAX_VALUE;
