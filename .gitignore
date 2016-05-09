@@ -3,6 +3,7 @@
 /.settings/
 
 # other
+*.project
 *.iml
 dependency-reduced-pom.xml
 .idea/
