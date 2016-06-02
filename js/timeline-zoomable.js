@@ -26,7 +26,8 @@ function initializeTimeline(data) {
 	timelineWidth = container.node().offsetWidth - margin.left - margin.right;
 	timelineHeight = container.node().offsetHeight - margin.top - margin.bottom - /* scroll */ 15;
 	window.onresize = function(event) {
-		container.node().innerHTML = '';
+		var svg = container.select('svg').node();
+		container.node().removeChild(svg);
 		initializeTimeline(data);
 	};
 
