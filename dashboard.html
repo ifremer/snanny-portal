@@ -5,158 +5,271 @@
 		<link rel="stylesheet" href="css/ol.css" type="text/css">
 		<link rel="stylesheet" href="css/sensornanny.css" type="text/css">
 		<link rel="stylesheet" href="css/browser.css" type="text/css">
+		<link rel="stylesheet" href="css/modal.css" type="text/css">
 		<link rel="stylesheet" href="css/map.css" type="text/css">
 		<link rel="stylesheet" href="css/timeline.css" type="text/css">
 		<link rel="stylesheet" href="css/nv.d3.min.css" type="text/css">
 		<link rel="stylesheet" href="css/envision.min.css" type="text/css">
 		<!--link rel="stylesheet" href="css/jstree.min.css" type="text/css"-->
 
-		
-		
+
+
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="css/bootstrap.min.css">
-		
+
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="js/jstree/themes/default/style.css" type="text/css">
 		<!--link rel="stylesheet" href="css/jstree-proton-style.min.css" type="text/css"-->
-		
+
 		<script src="js/jquery.min.js"></script>
-		
+
 		<script src="js/ol.js" charset="utf-8"></script>
-		
-        <script src="js/moment.min.js" charset="utf-8"></script>
+
+    <script src="js/moment.min.js" charset="utf-8"></script>
 		<script src="js/d3.v3.min.js" charset="utf-8"></script>
 		<script src="js/nv.d3.min.js" charset="utf-8"></script>
 		<script src="js/envision.min.js" charset="utf-8"></script>
+		<script src="js/mustache.min.js" charset="utf-8"></script>
 
 		<title>SensorNanny</title>
 	</head>
-	
+
 	<body>
-		
-		<div id="loading"><!-- Div loading--></div> 
+
+		<div id="loading"><!-- Div loading--></div>
 		<!-- status -->
 		<div id="timelineLoading" class="hidden">1</div>
 		<div id="syntheticMapLoading" class="hidden">1</div>
 		<div id="individualObsPointLoading" class="hidden">1</div>
 		<div id="individualObsPointCount" class="hidden">1</div>
 
-		<!-- Modal system description -->	
-  		<div class="modal fade" id="systemDescriptionModal" role="dialog">
-
-		    <div class="modal-dialog modal-lg">			
-			      <div class="modal-content">
-				        <div class="modal-header">
-				          	<button type="button" class="close" data-dismiss="modal">&times;</button>
-          				  	<h4 class="modal-title">System {name}</h4>
+<!-- Modal system description -->
+		<div class="modal fade" id="systemDescriptionModal" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button class="close" data-dismiss="modal" type="button">&times;</button>
+						<div class="btn-group">
+							<button id="backBtn" class="btn btn-default btn-large nav-btn">
+								<span class="glyphicon glyphicon-chevron-left"></span>
+							</button>
+							<button id="forwardBtn" class="btn btn-default btn-large nav-btn">
+								<span class="glyphicon glyphicon-chevron-right"></span>
+							</button>
+							<a id="xmlBtn" class="btn btn-default btn-large nav-btn" target="_blank" href={{resourceUrl}}>
+								<span class="glyphicon glyphicon-file"></span>
+							</a>
+							<button id="printBtn" class="btn btn-default btn-large nav-btn" disabled>
+								<span class="glyphicon glyphicon-print"></span>
+							</button>
+						</div>
+						<h4 class="modal-title templated-content">{{displayName}}</h4>
 					</div>
-
-			        	<div class="modal-body"> 						
+					<div class="modal-body">
+						<!-- @TODO: Insert the spinner div here? -->
+						<div id="modalSpinner">
+							<span class="img-block"><img src="./images/loading.gif" /></span>
+						</div>
 						<div class="row">
-							<div id="systemDescriptionModalleftcolumn" class="col-xs-6">
-								<div id="description" style="height: 130px;">
-									<div class="row"><div class="col-md-6">
-										<!-- img from documentation where function = quicklook, otherwise default image -->
-										<img src="images/grey_seal.png" style="height:120px;width:120px"></img>
+							<div class="col-xs-6" id="systemDescriptionModalleftcolumn">
+								<div id="description" class="templated-content">
+									<div class="row">
+										{{#image}}
+										<div class="col-md-6" id="image-ctnr">
+											<img src="{{image}}">
+										</div>
+										{{/image}}
+										<div class="col-md-6">
+											<p id="descriptionText">{{description}}</p>
+                      <a id="descriptionExtend" data-extended="false" class="btn-a extender">More...</a>
+										</div>
 									</div>
-									<div class="col-md-6">
-										<p>{description}</p>
-									</div></div>
 								</div>
-
-								<div id="identifiers">
-								<p>identifiers:</p>
-								<table class="table table-striped">
-									<!-- loop on identifiers -->
-									<tr><td><a href="href="{identifier definition url}">{identifier name}</a></td><td>{identifier value}</td></tr>
-									<tr><td><a href="href="{identifier definition url}">{identifier name}</a></td><td>{identifier value}</td></tr>
-								</table>
+								<div id="identifiers" class="templated-content">
+									<h5>Identifiers</h5>
+									{{#identifiers.length}}
+									<table class="table table-striped table-responsive">
+										<tbody>
+											<!--{{#identifiers}}-->
+											<tr>
+												<td>
+													<a href="{{href}}" target="_blank">{{name}}</a>
+												</td>
+												<td>{{value}}</td>
+											</tr>
+											<!--{{/identifiers}}-->
+										</tbody>
+									</table>
+									{{/identifiers.length}}
+									{{^identifiers.length}}
+									<p class="p-indent">No identifier documented.</p>
+									{{/identifiers.length}}
 								</div>
-								<div id="classifiers">
-								<p>other properties:</p>
-								<table class="table table-striped">
-									<!-- loop on classifiers -->
-									<tr><td><a href="href="{classifiers definition url}">{classifiers name}</a></td><td>{classifiers value}</td></tr>
-									<tr><td><a href="href="{classifiers definition url}">{classifiers name}</a></td><td>{classifiers value}</td></tr>
-								</table>
+								<div id="classifiers" class="templated-content">
+									<h5>Other properties</h5>
+									{{#classifiers.length}}
+									<table class="table table-striped table-responsive">
+										<tbody>
+											<!--{{#classifiers}}-->
+											<tr>
+												<td>{{#nameHref}}<a href="{{nameHref}}" target="_blank">{{/nameHref}}{{name}}</a></td>
+												<td>{{#valueHref}}<a href="{{valueHref}}" target="_blank">{{/valueHref}}{{value}}</a></td>
+											</tr>
+											<!--{{/classifiers}}-->
+										</tbody>
+									</table>
+									{{/classifiers.length}}
+									{{^classifiers.length}}
+									<p  class="p-indent">No classifier documented.</p>
+									{{/classifiers.length}}
 								</div>
-								<div id="ouputs">
-								<p>outputs:
-									<!-- loop on outputs -->
-									<a href="href="{output definition url}">{output name}</a>,
-									<a href="href="{output definition url}">{output name}</a>,
-								</p>						
+								<div id="ouputs" class="templated-content">
+									<h5>Outputs</h5>
+									{{#outputs.length}}
+									<ul class="flat-list">
+										<!--{{#outputs}}-->
+										<li><a href="{{href}}" target="_blank">{{name}}</a></li>
+										<!--{{/outputs}}-->
+									</ul>
+									{{/outputs.length}}
+									{{^outputs.length}}
+									<p  class="p-indent">No output documented.</p>
+									{{/outputs.length}}
 								</div>
-								<div id="documents">
-								<p>documents:
-									<!-- loop on documentation -->
-									<a href="href="{document url}">{document name}</a>,
-									<a href="href="{document url}">{document name}</a>,
-								</p>						
+								<div id="documents" class="templated-content">
+									<h5>Documents</h5>
+									{{#documents.length}}
+									<ul class="flat-list">
+										<!--{{#documents}}-->
+										<li><a href="{{href}}" target="_blank">{{name}}</a></li>
+										<!--{{/documents}}-->
+									</ul>
+									{{/documents.length}}
+									{{^documents.length}}
+									<p  class="p-indent">No document documented.</p>
+									{{/documents.length}}
 								</div>
-
-
 							</div>
-							<div id="systemDescriptionModalrightcolumn" class="col-xs-6">
-								<div style="height: 130px;">
+							<div class="col-xs-6" id="systemDescriptionModalrightcolumn">
+								<div id="location" style="height: 130px;" class="templated-content">
 									<div class="col-md-6">
-										<p>latitude: {latitude}<br/>
-										longitude: {longitude}</p>
+										{{#location}}
+										<ul>
+											<li>Latitude: {{lat}}</li>
+											<li>Longitude: {{lng}}</li>
+										</ul>
+										{{/location}}
 									</div>
 									<div class="col-md-6">
-										<div id="systemlocationmap"  style="height: 130px; width: 130px;" class="pull-right"></div>
+										<div class="pull-right"
+											id="locationMap" >
+										</div>
+										<img src="./images/map.jpg"
+											id="substituteMap" />
 									</div>
 								</div>
-								<div id="contacts">
-								<p>contacts:</p>
-								<table class="table table-striped">
-									<!-- loop on contacts -->
-									<tr><td><a href="href="{contacts role definition url}">{contact role}</a></td><td>{contact name,email...}</td></tr>
-									<tr><td><a href="href="{contacts role definition url}">{contact role}</a></td><td>{contact name,email...}</td></tr>
-
-								</table>
+								<div id="contacts" class="templated-content">
+									<h5>Contacts</h5>
+									{{#contacts.length}}
+									<table class="table table-striped table-responsive">
+										<tbody>
+											<!--{{#contacts}}-->
+											<tr>
+												<td><a href="{{role.href}}" target="_blank" >{{role.name}}</a></td>
+												<td>
+													<span class="contact-info">
+														{{#individual}}<span class="contact-info-elem">{{individual}}</span>{{/individual}}
+														{{#organization}}<span class="contact-info-elem">{{organization}}</span>{{/organization}}
+														{{#email}}<span class="contact-info-elem"><a href="mailto:{{email}}" target="_blank">{{email}}</a></span>{{/email}}
+													</span>
+												</td>
+											</tr>
+											<!--{{/contacts}}-->
+										</tbody>
+									</table>
+									{{/contacts.length}}
+									{{^contacts.length}}
+									<p  class="p-indent">No contact documented.</p>
+									{{/contacts.length}}
 								</div>
-								<div id="events">
-								<p>events:</p>
-								<table class="table table-striped">
-									<!-- loop on events -->
-									<tr><td>{event date/time}</td><td><a href="{event definition}">{event type}</a></td><td>{event desctiption}</td></tr>
-									<tr><td>{event date/time}</td><td><a href="{event definition}">{event type}</a></td><td>{event desctiption}</td></tr>
-								</table>
+								<div id="events" class="templated-content">
+									<h5>Events</h5>
+									{{#events.length}}
+									<table class="table table-striped">
+										<tbody>
+											<!-- {{#events}} -->
+											<tr>
+												<td>{{datetime}}</td>
+												<td>
+													<a href="{{href}}" target="_blank">{{description}}</a>
+												</td>
+											</tr>
+											<!-- {{/events}} -->
+										</tbody>
+									</table>
+									{{/events.length}}
+									{{^events.length}}
+									<p  class="p-indent">No event documented.</p>
+									{{/events.length}}
 								</div>
-								<div id="references">
-								<p>model: <a href="href="{typeOf url}">{typeOf name}</a></p>
-								<p>sub-components:
-									<!-- loop on components -->
-									<a href="href="{sub-components url}">{sub-component name}</a>,
-									<a href="href="{sub-components url}">{sub-component name}</a>,
-								</p>
+								<div id="references" class="templated-content">
+									<h5>Model</h5>
+									{{#model}}
+									<p><a href="{{href}}" class="modal-link">{{name}}</a></p>
+									{{/model}}
+									{{^model}}
+									<p  class="p-indent">No model documented.</p>
+									{{/model}}
+									<h5>Sub-components</h5>
+									{{#components.length}}
+									<ul id="components" class='flat-list'>
+										<!--{{#components}}-->
+										<li><a href="{{href}}" class="modal-link">{{name}}</a></li>
+										<!--{{/components}}-->
+									</ul>
+									<a id="componentsExtend" data-extended="false" class="btn-a extender">More...</a>
+									{{/components.length}}
+									{{^components.length}}
+									<p  class="p-indent">No component documented.</p>
+									{{/components.length}}
 								</div>
 							</div>
-						</div>									      
+						</div>
 					</div>
-        	    			<div class="modal-footer">					  
-						<div class="row">
-							<div  class="col-xs-6">
-								<p class="text-muted" style="font-size:80%">
-									<i>component {uuid} description valid from {valid start} to {valid stop}</i>
+					<div class="modal-footer">
+						<div class="row templated-content">
+							<div class="col-xs-6">
+								<p class="text-muted templated-content" style="font-size:80%">
+									<i>component {{uuid}}
+									{{#validTime}}
+									description valid
+									{{#start}}
+									from {{start}}
+									{{/start}}
+									{{#stop}}
+									until {{stop}}
+									{{/stop}}
+									{{/validTime}}
+									</i>
 								</p>
 							</div>
-							<div  class="col-xs-6">
-          		    					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							<div class="col-xs-6">
+								<button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
 							</div>
-						</div>					  
-        	    			</div>
-	      		    </div>
-      		    </div>
-      		</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 
 
 		<div class="container-full">
-		
+
 			<div class="header">
-				
+
 				<nav class="navbar navbar-inverse navbar-fixed-top">
 				      <div class="container-fluid">
 				        <div class="navbar-header">
@@ -167,7 +280,7 @@
 				            <span class="icon-bar"></span>
 				          </button>
 				          <a class="navbar-brand" href="index.html">Sensor Nanny</a>
-				        </div>				      
+				        </div>
 				        <div id="navbar" class="navbar-collapse collapse">
 				          <ul class="nav navbar-nav navbar-right">
 				            <li><a href="dashboard.html">Explore</a></li>
@@ -183,7 +296,7 @@
 											Log out
 										</a></li>
 									</ul>
-								</div> 
+								</div>
 				            </li>
 				            <li><a href="#" id="loginBtn">Sign in</a></li>
 				          </ul>
@@ -200,7 +313,7 @@
 				      </div>
 			    </nav>
 			</div>
-                
+
 			<div class="row marketing">
 				<div class="col-lg-9">
 					<div id='timeline' class='ui-timeline'>
@@ -213,7 +326,7 @@
 				</div>
 				<div>
 				<div id='observationsHeader' class='col-lg-3 well observations'></div>
-	
+
 				<div id='observationsBrowser' class='col-lg-3 well observations'>
 				<div id='browserActions'>
 					<button class="btnTree" onclick="$('#observations').jstree('open_all');" title="Expand All">+</button>
@@ -223,12 +336,12 @@
 				</div>
 
 			</div>
-						
+
 			<div class="footer">
 				<p>&copy; Ifremer 2015</p>
 			</div>
-		
-		</div> 
+
+		</div>
 		</div><!-- /container -->
 
 		<script src="js/configuration.js" charset="utf-8"></script>
@@ -241,13 +354,13 @@
 		<script src="js/geohash.js" charset="utf-8"></script>
 		<script src="js/timehash.js" charset="utf-8"></script>
 		<script src="js/searchbox.js" charset="utf-8"></script>
-		<script src="js/cas.js" charset="utf-8"></script>		
+		<script src="js/cas.js" charset="utf-8"></script>
 		<script src="js/status.js" charset="utf-8"></script>
 
 		<script type="text/javascript">
 			loadObservationsCount(SNANNY_API + "/obs/synthetic/map", SNANNY_API + "/obs/synthetic/timeline");
 		</script>
-		
+
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="js/bootstrap.min.js"></script>
 
