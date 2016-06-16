@@ -166,23 +166,23 @@ function unselectPreviousFeatures() {
 	var i;
 	for (i = 0; i < selectedFeatures.length; i++) {
 		selectedFeatures[i].setStyle(null);
-		$("#" + selectedFeatures[i].get("snanny-uuid")).attr("style", null);
+		$("#" + selectedFeatures[i].get("snanny-deploymentid")).attr("style", null);
 	}
 	selectedFeatures = [];
 }
 
 
 
-function selectObservationOnMap(uuid) {
+function selectObservationOnMap(deploymentId) {
 	unselectPreviousFeatures();
 	observationsSource.forEachFeature(function(observation) {
 		var ancestors = observation.get("snanny-ancestors");
-		if (observation.get("snanny-uuid") == uuid) {
+		if (observation.get("snanny-deploymentid") == deploymentId) {
 			observation.setStyle([selected_style]);
 			selectedFeatures.push(observation);
 		} else {
 			ancestors.forEach(function(ancestor) {
-				if (ancestor['snanny-ancestor-uuid'] == uuid) {
+				if (ancestor['snanny-ancestor-deploymentid'] == deploymentId) {
 					observation.setStyle([selected_style]);
 					selectedFeatures.push(observation);
 				}
@@ -197,7 +197,7 @@ map.on('pointermove', function(event) {
 	countTooltip.setPosition(undefined);
 	map.forEachFeatureAtPixel(event.pixel,
 		function(feature) {
-			if (feature.get("snanny-uuid") != undefined) {
+			if (feature.get("snanny-deploymentid") != undefined) {
 				feature.setStyle([
 					selected_style
 				]);
