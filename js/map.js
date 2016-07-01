@@ -1,5 +1,5 @@
-// Variables nécessaires à l'affichage du Layer arcgisonline
-var projection = ol.proj.get('EPSG:3857');
+// Variables nécessaires à l'affichage du Layer WMTS fond de carte sextant
+var projection = ol.proj.get('EPSG:4326');
 var projectionExtent = projection.getExtent();
 var size = ol.extent.getWidth(projectionExtent) / 256;
 var resolutions = new Array(14);
@@ -8,10 +8,17 @@ var changeMapRequest = null;
 var countTooltipElement;
 var countTooltip;
 for (var z = 0; z < 14; ++z) {
-	// generate resolutions and matrixIds arrays for this WMTS
-	resolutions[z] = size / Math.pow(2, z);
-	matrixIds[z] = z;
+  // generate resolutions and matrixIds arrays for this WMTS
+  resolutions[z] = size / Math.pow(2, z);
+  matrixId=z-1.0;
+  matrixIds[z] = 'EPSG:4326:'+matrixId;
 }
+
+var attribution = new ol.Attribution({
+  html: 'Tiles &copy; <a href="http://services.arcgisonline.com/arcgis/rest/' +
+      'services/Demographics/USA_Population_Density/MapServer/">ArcGIS</a>'
+});
+
 
 
 var interactions = ol.interaction.defaults({
@@ -25,21 +32,33 @@ var map = new ol.Map({
 
 	interactions: interactions,
 	controls: controls,
-	layers: [new ol.layer.Tile({
-		source: new ol.source.TileWMS({
-			url: 'http://www.ifremer.fr/services/wms1',
-			params: {
-				'LAYERS': 'continent,ETOPO1_BATHY_R'
-			}
-		})
-	})],
+	layers: [
+	    new ol.layer.Tile({
+      		opacity: 1.0,
+	        extent: projectionExtent,
+	        source: new ol.source.WMTS({
+		        attributions: [attribution],
+		        url: 'http://sextant.ifremer.fr/geowebcache/service/wmts',
+		        layer: 'sextant',
+		        matrixSet: 'EPSG:4326',
+		        format: 'image/png',
+		        projection: projection,
+		        tileGrid: new ol.tilegrid.WMTS({
+		          origin: ol.extent.getTopLeft(projectionExtent),
+		          resolutions: resolutions,
+		          matrixIds: matrixIds
+        		}),
+        	        style: ''
+      	        })
+           })
+	],
 	target: 'map',
 	view: new ol.View({
 		projection: 'EPSG:4326',
 		center: [0, 0],
 		zoom: 2.5,
 		minZoom: 2.1,
-		maxZoom: 11
+		maxZoom: 16
 	})
 });
 
