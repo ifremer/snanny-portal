@@ -14,10 +14,6 @@ for (var z = 0; z < 14; ++z) {
   matrixIds[z] = 'EPSG:4326:'+matrixId;
 }
 
-var attribution = new ol.Attribution({
-  html: 'Tiles &copy; <a href="http://services.arcgisonline.com/arcgis/rest/' +
-      'services/Demographics/USA_Population_Density/MapServer/">ArcGIS</a>'
-});
 
 
 
@@ -37,7 +33,6 @@ var map = new ol.Map({
       		opacity: 1.0,
 	        extent: projectionExtent,
 	        source: new ol.source.WMTS({
-		        attributions: [attribution],
 		        url: 'http://sextant.ifremer.fr/geowebcache/service/wmts',
 		        layer: 'sextant',
 		        matrixSet: 'EPSG:4326',
