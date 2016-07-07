@@ -44,6 +44,7 @@ var map = new ol.Map({
 		          matrixIds: matrixIds
         		}),
         	        style: ''
+
       	        })
            })
 	],
@@ -52,7 +53,7 @@ var map = new ol.Map({
 		projection: 'EPSG:4326',
 		center: [0, 0],
 		zoom: 2.5,
-		minZoom: 2.1,
+		minZoom: 2.5,
 		maxZoom: 16
 	})
 });
