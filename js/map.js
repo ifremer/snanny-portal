@@ -113,7 +113,7 @@ var observation_count_style = (function() {
 	return function(feature, resolution) {
 		return [new ol.style.Style({
 			fill: new ol.style.Fill({
-				color: color(154, 205, 50, 0.4+Math.floor(10.0 * Math.log(feature.get('ratio') + 1) / Math.log(100.0)) / 10.0),
+                color: colorAsRgba(154, 205, 50, smoothObservationCount(feature.get('count'))),
 			}),
 			zIndex: 0
 		})];
@@ -121,6 +121,9 @@ var observation_count_style = (function() {
 })();
 
 
+function smoothObservationCount(nbObservations) {
+    return (1.0 - (1.0 / (1.0 + nbObservations / RESOLUTION)));
+}
 
 var observation_count_style_backup = (function() {
 	var compute = function(average, alpha) {
@@ -137,7 +140,7 @@ var observation_count_style_backup = (function() {
 			blue = 0;
 		}
 
-		return 'rgba(' + red + ',' + green + ',' + blue + ',' + alpha + ')';
+		return colorAsRgba(red, green, blue, alpha);
 	};
 	return function(feature, resolution) {
 		return [new ol.style.Style({
@@ -149,10 +152,13 @@ var observation_count_style_backup = (function() {
 	};
 })();
 
+function colorAsRgba(red, green, blue, alpha) {
+    return 'rgba(' + red + ',' + green + ',' + blue + ',' + alpha + ')';
+}
+
 var observationsSource = new ol.source.GeoJSON({
 	projection: 'EPSG:4326'
 });
-
 
 
 map.addLayer(new ol.layer.Vector({

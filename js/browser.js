@@ -384,11 +384,11 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
         timelineRequest = d3.json(timelineZoomURL, function (err, data) {
             $('#timelineLoading').text("1");
             if (!timelineInitialized) {
-
-                initializeTimeline(data);
+                
+                initializeTimeline(smoothData(data));
                 timelineInitialized = true;
             } else {
-                setTimeline(data);
+                setTimeline(smoothData(data));
             }
 
             if (--loadingCount == 0) {
@@ -404,8 +404,6 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
     if (loadingCount > 0) {
         startLoading();
     }
-
-
 }
 
 function loadObservations(observationsURL) {
@@ -431,6 +429,17 @@ function loadObservations(observationsURL) {
 
 
     });
+}
+
+function smoothData(data) {
+    var smoothedData = [];
+    data.forEach(function (each, index) {
+        var smoothData = each;
+        smoothData.value = (1.0 - (1.0 / (1.0 + each.value / RESOLUTION)));
+        smoothedData.push(smoothData);
+    });
+    
+    return smoothedData;
 }
 
 function showDetail(observationID, container, title) {

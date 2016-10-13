@@ -24,3 +24,5 @@ var DATA_ACCESS_URI = OWNCLOUD_HOST + "/index.php/apps/snannyowncloudapi/";
 
 //// CAS Authentication ////
 var CAS_URI = "https://auth.ifremer.fr/";
+
+var RESOLUTION = 200;
