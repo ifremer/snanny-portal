@@ -239,7 +239,7 @@ map.on('moveend', function(evt) {
 	clearTimeout(changeMapRequest);
 	changeMapRequest = setTimeout(function() {
 		getObservationsCount();
-		getObservations();
+		getObservationsAndSystems();
 	}, 500);
 
 });

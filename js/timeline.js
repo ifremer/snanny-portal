@@ -96,7 +96,7 @@ function initializeTimeline(data) {
 
 	function timelineSelectionEnd() {
 		getObservationsCount();
-		getObservations();
+		getObservationsAndSystems();
 	}
 
 	setTimelineAll(data);

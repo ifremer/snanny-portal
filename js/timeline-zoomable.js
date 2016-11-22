@@ -109,7 +109,7 @@ function initializeTimeline(data) {
 				if (lastQuery != timeQuery) {
 					lastQuery = timeQuery;
 					getObservationsCount();
-					getObservations();
+					getObservationsAndSystems();
 				}
 			}, 500);
 

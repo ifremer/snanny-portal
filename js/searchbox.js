@@ -4,11 +4,11 @@ $("#searchInput").keyup(function(e){
 	if (e.keyCode == '13') {
         e.preventDefault();
         getObservationsCount();
-		getObservations();
+		getObservationsAndSystems();
     }else{
 		changeRequest = setTimeout(function(){
 			getObservationsCount();
-			getObservations();
+			getObservationsAndSystems();
 		}, 500);
 	}
 

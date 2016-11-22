@@ -119,7 +119,7 @@ body {
 
 .square-noscroll {
   padding: 14px;
-  border: 1px solid #AAAAAA; 
+  border: 1px solid #AAAAAA;
 }
 
 .nav .breadcrumb {
@@ -175,7 +175,7 @@ body svg{
   line-height: 65px;
   background-color: black;
   /* set it at will according to your message's length in small devices */
-  max-height: 100px; 
+  max-height: 100px;
   position: fixed;
   top: 0px;
   left: 0px;
@@ -211,4 +211,95 @@ body svg{
 #ok a {
   color: #3EAAEE;
   text-decoration: none;
+}
+
+.settings {
+  padding-top: 20px;
+  text-align: left;
+}
+
+.settings label {
+  min-width: 100%;
+}
+
+.togglebutton {
+  vertical-align: middle;
+  padding-bottom: 5px;
+}
+.togglebutton,
+.togglebutton input,
+.togglebutton .toggle {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.togglebutton {
+  cursor: pointer;
+  color: rgba(0,0,0, 0.26);
+}
+.form-group.is-focused .togglebutton {
+  color: rgba(0,0,0, 0.26);
+}
+fieldset[disabled] .form-group.is-focused .togglebutton {
+  color: rgba(0,0,0, 0.26);
+}
+.togglebutton input[type=checkbox] {
+  opacity: 0;
+}
+.togglebutton .toggle {
+  text-align: left;
+}
+.togglebutton .toggle,
+.togglebutton input[type=checkbox][disabled] + .toggle {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 15px;
+  background-color: rgba(80, 80, 80, 0.7);
+  border-radius: 15px;
+  margin-right: 15px;
+  -webkit-transition: background 0.3s ease;
+       -o-transition: background 0.3s ease;
+          transition: background 0.3s ease;
+  vertical-align: middle;
+  float: right;
+}
+.togglebutton .toggle:after {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #F1F1F1;
+  border-radius: 20px;
+  position: relative;
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4);
+  left: -5px;
+  top: -2px;
+  -webkit-transition: left 0.3s ease, background 0.3s ease, -webkit-box-shadow 0.1s ease;
+       -o-transition: left 0.3s ease, background 0.3s ease, box-shadow 0.1s ease;
+          transition: left 0.3s ease, background 0.3s ease, box-shadow 0.1s ease;
+}
+.togglebutton input[type=checkbox][disabled] + .toggle:after,
+.togglebutton input[type=checkbox][disabled]:checked + .toggle:after {
+  background-color: #BDBDBD;
+}
+.togglebutton input[type=checkbox] + .toggle:active:after,
+.togglebutton input[type=checkbox][disabled] + .toggle:active:after {
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 0, 0, 0.1);
+}
+.togglebutton input[type=checkbox]:checked + .toggle:after {
+  left: 15px;
+}
+.togglebutton input[type=checkbox]:checked + .toggle {
+  background-color: rgba(0, 150, 136, 0.5);
+}
+.togglebutton input[type=checkbox]:checked + .toggle:after {
+  background-color: #009688;
+}
+.togglebutton input[type=checkbox]:checked + .toggle:active:after {
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 150, 136, 0.1);
+          box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 0 0 15px rgba(0, 150, 136, 0.1);
 }
