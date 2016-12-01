@@ -10,7 +10,7 @@ var treeSystems = [];
 var treeWithoutGeo = [];
 
 function showObservations(observations) {
-    
+
     if (observations != undefined && observations.length > 0) {
         jQuery('#browserActions').show('slow');
         var deploymentIds = {};
@@ -21,7 +21,7 @@ function showObservations(observations) {
 
         // Iterate over each observation, to display informations
         observations.forEach(function (observation) {
-            
+
             var uuid = observation.get('snanny-uuid');
             var deploymentId = observation.get('snanny-deploymentid');
             if (deploymentId == undefined) {
@@ -88,7 +88,7 @@ function showObservations(observations) {
             }
         });
 
-        return observationsCount;
+        setObservationsContainerHeader(observationsCount);
         // apparently not useful as mouseover event is configured in jstree nodes
         //$("#observations").on("select_node.jstree", function(e, data) {
         //	$("#observations").jstree().toggle_node(data.node);
@@ -100,7 +100,7 @@ function showObservations(observations) {
 }
 
 function showObservationsWithoutGeo(observations) {
-    
+
     if (observations != undefined && observations.length > 0) {
         jQuery('#browserActions').show('slow');
         var deploymentIds = {};
@@ -108,8 +108,67 @@ function showObservationsWithoutGeo(observations) {
 
         var observationsCount = 0;
         treeWithoutGeo = [];
-        
-        if(viewSystemsWithoutGeo) {
+
+        // Iterate over each observation, to display informations
+        observations.forEach(function (observation) {
+
+            var coordinates = observation.getGeometry().getCoordinates();
+
+            if(isSystemWithoutData(coordinates)){
+              var uuid = observation.get('snanny-uuid');
+              var deploymentId = observation.get('snanny-deploymentid');
+              var name = observation.get('snanny-name');
+              if (deploymentId != undefined) {
+                  if (deploymentIds[deploymentId] == undefined) {
+
+                      var ancestors = observation.get('snanny-ancestors');
+                      var parent = deploymentId + "__" + name;
+                      ancestors.forEach(function (ancestor) {
+
+                          var uuid = ancestor['snanny-ancestor-uuid'];
+                          var deploymentId = ancestor['snanny-ancestor-deploymentid'];
+                          if (deploymentId == undefined) {
+                              deploymentId = uuid;
+                          }
+                          if (ancestorDeploymentIds[deploymentId] == undefined) {
+                              if(isSystemWithoutData(coordinates)){
+                                  var nameAncestor = ancestor['snanny-ancestor-name'];
+                                  treeWithoutGeo.push({
+                                  "id": deploymentId + "__" + nameAncestor,
+                                  "text": nameAncestor,
+                                  "parent": parent,
+                                  "icon": "sensor-ico"
+                                  });
+                              }
+                              ancestorDeploymentIds[deploymentId] = 1;
+                          }
+
+                      });
+                      //Then add observation in the treeView
+                      if (deploymentId == undefined) {
+                          deploymentId = uuid;
+                      }
+                      var id = observation.get('snanny-id');
+                      var author = observation.get('snanny-author');
+                      var resultFilename = observation.get('snanny-result');
+                      var href = DATA_ACCESS_URI + "data/" + uuid + "/download";
+                      treeWithoutGeo.push({
+                          "id": deploymentId + "__" + name,
+                          "parent": "without_geo_systems",
+                          "text": name,
+                          "icon": "download-ico"
+                      });
+
+                      observationsCount++;
+                      // Simulate a Set collection
+                      deploymentIds[deploymentId] = 1;
+                  }
+
+              }
+            }
+        });
+
+        if(viewSystemsWithoutGeo && observationsCount != 0) {
             treeWithoutGeo.push({
                 "id": "without_geo_systems",
                 "text": "Data without geolocation",
@@ -117,91 +176,30 @@ function showObservationsWithoutGeo(observations) {
             });
         }
 
-        // Iterate over each observation, to display informations
-        observations.forEach(function (observation) {
-
-            var coordinates = observation.getGeometry().getCoordinates();
-            
-            var uuid = observation.get('snanny-uuid');
-            var deploymentId = observation.get('snanny-deploymentid');
-
-            if (deploymentId != undefined) {
-                if (deploymentIds[deploymentId] == undefined) {
-
-                    var ancestors = observation.get('snanny-ancestors');
-                    var parent = 'without_geo_systems';
-                    ancestors.forEach(function (ancestor) {
-
-                        var uuid = ancestor['snanny-ancestor-uuid'];
-                        var deploymentId = ancestor['snanny-ancestor-deploymentid'];
-                        if (deploymentId == undefined) {
-                            deploymentId = uuid;
-                        }
-                        if (ancestorDeploymentIds[deploymentId] == undefined) {
-                            if(coordinates[0] === "200" && coordinates[1] === "0"){
-                                treeWithoutGeo.push({
-                                "id": deploymentId,
-                                "text": ancestor['snanny-ancestor-name'],
-                                "parent": "without_geo_systems",
-                                "icon": "sensor-ico",
-                                "a_attr": {
-                                    "onMouseOver": "selectObservationOnMap('" + deploymentId + "')",
-                                    "onclick": "showSystem('" + deploymentId + "')"
-                                    }
-                                });
-                            }
-                            ancestorDeploymentIds[deploymentId] = 1;
-                        }
-
-                    });
-                    //Then add observation in the treeView
-                    var uuid = observation.get('snanny-uuid');
-                    var deploymentId = observation.get('snanny-deploymentid');
-                    if (deploymentId == undefined) {
-                        deploymentId = uuid;
-                    }
-                    var id = observation.get('snanny-id');
-                    var author = observation.get('snanny-author');
-                    var resultFilename = observation.get('snanny-result');
-                    var name = observation.get('snanny-name');
-                    var href = DATA_ACCESS_URI + "data/" + uuid + "/download";
-                    treeWithoutGeo.push({
-                        "id": deploymentId,
-                        "parent": "without_geo_systems",
-                        "text": name,
-                        "icon": "download-ico",
-                        "a_attr": {
-                            "href": href,
-                            "target": "_blank",
-                            "onMouseOver": "selectObservationOnMap('" + deploymentId + "')",
-                            "onClick": "downloadData('" + uuid + "')"
-                        }
-                    });
-
-                    observationsCount++;
-                    // Simulate a Set collection
-                    deploymentIds[deploymentId] = 1;
-                }
-
-            }
-            
-        });
+        return observationsCount;
     }
+}
+
+function isSystemWithoutData(coords) {
+  if(coords[0] === "200" && coords[1] === "0"){
+    return true;
+  }
+  return false;
 }
 
 function showSystems(systems) {
     treeSystems = [];
-    
+
     if (systems != undefined && systems.length > 0 && viewSystemsWithoutData) {
         jQuery('#browserActions').show('slow');
-        
+
         if(viewSystemsWithoutData) {
             treeSystems.push({
                "id": "without_data_systems",
                 "text": "Systems without data",
                 "parent": "#"
             });
-        
+
             // Iterate over each observation, to display informations
             systems.forEach(function (system) {
                 var name = system['snanny-systems-name'];
@@ -405,20 +403,17 @@ function getObservationsAndSystems() {
     // Clear "observations" panel
     observationsContainerHeader.html("");
     observationsContainer.html("");
-    
-    var observationsCount = getObservations();
-    getSystems();
-    
-    // Display header with observation's count
-    observationsContainerHeader.append(jQuery("<h4>" + $('#individualObsPointCount').text() + " points from " + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h4>"));
 
-    if (timelineSelection != null && timelineSelection.length > 0) {
-        observationsContainerHeader.append(jQuery("<p>from " + moment(+timelineSelection[0]).format('lll') + " to " + moment(+timelineSelection[1]).format('lll') + "</p>"));
-    } else {
-        observationsContainerHeader.append(jQuery("<p>on full time range</p>"));
-    }
+    observationsContainerHeader.append("<h4>loading...</h4>");
+    observationsContainerHeader.append("<p>&nbsp;</p>");
+
+    getObservations();
+    getSystems();
 
     tree = treeSystems.concat(treeObservations).concat(treeWithoutGeo);
+    if(tree.length == 0) {
+      jQuery('#browserActions').hide('fast');
+    }
     observationsContainer.jstree('destroy');
     //$.jstree.defaults.core.themes.variant = "large";
     observationsContainer.jstree({
@@ -433,19 +428,25 @@ function getObservationsAndSystems() {
     });
 }
 
+function setObservationsContainerHeader(observationsCount) {
+  var observationsContainerHeader = jQuery('#observationsHeader');
+
+  observationsContainerHeader.html("");
+  // Display header with observation's count
+  observationsContainerHeader.append(jQuery("<h4>" + $('#individualObsPointCount').text() + " points from " + observationsCount + " observation" + (observationsCount > 1 ? "s" : "") + "</h4>"));
+
+  if (timelineSelection != null && timelineSelection.length > 0) {
+      observationsContainerHeader.append(jQuery("<p>from " + moment(+timelineSelection[0]).format('lll') + " to " + moment(+timelineSelection[1]).format('lll') + "</p>"));
+  } else {
+      observationsContainerHeader.append(jQuery("<p>on full time range</p>"));
+  }
+}
+
 function getObservations() {
 
     var bboxQuery = getBboxQuery();
     var timeQuery = getTimeQuery();
     var kwordsQuery = getKeywordsQuery();
-
-    var observationsContainerHeader = jQuery('#observationsHeader');
-    var observationsContainer = jQuery('#observations');
-    // Clear "observations" panel
-    observationsContainer.html("");
-    observationsContainerHeader.html("");
-    observationsContainerHeader.append("<h4>loading...</h4>");
-    observationsContainerHeader.append("<p>&nbsp;</p>");
 
     if (observationRequest != null) {
         observationRequest.abort();
@@ -470,21 +471,22 @@ function getObservations() {
             while ($('#syntheticMapLoading').text() == 1) {
                 1;
             }
+            treeObservations = [];
+            var observationsContainerHeader = jQuery('#observationsHeader');
             observationsContainerHeader.html("");
             observationsContainerHeader.append("<h4>" + $('#individualObsPointCount').text() + " points available </h4> \
 						      <p>refine your request to see individual observations...");
-            jQuery('#browserActions').hide('fast');
 
         } else if (data && data.status == "empty") {
+            treeObservations = [];
             observationsCountSource.clear();
-            jQuery('#browserActions').hide('fast');
         }
 
         $('#individualObsPointLoading').text("0");
 
     });
-    
-    
+
+
     var withGeo = localStorage.getItem('withoutGeo');
     if (!withGeo || withGeo === "on") {
         timeQuery = timeQuery.replace("&", "?");
@@ -498,7 +500,6 @@ function getObservations() {
                     object: data
                 });
 
-                observationsCountSource.clear();
                 observationsSource.addFeatures(vectorSource.getFeatures());
                 //filterObservations();
                 showObservationsWithoutGeo(observationsSource.getFeatures());
@@ -507,14 +508,6 @@ function getObservations() {
                 while ($('#syntheticMapLoading').text() == 1) {
                     1;
                 }
-                observationsContainerHeader.html("");
-                observationsContainerHeader.append("<h4>" + $('#individualObsPointCount').text() + " points available </h4> \
-                                  <p>refine your request to see individual observations...");
-                jQuery('#browserActions').hide('fast');
-
-            } else if (data && data.status == "empty") {
-                observationsCountSource.clear();
-                jQuery('#browserActions').hide('fast');
             }
 
             $('#individualObsPointLoading').text("0");
@@ -524,9 +517,9 @@ function getObservations() {
 }
 
 function getSystems() {
-    
+
     var hasData = getHasDataQuery();
-    
+
     if (systemRequest != null) {
         systemRequest.abort();
     }
@@ -538,10 +531,6 @@ function getSystems() {
         if (data && data.status == "success" && data.systems && data.systems.length > 0) {
             //filterObservations();
             showSystems(data.systems);
-
-        } else if (data && data.status == "empty") {
-            observationsCountSource.clear();
-            jQuery('#browserActions').hide('fast');
         }
 
         $('#individualObsPointLoading').text("0");
@@ -600,7 +589,7 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
         timelineRequest = d3.json(timelineZoomURL, function (err, data) {
             $('#timelineLoading').text("1");
             if (!timelineInitialized) {
-                
+
                 initializeTimeline(smoothData(data));
                 timelineInitialized = true;
             } else {
@@ -652,7 +641,7 @@ function smoothData(data) {
         smoothData.value = (1.0 - (1.0 / (1.0 + each.value / RESOLUTION)));
         smoothedData.push(smoothData);
     });
-    
+
     return smoothedData;
 }
 
@@ -747,5 +736,3 @@ function showDetailNVD3(observationID, container, title) {
         });
     });
 }
-
-

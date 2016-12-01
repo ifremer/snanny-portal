@@ -107,9 +107,6 @@ var getObservationCountText = function(feature, resolution) {
 
 
 var observation_count_style = (function() {
-	var color = function(red, green, blue, alpha) {
-		return 'rgba(' + red + ',' + green + ',' + blue + ',' + alpha + ')';
-	};
 	return function(feature, resolution) {
 		return [new ol.style.Style({
 			fill: new ol.style.Fill({
@@ -229,7 +226,7 @@ map.on('pointermove', function(event) {
 				//Affichage UUID
 				countTooltipElement.innerHTML = feature.get("count")+" observations";
 				countTooltip.setPosition(event.coordinate);
-			}	
+			}
 		});
 });
 
