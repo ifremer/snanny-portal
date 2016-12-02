@@ -2,8 +2,6 @@ var mapRequest;
 var timelineRequest;
 var observationRequest;
 var systemRequest;
-var viewSystemsWithoutData;
-var viewSystemsWithoutGeo;
 var tree = [];
 var treeObservations = [];
 var treeSystems = [];
@@ -57,26 +55,21 @@ function showObservations(observations) {
 
                     });
                     //Then add observation in the treeView
-                    var uuid = observation.get('snanny-uuid');
-                    var deploymentId = observation.get('snanny-deploymentid');
-                    if (deploymentId == undefined) {
-                        deploymentId = uuid;
-                    }
-                    var id = observation.get('snanny-id');
-                    var author = observation.get('snanny-author');
-                    var resultFilename = observation.get('snanny-result');
-                    var name = observation.get('snanny-name');
-                    var href = DATA_ACCESS_URI + "data/" + uuid + "/download";
+                    //var id = observation.get('snanny-id');
+                    //var author = observation.get('snanny-author');
+                    //var resultFilename = observation.get('snanny-result');
+                    var idDownload = uuid.substr(0, uuid.lastIndexOf('-'));
+                    var href = DATA_ACCESS_URI + "data/" + idDownload + "/download";
                     treeObservations.push({
                         "id": deploymentId,
                         "parent": parent,
-                        "text": name,
+                        "text": observation.get('snanny-name'),
                         "icon": "download-ico",
                         "a_attr": {
                             "href": href,
                             "target": "_blank",
                             "onMouseOver": "selectObservationOnMap('" + deploymentId + "')",
-                            "onClick": "downloadData('" + uuid + "')"
+                            "onClick": "downloadData('" + idDownload + "')"
                         }
                     });
 
@@ -89,6 +82,7 @@ function showObservations(observations) {
         });
 
         setObservationsContainerHeader(observationsCount);
+        updateBrowser();
         // apparently not useful as mouseover event is configured in jstree nodes
         //$("#observations").on("select_node.jstree", function(e, data) {
         //	$("#observations").jstree().toggle_node(data.node);
@@ -115,7 +109,6 @@ function showObservationsWithoutGeo(observations) {
             var coordinates = observation.getGeometry().getCoordinates();
 
             if(isSystemWithoutData(coordinates)){
-              var uuid = observation.get('snanny-uuid');
               var deploymentId = observation.get('snanny-deploymentid');
               var name = observation.get('snanny-name');
               if (deploymentId != undefined) {
@@ -125,33 +118,23 @@ function showObservationsWithoutGeo(observations) {
                       var parent = deploymentId + "__" + name;
                       ancestors.forEach(function (ancestor) {
 
-                          var uuid = ancestor['snanny-ancestor-uuid'];
                           var deploymentId = ancestor['snanny-ancestor-deploymentid'];
                           if (deploymentId == undefined) {
-                              deploymentId = uuid;
+                              deploymentId = ancestor['snanny-ancestor-uuid'];
                           }
                           if (ancestorDeploymentIds[deploymentId] == undefined) {
-                              if(isSystemWithoutData(coordinates)){
-                                  var nameAncestor = ancestor['snanny-ancestor-name'];
-                                  treeWithoutGeo.push({
-                                  "id": deploymentId + "__" + nameAncestor,
-                                  "text": nameAncestor,
-                                  "parent": parent,
-                                  "icon": "sensor-ico"
-                                  });
-                              }
+                              var nameAncestor = ancestor['snanny-ancestor-name'];
+                              treeWithoutGeo.push({
+                                "id": deploymentId + "__" + nameAncestor,
+                                "text": nameAncestor,
+                                "parent": parent,
+                                "icon": "sensor-ico"
+                              });
                               ancestorDeploymentIds[deploymentId] = 1;
                           }
 
                       });
                       //Then add observation in the treeView
-                      if (deploymentId == undefined) {
-                          deploymentId = uuid;
-                      }
-                      var id = observation.get('snanny-id');
-                      var author = observation.get('snanny-author');
-                      var resultFilename = observation.get('snanny-result');
-                      var href = DATA_ACCESS_URI + "data/" + uuid + "/download";
                       treeWithoutGeo.push({
                           "id": deploymentId + "__" + name,
                           "parent": "without_geo_systems",
@@ -163,12 +146,11 @@ function showObservationsWithoutGeo(observations) {
                       // Simulate a Set collection
                       deploymentIds[deploymentId] = 1;
                   }
-
               }
             }
         });
 
-        if(viewSystemsWithoutGeo && observationsCount != 0) {
+        if(viewSystemsWithoutGeo() && observationsCount != 0) {
             treeWithoutGeo.push({
                 "id": "without_geo_systems",
                 "text": "Data without geolocation",
@@ -176,7 +158,7 @@ function showObservationsWithoutGeo(observations) {
             });
         }
 
-        return observationsCount;
+        updateBrowser();
     }
 }
 
@@ -190,34 +172,52 @@ function isSystemWithoutData(coords) {
 function showSystems(systems) {
     treeSystems = [];
 
-    if (systems != undefined && systems.length > 0 && viewSystemsWithoutData) {
+    if (systems != undefined && systems.length > 0 && viewSystemsWithoutData()) {
         jQuery('#browserActions').show('slow');
 
-        if(viewSystemsWithoutData) {
-            treeSystems.push({
-               "id": "without_data_systems",
-                "text": "Systems without data",
-                "parent": "#"
-            });
+          treeSystems.push({
+             "id": "without_data_systems",
+              "text": "Systems without data",
+              "parent": "#"
+          });
 
-            // Iterate over each observation, to display informations
-            systems.forEach(function (system) {
-                var name = system['snanny-systems-name'];
-                var description = system['snanny-systems-description'];
-                var uuid = system['snanny-systems-uuid'];
+          // Iterate over each observation, to display informations
+          systems.forEach(function (system) {
 
-                treeSystems.push({
-                    "id": uuid,
-                    "text": name,
-                    "parent": "without_data_systems",
-                    "icon": "sensor-ico",
-                    "description": description
-                });
-            });
-        }
+              treeSystems.push({
+                  "id": system['snanny-systems-uuid'],
+                  "text": system['snanny-systems-name'],
+                  "parent": "without_data_systems",
+                  "icon": "sensor-ico",
+                  "description": system['snanny-systems-description']
+              });
+          });
+
+          updateBrowser();
     } else {
         jQuery('#browserActions').hide('slow');
     }
+}
+
+function updateBrowser() {
+  if(tree.length != (treeSystems.length + treeObservations.length + treeWithoutGeo.length)){
+
+      var observationsContainer = jQuery('#observations');
+    // Clear "observations" panel
+    observationsContainer.html("");
+
+    tree = treeSystems.concat(treeObservations).concat(treeWithoutGeo);
+    if(tree.length == 0) {
+      jQuery('#browserActions').hide('fast');
+    }
+    observationsContainer.jstree('destroy');
+    observationsContainer.jstree({
+        "core": {
+            "data": tree,
+            "plugins": ["wholerow"]
+        }
+    });
+  }
 }
 
 function downloadData(uuid) {
@@ -233,12 +233,10 @@ function appendObservation(observation) {
         var ancestorItem = jQuery("#" + ancestor);
 
     });
-
 }
 
 function allObservations() {
     var observations = [];
-
     observationsSource.forEachFeature(function (observation) {
         observations.push(observation);
     });
@@ -248,7 +246,6 @@ function allObservations() {
 
 function filterObservationsByPosition() {
     if (selectionFeature.getGeometry() != undefined && selectionFeature.getGeometry() != null) {
-
         filter = function (observation) {
             var geometry = observation.getGeometry();
             if (geometry.intersectsExtent(selectionFeature.getGeometry().getExtent())) {
@@ -263,12 +260,10 @@ function filterObservationsByPosition() {
                 observationsSource.removeFeature(observation);
             }
         });
-
     }
 }
 
 function filterObservationsByTime() {
-
     var filter;
 
     if (timelineSelection == null || timelineSelection.length == 0) {
@@ -357,13 +352,10 @@ function getBboxQuery() {
 
 function getTimeQuery() {
     var timeQuery = "";
-
-
     if (timelineSelection != null && timelineSelection.length > 0) {
         timeQuery = "&time=" + (+timelineSelection[0]) + "," + (+timelineSelection[1]);
     }
     return timeQuery;
-
 }
 
 function getKeywordsQuery() {
@@ -375,34 +367,42 @@ function getKeywordsQuery() {
     return kwordsQuery;
 }
 
+function viewSystemsWithoutData() {
+    var withData = localStorage.getItem('withoutData');
+    if (!withData || withData === "on") {
+      return true;
+    }
+    return false;
+}
+
 function getHasDataQuery() {
     var withData = localStorage.getItem('withoutData');
     if (!withData || withData === "on") {
-        viewSystemsWithoutData = true;
         return "?hasdata=false";
-    } else {
-        viewSystemsWithoutData = false;
-        return "?hasdata=true";
     }
+    return "?hasdata=true";
+}
+
+function viewSystemsWithoutGeo() {
+    var withGeo = localStorage.getItem('withoutGeo');
+    if (!withGeo || withGeo === "on") {
+      return true;
+    }
+    return false;
 }
 
 function getHasGeoQuery() {
     var withGeo = localStorage.getItem('withoutGeo');
     if (!withGeo || withGeo === "on") {
-        viewSystemsWithoutGeo = true;
         return "&hasCoords=false";
-    } else {
-        viewSystemsWithoutGeo = false;
-        return "&hasCoords=true";
     }
+    return "&hasCoords=true";
 }
 
 function getObservationsAndSystems() {
     var observationsContainerHeader = jQuery('#observationsHeader');
-    var observationsContainer = jQuery('#observations');
     // Clear "observations" panel
     observationsContainerHeader.html("");
-    observationsContainer.html("");
 
     observationsContainerHeader.append("<h4>loading...</h4>");
     observationsContainerHeader.append("<p>&nbsp;</p>");
@@ -410,22 +410,6 @@ function getObservationsAndSystems() {
     getObservations();
     getSystems();
 
-    tree = treeSystems.concat(treeObservations).concat(treeWithoutGeo);
-    if(tree.length == 0) {
-      jQuery('#browserActions').hide('fast');
-    }
-    observationsContainer.jstree('destroy');
-    //$.jstree.defaults.core.themes.variant = "large";
-    observationsContainer.jstree({
-        "core": {
-            //'themes': {
-            //        'name': 'default-dark',
-            // 'responsive': true
-            //},
-            "data": tree,
-            "plugins": ["wholerow"]
-        }
-    });
 }
 
 function setObservationsContainerHeader(observationsCount) {
@@ -443,7 +427,7 @@ function setObservationsContainerHeader(observationsCount) {
 }
 
 function getObservations() {
-
+    var observationsContainerHeader = jQuery('#observationsHeader');
     var bboxQuery = getBboxQuery();
     var timeQuery = getTimeQuery();
     var kwordsQuery = getKeywordsQuery();
@@ -472,18 +456,20 @@ function getObservations() {
                 1;
             }
             treeObservations = [];
-            var observationsContainerHeader = jQuery('#observationsHeader');
+            updateBrowser();
             observationsContainerHeader.html("");
             observationsContainerHeader.append("<h4>" + $('#individualObsPointCount').text() + " points available </h4> \
 						      <p>refine your request to see individual observations...");
 
         } else if (data && data.status == "empty") {
             treeObservations = [];
+            observationsContainerHeader.html("");
+            observationsContainerHeader.append("<h4>" + $('#individualObsPointCount').text() + " points available </h4> \
+						      <p>refine your request to see individual observations...");
             observationsCountSource.clear();
         }
 
         $('#individualObsPointLoading').text("0");
-
     });
 
 
@@ -491,27 +477,18 @@ function getObservations() {
     if (!withGeo || withGeo === "on") {
         timeQuery = timeQuery.replace("&", "?");
         observationWithoutGeo = d3.json(OBSERVATIONS_RESOURCES + '/withoutgeo' + timeQuery + kwordsQuery, function (err, data) {
-            $('#individualObsPointLoading').text("1");
-            observationsSource.clear(true);
-
             if (data && data.status == "success" && data.features && data.features.length > 0) {
                 var vectorSource = new ol.source.GeoJSON({
                     projection: 'EPSG:4326',
                     object: data
                 });
-
                 observationsSource.addFeatures(vectorSource.getFeatures());
-                //filterObservations();
                 showObservationsWithoutGeo(observationsSource.getFeatures());
 
             } else if (data && (data.status == "timeOut" || data.status == "tooMany")) {
-                while ($('#syntheticMapLoading').text() == 1) {
-                    1;
-                }
+                treeWithoutGeo = [];
+                updateBrowser();
             }
-
-            $('#individualObsPointLoading').text("0");
-
         });
     }
 }
@@ -525,15 +502,12 @@ function getSystems() {
     }
 
     systemRequest = d3.json(SYSTEMS_RESOURCES + hasData, function (err, data) {
-        $('#individualObsPointLoading').text("1");
-        observationsSource.clear(true);
-
         if (data && data.status == "success" && data.systems && data.systems.length > 0) {
-            //filterObservations();
             showSystems(data.systems);
+        }  else if (data && (data.status == "timeOut" || data.status == "tooMany")) {
+            treeSystems = [];
+            updateBrowser();
         }
-
-        $('#individualObsPointLoading').text("0");
     });
 }
 
@@ -610,29 +584,6 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
         startLoading();
     }
 }
-
-/*function loadObservations(observationsURL) {
-    startLoading();
-
-    d3.json(observationsURL, function (err, data) {
-        debugger;
-        var vectorSource = new ol.source.GeoJSON({
-            projection: 'EPSG:4326',
-            object: data
-        });
-
-        observationsSource.clear();
-        observationsSource.addFeatures(vectorSource.getFeatures());
-
-        observations = filterObservations();
-
-        showObservations(observations);
-
-        initializeTimeline(observations);
-
-        stopLoading();
-    });
-}*/
 
 function smoothData(data) {
     var smoothedData = [];
@@ -713,11 +664,9 @@ function showDetailNVD3(observationID, container, title) {
 
                 chart.yAxis
                     .axisLabel(each.key)
-                    .tickFormat(d3.format(',.1f'))
-                ;
+                    .tickFormat(d3.format(',.1f'));
 
-                chart.y2Axis.tickFormat(d3.format(',.1f'))
-                ;
+                chart.y2Axis.tickFormat(d3.format(',.1f'));
 
                 if (data == null || data.length == 0) {
                     d3.select('#' + eachContainer).html("");
