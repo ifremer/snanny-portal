@@ -5,9 +5,9 @@
 // validation
 //var SNANNY_HOST = "http://isi.ifremer.fr/snanny-indexIO-api";
 // development
-var SNANNY_HOST = "http://ubisi54.ifremer.fr/snanny-indexIO-api";
+//var SNANNY_HOST = "http://ubisi54.ifremer.fr/snanny-indexIO-api";
 // local
-//var SNANNY_HOST = "http://localhost.ifremer.fr:8080/snanny-indexIO-api";
+var SNANNY_HOST = "http://localhost.ifremer.fr:8080/snanny-indexIO-api";
 
 var SNANNY_API = SNANNY_HOST+"/rest";
 
@@ -18,8 +18,8 @@ var OBSERVATIONS_RESOURCES = SNANNY_API+"/obs";
 var SYSTEMS_RESOURCES = SNANNY_API+"/systems/all";
 
 //// OWNCLOUD /////
-var OWNCLOUD_HOST = "http://visi-snanny-datacloud.ifremer.fr/owncloud"
-//var OWNCLOUD_HOST = "10.17.2.49/owncloud"
+//var OWNCLOUD_HOST = "http://visi-snanny-datacloud.ifremer.fr/owncloud"
+var OWNCLOUD_HOST = "http://10.17.2.49/owncloud"
 
 var DATA_ACCESS_URI = OWNCLOUD_HOST + "/index.php/apps/snannyowncloudapi/";
 

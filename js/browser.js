@@ -39,16 +39,7 @@ function showObservations(observations) {
                             deploymentId = uuid;
                         }
                         if (ancestorDeploymentIds[deploymentId] == undefined) {
-                            treeObservations.push({
-                                "id": deploymentId,
-                                "text": ancestor['snanny-ancestor-name'],
-                                "parent": parent,
-                                "icon": "sensor-ico",
-                                "a_attr": {
-                                    "onMouseOver": "selectObservationOnMap('" + deploymentId + "')",
-                                    "onclick": "showSystem('" + deploymentId + "')"
-                                }
-                            });
+                            pushInTreeObservations(deploymentId, ancestor['snanny-ancestor-name'], parent, "sensor-ico", "", "", "showSystem('" + deploymentId + "')");
                             ancestorDeploymentIds[deploymentId] = 1;
                         }
                         parent = deploymentId;
@@ -60,18 +51,7 @@ function showObservations(observations) {
                     //var resultFilename = observation.get('snanny-result');
                     var idDownload = uuid.substr(0, uuid.lastIndexOf('-'));
                     var href = DATA_ACCESS_URI + "data/" + idDownload + "/download";
-                    treeObservations.push({
-                        "id": deploymentId,
-                        "parent": parent,
-                        "text": observation.get('snanny-name'),
-                        "icon": "download-ico",
-                        "a_attr": {
-                            "href": href,
-                            "target": "_blank",
-                            "onMouseOver": "selectObservationOnMap('" + deploymentId + "')",
-                            "onClick": "downloadData('" + idDownload + "')"
-                        }
-                    });
+                    pushInTreeObservations(deploymentId, observation.get('snanny-name'), parent, "download-ico", href, "_blank", "downloadData('" + idDownload + "')");
 
                     observationsCount++;
                     // Simulate a Set collection
@@ -91,6 +71,21 @@ function showObservations(observations) {
     } else {
         jQuery('#browserActions').hide('slow');
     }
+}
+
+function pushInTreeObservations(id, text, parent, icon, href, target, onclick) {
+  treeObservations.push({
+      "id": id,
+      "text": text,
+      "parent": parent,
+      "icon": icon,
+      "a_attr": {
+          "href": href,
+          "target": target,
+          "onMouseOver": "selectObservationOnMap('" + id + "')",
+          "onclick": onclick
+      }
+  });
 }
 
 function showObservationsWithoutGeo(observations) {
@@ -124,23 +119,13 @@ function showObservationsWithoutGeo(observations) {
                           }
                           if (ancestorDeploymentIds[deploymentId] == undefined) {
                               var nameAncestor = ancestor['snanny-ancestor-name'];
-                              treeWithoutGeo.push({
-                                "id": deploymentId + "__" + nameAncestor,
-                                "text": nameAncestor,
-                                "parent": parent,
-                                "icon": "sensor-ico"
-                              });
+                              pushInTreeWithoutGeo(deploymentId + "__" + nameAncestor, nameAncestor, parent, "sensor-ico");
                               ancestorDeploymentIds[deploymentId] = 1;
                           }
 
                       });
                       //Then add observation in the treeView
-                      treeWithoutGeo.push({
-                          "id": deploymentId + "__" + name,
-                          "parent": "without_geo_systems",
-                          "text": name,
-                          "icon": "download-ico"
-                      });
+                      pushInTreeWithoutGeo(deploymentId + "__" + name, name, "without_geo_systems", "download-ico");
 
                       observationsCount++;
                       // Simulate a Set collection
@@ -160,6 +145,15 @@ function showObservationsWithoutGeo(observations) {
 
         updateBrowser();
     }
+}
+
+function pushInTreeWithoutGeo(id, text, parent, icon) {
+  treeWithoutGeo.push({
+    "id": id,
+    "text": text,
+    "parent": parent,
+    "icon": icon
+  });
 }
 
 function isSystemWithoutData(coords) {
@@ -202,7 +196,7 @@ function showSystems(systems) {
 function updateBrowser() {
   if(tree.length != (treeSystems.length + treeObservations.length + treeWithoutGeo.length)){
 
-      var observationsContainer = jQuery('#observations');
+    var observationsContainer = jQuery('#observations');
     // Clear "observations" panel
     observationsContainer.html("");
 
@@ -511,12 +505,13 @@ function getSystems() {
     });
 }
 
-function startLoading() {
-    document.getElementsByTagName('body')[0].classList.add("chargement");
-}
-
-function stopLoading() {
-    document.getElementsByTagName('body')[0].classList.remove("chargement");
+function loading(start) {
+    var bodyDoc = document.getElementsByTagName('body')[0];
+    if(start) {
+        bodyDoc.classList.add("chargement");
+    } else {
+        bodyDoc.classList.remove("chargement");
+    }
 }
 
 var timelineInitialized = false;
@@ -543,7 +538,7 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
                 if (data['status'] != undefined && data['status'] == "tooMany") {
                     observationsCountSource.addFeatures(vectorSource.getFeatures());
                     if (--loadingCount == 0) {
-                        stopLoading();
+                        loading(false);
                     }
                 }
             }
@@ -571,7 +566,7 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
             }
 
             if (--loadingCount == 0) {
-                stopLoading();
+                loading(false);
             }
             $('#timelineLoading').text("0");
         });
@@ -581,7 +576,7 @@ function loadObservationsCount(mapZoomURL, timelineZoomURL) {
     }
 
     if (loadingCount > 0) {
-        startLoading();
+        loading(true);
     }
 }
 
