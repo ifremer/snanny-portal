@@ -15,7 +15,7 @@ var SNANNY_API = SNANNY_HOST+"/rest";
 var MAP_RESOURCES = SNANNY_API+"/obs/synthetic/map";
 var TIMELINE_RESOURCES = SNANNY_API+"/obs/synthetic/timeline";
 var OBSERVATIONS_RESOURCES = SNANNY_API+"/obs";
-var SYSTEMS_RESOURCES = SNANNY_API+"/systems/all";
+var SYSTEMS_RESOURCES = SNANNY_API+"/system/all";
 
 //// OWNCLOUD /////
 //var OWNCLOUD_HOST = "http://visi-snanny-datacloud.ifremer.fr/owncloud"
