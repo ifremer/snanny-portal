@@ -11,3 +11,7 @@
   opacity: 0.8 !important;
   white-space: nowrap;
 }
+
+.ol-zoom .tooltip {
+  background: none;
+}
