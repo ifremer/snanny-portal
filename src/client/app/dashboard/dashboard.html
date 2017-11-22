@@ -1,0 +1,30 @@
+<section id="dashboard-view" class="mainbar clearfix">
+  <section id="dashboard-content" class="col-md-9">
+    <snp-timeline data="vm.timeline" on-update="vm.updateTimeRange($timeRange)"></snp-timeline>
+    <snp-map data="vm.observations.observations" count-mode="vm.isCountMode()"
+             on-update="vm.updateBoundaryBox($boundaryBox)" on-hover="vm.selectTreeNode($id)"></snp-map>
+  </section>
+  <aside id="dashboard-aside" class="col-md-3">
+    <div class="well">
+      <div ng-show="vm.loading">
+        <h4>loading...</h4>
+      </div>
+      <div ng-show="!vm.loading && !vm.isCountMode()">
+        <h4>{{vm.observations.nbPoints}} Points from {{vm.observations.summary.length}}</h4>
+        <span>from {{vm.startDate}} to {{vm.endDate}}</span>
+      </div>
+      <div ng-show="!vm.loading && vm.isCountMode()">
+        <h4>{{vm.observations.nbPoints}} points available</h4>
+        <span>refine your request to see individual observations...</span>
+      </div>
+    </div>
+    <div class="well">
+      <snp-systems-tree no-system="vm.systems.noSystem" no-geo="vm.systems.noGeo" system="vm.systems.system"
+        on-hover="vm.selectFeature($node)" on-click="vm.manageTreeClick($node)" on-update="vm.addObservations($observations)"></snp-systems-tree>
+    </div>
+  </aside>
+</section>
+<footer>
+  <p>&copy; Ifremer 2017</p>
+</footer>
+

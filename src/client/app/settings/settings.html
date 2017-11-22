@@ -1,0 +1,21 @@
+<section id="settings-view" class="mainbar">
+  <snp-container>
+    <h1>Settings</h1>
+    <div class="row">
+      <div class="col-md-11">
+        <label id="withoutDataLabel">Show system without data</label>
+      </div>
+      <div class="col-md-1">
+        <md-switch md-no-ink ng-model="vm.showWithoutData" aria-labelledby="withoutDataLabel" ng-change="vm.updateSettings()"></md-switch>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-11">
+        <label id="withoutGeoLabel">Show data without geolocation</label>
+      </div>
+      <div class="col-md-1">
+        <md-switch md-no-ink ng-model="vm.showWithoutGeo" aria-labelledby="withoutGeoLabel" ng-change="vm.updateSettings()"></md-switch>
+      </div>
+    </div>
+  </snp-container>
+</section>

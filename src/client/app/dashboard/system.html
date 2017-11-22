@@ -1,0 +1,145 @@
+<div id="system">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal" type="button" ng-click="vm.close()">&times;</button>
+    <div class="btn-group">
+      <a id="xmlBtn" class="btn btn-default btn-large nav-btn" target="_blank" href={{vm.resourceURL}}>
+        <span class="fa fa-file"></span>
+      </a>
+      <button id="printBtn" class="btn btn-default btn-large nav-btn" disabled>
+        <span class="fa fa-print"></span>
+      </button>
+    </div>
+    <h4 class="modal-title templated-content">System : {{vm.name}}</h4>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-xs-6" id="systemDescriptionModalleftcolumn">
+        <div id="description" class="templated-content">
+          <div class="row">
+            <div class="col-md-6" id="image-ctnr">
+              <img ng-src="{{vm.image}}">
+            </div>
+            <div class="col-md-6" ng-if="vm.description !== null">
+              <p id="descriptionText">{{vm.description}}</p>
+              <!--<a id="descriptionExtend" data-extended="false" class="btn-a extender">More...</a>-->
+            </div>
+          </div>
+        </div>
+        <div id="identifiers" class="templated-content">
+          <h5>Identifiers</h5>
+          <table ng-if="vm.identifiers.length > 0" class="table table-striped table-responsive">
+            <tbody>
+            <tr ng-repeat="id in vm.identifiers">
+              <td>
+                <a href="{{id.href}}" target="_blank">{{id.name}}</a>
+              </td>
+              <td>{{id.value}}</td>
+            </tr>
+            </tbody>
+          </table>
+          <p ng-if="vm.identifiers.length === 0" class="p-indent">No identifier documented.</p>
+        </div>
+        <div id="classifiers" class="templated-content">
+          <h5>Other properties</h5>
+          <table ng-if="vm.classifiers.length > 0" class="table table-striped table-responsive">
+            <tbody>
+            <tr ng-repeat="classifier in vm.classifiers">
+              <td><a href="{{classifier.nameHref}}" target="_blank">{{classifier.name}}</a>
+              </td>
+              <td><a href="{{classifier.valueHref}}"
+                     target="_blank">{{classifier.value}}</a></td>
+            </tr>
+            </tbody>
+          </table>
+          <p ng-if="vm.classifiers.length === 0" class="p-indent">No classifier documented.</p>
+        </div>
+        <div id="ouputs" class="templated-content">
+          <h5>Outputs</h5>
+          <ul ng-if="vm.outputs.length > 0" class="flat-list">
+            <li ng-repeat="output in vm.outputs"><a href="{{output.href}}" target="_blank">{{output.name}}</a></li>
+          </ul>
+          <p ng-if="vm.outputs.length === 0" class="p-indent">No output documented.</p>
+        </div>
+        <div id="documents" class="templated-content">
+          <h5>Documents</h5>
+          <ul ng-if="vm.documents.length > 0" class="flat-list">
+            <li ng-repeat="doc in vm.documents"><a href="{{doc.href}}" target="_blank">{{doc.name}}</a></li>
+          </ul>
+          <p ng-if="vm.documents.length === 0" class="p-indent">No document documented.</p>
+        </div>
+      </div>
+      <div class="col-xs-6" id="systemDescriptionModalrightcolumn">
+        <div id="location" style="height: 130px;" class="templated-content">
+          <div class="col-md-6">
+            <ul ng-if="vm.position !== undefined">
+              <li>Latitude: {{vm.position.lat}}</li>
+              <li>Longitude: {{vm.position.lon}}</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <!--<div class="pull-right" id="locationMap">
+            </div>-->
+            <img src="./images/map.jpg" id="substituteMap"/>
+          </div>
+        </div>
+        <div id="contacts" class="templated-content">
+          <h5>Contacts</h5>
+          <table ng-if="vm.contacts.length > 0" class="table table-striped table-responsive">
+            <tbody>
+            <tr ng-repeat="contact in vm.contacts">
+              <td><a href="{{contact.role.href}}" target="_blank">{{contact.role.name}}</a></td>
+              <td>
+              <span class="contact-info">
+                <span ng-if="contact.individual"
+                      class="contact-info-elem">{{contact.individual}}</span>
+               <span ng-if="contact.organization" class="contact-info-elem">{{contact.organization}}</span>
+                <span ng-if="contact.email" class="contact-info-elem"><a
+                  href="mailto:{{contact.email}}" target="_blank">{{contact.email}}</a></span>
+              </span>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <p ng-if="vm.contacts.length === 0" class="p-indent">No contact documented.</p>
+        </div>
+        <div id="events" class="templated-content">
+          <h5>Events</h5>
+          <table ng-if="vm.events.length > 0" class="table table-striped">
+            <tbody>
+            <tr ng-repeat="event in vm.events">
+              <td>{{event.datetime}}</td>
+              <td>
+                <a href="" target="_blank">{{event.description}}</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <p ng-if="vm.events.length === 0" class="p-indent">No event documented.</p>
+        </div>
+        <div id="references" class="templated-content">
+          <h5>Model</h5>
+          <p ng-if="vm.model !== undefined"><a href="{{vm.model.href}}" class="modal-link">{{vm.model.name}}</a></p>
+          <p ng-if="vm.model === undefined" class="p-indent">No model documented.</p>
+          <h5>Sub-components</h5>
+          <ul ng-if="vm.references.length > 0" id="components" class='flat-list'>
+            <li ng-repeat="ref in vm.references"><a href="{{ref.href}}" class="modal-link">{{ref.name}}</a></li>
+          </ul>
+          <!--<a id="componentsExtend" data-extended="false" class="btn-a extender">More...</a>-->
+          <p ng-if="vm.references.length === 0" class="p-indent">No component documented.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="row templated-content">
+      <div class="col-xs-6">
+        <p ng-if="vm.validTime !== undefined" class="text-muted templated-content" style="font-size:80%">
+          <i>component {{vm.uuid}} description valid from {{vm.validTime.start}} until {{vm.validTime.end}}</i>
+        </p>
+      </div>
+      <div class="col-xs-6">
+        <button class="btn btn-default" data-dismiss="modal" type="button" ng-click="vm.close()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,9 +1,9 @@
-/bin/
-/target/
-/.settings/
+# Dependency directory
+# https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
+node_modules/
+bower_components/
 
 # other
-*.project
-*.iml
-dependency-reduced-pom.xml
-.idea/
+.tmp
+report/plato
+build
